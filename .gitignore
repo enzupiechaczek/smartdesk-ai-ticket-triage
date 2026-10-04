@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Secrets and local files
+.env
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Local data and models (regenerate with the project commands)
+*.db
+*.sqlite
+*.sqlite3
+model.joblib
