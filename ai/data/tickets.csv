@@ -1,1 +1,31 @@
 ticket_text,category
+I cannot sign in to my account,access
+My password is not being accepted,access
+The login page keeps rejecting my credentials,access
+I forgot my password and need to get back into my account,access
+I am locked out after several login attempts,access
+The password reset link does not seem to work,access
+I can reach the login page but cannot access my dashboard,access
+My account says access is denied when I try to sign in,access
+I changed my password but I still cannot log in,access
+Please help me regain access to my account,access
+I was charged twice for the same subscription,billing
+My latest invoice shows the wrong amount,billing
+I need help understanding a charge on my bill,billing
+The payment for my subscription did not go through,billing
+I would like to know when my refund will arrive,billing
+My plan was renewed but the price looks incorrect,billing
+I cannot update my payment method,billing
+The subscription fee is higher than I expected,billing
+I need a copy of my most recent invoice,billing
+My card was charged even though I cancelled my subscription,billing
+The application crashes whenever I open the settings page,technical
+The dashboard is taking a very long time to load,technical
+I get an error whenever I try to upload a file,technical
+Notifications suddenly stopped working in the app,technical
+The page becomes blank after I click the save button,technical
+The search feature is not returning any results,technical
+The mobile app freezes when I open the reports section,technical
+I cannot download files from the dashboard,technical
+The website keeps showing an unexpected server error,technical
+The submit button does nothing when I click it,technical
