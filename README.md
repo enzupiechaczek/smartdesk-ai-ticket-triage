@@ -50,7 +50,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ```bash
 git clone <repository-url>
 cd <repository-folder>
-git checkout a1-<githubusername>-day1-foundation
+git checkout a1-day1-foundation
 ```
 
 ### 2. Create the virtual environment (first time only)
