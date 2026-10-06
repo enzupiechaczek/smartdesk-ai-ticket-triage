@@ -36,3 +36,61 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 - Synthetic data only. No real names, emails or customer data.
 - No keys, tokens or passwords in code, screenshots or chat.
 - The model works offline and never calls a paid or cloud AI service.
+
+## How to run SmartDesk
+
+### Requirements
+
+- Git
+- Anaconda or Miniconda (Python 3.8 or newer)
+
+### 1. Get the code
+
+```bash
+git clone <repository-url>
+cd <repository-folder>
+git checkout a1-<githubusername>-day1-foundation
+```
+
+### 2. Create and activate the environment (first time only)
+
+Open **Anaconda Prompt** and run, from the repository root:
+
+```bash
+conda create -n smartdesk python=3.11 -y
+conda activate smartdesk
+pip install -r backend/requirements.txt
+```
+
+In every new Anaconda Prompt, run `conda activate smartdesk` again before starting the server.
+
+### 3. Start the server
+
+From the repository root:
+
+```bash
+python backend/app.py
+```
+
+Mac: `python3 backend/app.py`
+
+You should see `Running on http://127.0.0.1:5000`. Leave this window open.
+
+### 4. Check it works
+
+Open http://127.0.0.1:5000/api/health in a browser. You should see:
+
+```json
+{ "service": "SmartDesk local API", "status": "ok" }
+```
+
+Stop the server with `Ctrl+C`.
+
+### Without Anaconda (alternative)
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate        # Mac: source .venv/bin/activate
+pip install -r backend/requirements.txt
+python backend/app.py
+```
