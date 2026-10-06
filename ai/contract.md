@@ -43,3 +43,10 @@ The returned category must be exactly one of access, billing, or technical.
 The returned confidence must be between 0 and 1, inclusive.
 
 Higher confidence indicates greater certainty in the classification.
+
+
+
+Rules
+- It works fully offline.
+- It never calls Azure, OpenAI, or any paid service.
+- It never requires an API key.
