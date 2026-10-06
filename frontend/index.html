@@ -1,1 +1,29 @@
 <!-- Placeholder. Group A1 builds this page in task A1-1.2. -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>SmartDesk</h1>
+    <p>SmartDesk is a local AI-powered support-ticket triage app that categorizes and prioritizes tickets before they
+        reach a human agent.</p>
+    <form id="ticket-form">
+        <label for="subject">Subject</label>
+        <input label="subject" type="text" id="subject" maxlength="100" name="subject" required>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="5" maxlength="500" required></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+    <p id="status"></p>
+    <div id="tickets"></div>
+    <script src="app.js"></script>
+</body>
+
+</html>
