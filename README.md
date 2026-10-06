@@ -21,10 +21,6 @@ docs/       Architecture, model card, reports         All groups
 ## How to run SmartDesk
 
 Please set up a [venv](https://www.w3schools.com/python/python_virtualenv.asp) and source it according to your shell.
-to launch the frontend:
-```python
-python -m http.server 8000 -d frontend
-```
 
 to launch the backend:
 ```python
