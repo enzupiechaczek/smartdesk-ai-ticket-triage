@@ -2,11 +2,13 @@
 
 from flask import Flask, jsonify
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../frontend", static_url_path="")
+
 
 @app.get("/api/health")
 def health():
     return jsonify({"status": "ok", "service": "SmartDesk local API"})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
