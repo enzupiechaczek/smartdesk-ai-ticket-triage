@@ -1,7 +1,0 @@
-ticket_text,category
-"I keep getting redirected to the sign-in page even though my credentials are correct.",access
-"My account is locked after several failed login attempts and I need to regain access.",access
-"My monthly payment was charged even though I cancelled the subscription before renewal.",billing
-"The invoice for my latest payment contains an unexpected service charge.",billing
-"The dashboard freezes whenever I try to export the monthly report.",technical
-"The desktop application shows a connection error whenever I launch it.",technical
