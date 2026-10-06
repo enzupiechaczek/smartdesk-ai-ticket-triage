@@ -1,3 +1,23 @@
-# Bug template
+# Bug Report Template
 
-Placeholder. Group B writes this in task B-1.1.
+## Title
+
+## Steps to reproduce
+
+1.
+2.
+3.
+
+## Expected
+
+## Actual
+
+## Severity
+
+- [ ] High
+- [ ] Medium
+- [ ] Low
+
+## Evidence
+
+## Owner
