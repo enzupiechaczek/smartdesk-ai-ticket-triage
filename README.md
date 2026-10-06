@@ -42,7 +42,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ### Requirements
 
 - Git
-- Anaconda or Miniconda (Python 3.8 or newer)
+- Python 3.11 or newer ([python.org](https://www.python.org/downloads/))
+- On Windows, tick **"Add python.exe to PATH"** during the Python installer
 
 ### 1. Get the code
 
@@ -52,29 +53,36 @@ cd <repository-folder>
 git checkout a1-<githubusername>-day1-foundation
 ```
 
-### 2. Create and activate the environment (first time only)
+### 2. Create the virtual environment (first time only)
 
-Open **Anaconda Prompt** and run, from the repository root:
+Run from the repository root.
 
-```bash
-conda create -n smartdesk python=3.11 -y
-conda activate smartdesk
+**Windows (PowerShell)**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
 pip install -r backend/requirements.txt
 ```
 
-In every new Anaconda Prompt, run `conda activate smartdesk` again before starting the server.
+**Mac / Linux**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r backend/requirements.txt
+```
+
+Your prompt should now start with `(.venv)`. In every new terminal, activate the environment again before starting the server.
 
 ### 3. Start the server
 
 From the repository root:
 
-```bash
-python backend/app.py
-```
+**Windows:** `python backend/app.py`
+**Mac / Linux:** `python3 backend/app.py`
 
-Mac: `python3 backend/app.py`
-
-You should see `Running on http://127.0.0.1:5000`. Leave this window open.
+You should see `Running on http://127.0.0.1:5000`. Leave the terminal open.
 
 ### 4. Check it works
 
@@ -86,11 +94,9 @@ Open http://127.0.0.1:5000/api/health in a browser. You should see:
 
 Stop the server with `Ctrl+C`.
 
-### Without Anaconda (alternative)
+### Troubleshooting
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate        # Mac: source .venv/bin/activate
-pip install -r backend/requirements.txt
-python backend/app.py
-```
+- **PowerShell blocks the activate script:** run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use `.venv\Scripts\activate.bat` in cmd.
+- **`No module named 'flask'`:** the environment isn't active. Activate it and run `pip install -r backend/requirements.txt` again.
+- **Python version is older than 3.11:** install a newer Python, then create the environment with `py -3.11 -m venv .venv` (Windows) or `python3.11 -m venv .venv` (Mac).
+- **Port 5000 already in use:** stop the other program, or stop the old server with `Ctrl+C`.
