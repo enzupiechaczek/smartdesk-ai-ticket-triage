@@ -1,1 +1,7 @@
 ticket_text,category
+"My account verification code expired before I could finish signing in.",access
+"Please remove the old phone from my profile; it blocks me from opening the workspace.",access
+"The receipt lists a higher tax amount than the total shown at checkout.",billing
+"Can you explain why my plan renewed when I thought I had switched to the monthly option?",billing
+"The desktop app closes whenever I attach a spreadsheet to a new request.",technical
+"Our office router is online, but the support portal keeps timing out on every browser.",technical
