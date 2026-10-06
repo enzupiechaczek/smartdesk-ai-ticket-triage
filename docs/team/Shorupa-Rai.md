@@ -2,4 +2,5 @@
 
 - GitHub: @ShorupaRai
 - Role: EARTech IT Intern
-- Group: A2
+- Group: B
+- Want to learn more about QA
