@@ -73,13 +73,13 @@ Your prompt should now start with `(.venv)`. In every new terminal, activate the
 
 ### 3. Start the server
 
-to launch the frontend:
-```python
+To launch the frontend:
+
+```bash
 python -m http.server 8000 -d frontend
 ```
 
-to launch the backend:
-from the repository root:
+To launch the backend, from the repository root:
 
 **Windows:** `python backend/app.py`
 **Mac / Linux:** `python3 backend/app.py`
@@ -96,7 +96,99 @@ Open http://127.0.0.1:5000/api/health in a browser. You should see:
 
 Stop the server with `Ctrl+C`.
 
-### Troubleshooting
+## API routes
+
+| Method | Route          | What it does                                     |
+| ------ | -------------- | ------------------------------------------------ |
+| GET    | `/api/health`  | Checks that the server is running                |
+| GET    | `/api/tickets` | Returns every saved ticket, newest first         |
+| POST   | `/api/tickets` | Validates a new ticket, classifies it, saves it  |
+
+### `GET /api/health`
+
+A quick check that the Flask server is up.
+
+**Response `200 OK`**
+
+```json
+{ "status": "ok", "service": "SmartDesk local API" }
+```
+
+### `GET /api/tickets`
+
+Returns all tickets stored in SQLite as a list. Returns an empty list `[]` if there are no tickets yet.
+
+**Response `200 OK`**
+
+```json
+[
+  {
+    "id": 2,
+    "subject": "Cannot log in",
+    "description": "My password reset link has expired.",
+    "category": "access",
+    "confidence": 0.91,
+    "priority": "normal",
+    "created_at": "2026-10-07T07:15:42.120000+00:00"
+  }
+]
+```
+
+### `POST /api/tickets`
+
+Creates a new ticket.
+
+**Request body**
+
+```json
+{
+  "subject": "Cannot log in",
+  "description": "My password reset link has expired."
+}
+```
+
+| Field         | Type   | Rules                         |
+| ------------- | ------ | ----------------------------- |
+| `subject`     | string | Required, 1–100 characters    |
+| `description` | string | Required, 1–500 characters    |
+
+**Response `201 Created`**
+
+```json
+{
+  "id": 3,
+  "subject": "Cannot log in",
+  "description": "My password reset link has expired.",
+  "category": "access",
+  "confidence": 0.91,
+  "priority": "normal",
+  "created_at": "2026-10-07T07:20:05.481000+00:00"
+}
+```
+
+**Response `400 Bad Request`** — returned when a field is missing, empty, or too long:
+
+```json
+{ "error": "Subject is required (max 100 characters)" }
+```
+
+```json
+{ "error": "Description is required (max 500 characters)" }
+```
+
+### Ticket fields
+
+| Field         | Type    | Meaning                                                      |
+| ------------- | ------- | ------------------------------------------------------------ |
+| `id`          | integer | Unique ticket number, set by the database                    |
+| `subject`     | string  | Short title written by the user                              |
+| `description` | string  | Details of the problem                                       |
+| `category`    | string  | Predicted by the model: `access`, `billing` or `technical`   |
+| `confidence`  | number  | How sure the model is, from 0 to 1                           |
+| `priority`    | string  | `urgent` or `normal`                                         |
+| `created_at`  | string  | When the ticket was created (ISO 8601, UTC)                  |
+
+## Troubleshooting
 
 - **PowerShell blocks the activate script:** run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use `.venv\Scripts\activate.bat` in cmd.
 - **`No module named 'flask'`:** the environment isn't active. Activate it and run `pip install -r backend/requirements.txt` again.
