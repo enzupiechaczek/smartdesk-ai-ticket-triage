@@ -119,6 +119,8 @@ python -m unittest discover -s tests -v
 | GET    | `/api/tickets` | Returns every saved ticket, newest first         |
 | POST   | `/api/tickets` | Validates a new ticket, classifies it, saves it  |
 
+> **Note:** The `category` and `confidence` values in the examples below are illustrative. They show the intended output of the trained model. Until that model replaces the temporary stub in [ai/predictor.py](ai/predictor.py), every ticket is returned as `"category": "technical"` with `"confidence": 0.5`.
+
 ### `GET /api/health`
 
 A quick check that the Flask server is up.
@@ -133,7 +135,7 @@ A quick check that the Flask server is up.
 
 Returns all tickets stored in SQLite as a list. Returns an empty list `[]` if there are no tickets yet.
 
-**Response `200 OK`**
+**Response `200 OK`** (illustrative values, see the note above)
 
 ```json
 [
@@ -167,7 +169,7 @@ Creates a new ticket.
 | `subject`     | string | Required, 1–100 characters    |
 | `description` | string | Required, 1–500 characters    |
 
-**Response `201 Created`**
+**Response `201 Created`** (illustrative values, see the note above)
 
 ```json
 {
