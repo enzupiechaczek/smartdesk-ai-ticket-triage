@@ -7,6 +7,10 @@ ticket_text,category
 The invitation to join the workspace has expired. Please send me a new one.,access
 "My role is read-only, but I need permission to edit tickets.",access
 "The verification code is not being accepted, so I cannot enter the account.",access
+"cant log in, fix pls",access
+"I need my 2fa reset and also your UI looks completely glitched on mobile",access
+"My accout is loocked after 3 attemptss",access
+"My card payment went through fine, but I still cannot view the admin settings page due to unauthorized role error",access
 "I canceled before renewal but was still charged. Please refund me.",billing
 "My renewal payment was declined. How do I update my payment method?",billing
 Please send me a receipt for my most recent payment.,billing
@@ -15,6 +19,10 @@ I was charged twice for the same month. Please reverse the extra payment.,billin
 My invoice lists five seats but my plan includes only two.,billing
 The refund you approved has not appeared on my card statement.,billing
 "I upgraded mid-month and do not understand the prorated charge.",billing
+Refund pls,billing
+"I got billed 49 usd insted of 29, pleaze fix invoyce",billing
+"I can sign into the workspace without issue, but the system billed our company credit card twice for this month",billing
+"The app keeps freezing on checkout, but my main problem is my card was already charged without creating a receipt",billing
 "The application becomes unresponsive when I try to upload a file.",technical
 "An error appears whenever I attempt to save my changes.",technical
 "The dashboard loads slowly and sometimes stops before displaying the full page.",technical
@@ -23,3 +31,7 @@ The refund you approved has not appeared on my card statement.,billing
 "Some settings are not being saved after I update them.",technical
 "The system displays an error when I open the activity section.",technical
 "The search tool is returning no results even for entries that should exist.",technical
+App crash,technical
+"The downlaod botton throwss a 500 internal serer errror",technical
+"I got locked out yesterday because the server throws a 502 bad gateway on the backend api whenever it tries to fetch records",technical
+"We updated our billing card details successfully, but the data export script hangs indefinitely at 99%",technical
