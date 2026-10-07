@@ -46,8 +46,12 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ```bash
 git clone <repository-url>
 cd <repository-folder>
-git checkout main
 ```
+
+Then check out the branch that matches what you want to run:
+
+- **Testing this work before it is merged:** `git checkout A1-merge-branch`. This is the A1 feature branch. It merges into the `a1-day2` integration branch first, and into `main` later.
+- **After the work has been merged into `main`:** `git checkout main`.
 
 ### 2. Create the virtual environment (first time only)
 
@@ -108,8 +112,10 @@ To stop the servers, press `Ctrl+C` in each terminal.
 With the virtual environment active, from the repository root:
 
 ```bash
-python -m unittest discover -s tests -v
+python -m unittest discover -s backend -p "test_api.py" -v
 ```
+
+The current API validation tests live in [backend/test_api.py](backend/test_api.py).
 
 ## API routes
 
