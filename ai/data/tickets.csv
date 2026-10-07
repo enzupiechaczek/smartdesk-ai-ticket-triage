@@ -1,28 +1,25 @@
 ticket_text,category
-"""I was charged twice for the same monthly subscription."",billing 
-""My invoice shows a tax amount that I do not understand."",billing 
-""Can you explain why my latest bill is higher than usual?"",billing 
-""I need a copy of my receipt for last month's payment."",billing 
-""My credit card was declined even though it works elsewhere."",billing 
-""I want to change the payment method on my account."",billing 
-""I was charged after I canceled my subscription."",billing 
-""How can I update the billing address on my invoices?"",billing 
-""The payment went through, but my account still says the invoice is unpaid."",billing 
-""I cannot upload files larger than 10 MB even though my plan should allow it."",support 
-""The dashboard keeps loading and never displays my reports."",support 
-""Notifications stopped appearing on my desktop this morning."",support 
-""The mobile app crashes whenever I open the settings page."",support 
-""My exported CSV file contains missing rows."",technical_support 
-""Search results are not matching the keywords I enter."",support 
-""The website is showing a blank page after I click Save."",support 
-""Our team's shared folder is not syncing with the latest changes."",support 
-""The API request returns a timeout when we upload a large batch."",support 
-""I forgot my password and cannot sign in."",access 
-""The password reset email never arrived in my inbox."",access 
-""My account was locked after several failed login attempts."",access 
-""I changed my phone number and cannot receive the verification code."",access 
-""Two-factor authentication is sending codes to an old device."",access 
-""I need help changing the email address associated with my account."",access 
-""I was signed out of all devices and cannot remember my recovery options."",access 
-""The verification link says it has expired."",access 
-""I cannot log in because the security challenge keeps failing."",access"
+"I cannot sign in to the portal, even though my password appears to be correct.",access
+"The login page keeps rejecting my credentials after I reset the password.",access
+"I am unable to open my account because the verification step never completes.",access
+"Access to my workspace stopped working after I signed in this morning.",access
+"Please help me regain access to the dashboard after being locked out.",access
+"The account sign-in screen returns an error whenever I try to continue.",access
+"I can log in successfully, but the main account area remains unavailable.",access
+"The verification code is not being accepted, so I cannot enter the account.",access
+"The invoice total looks different from what I expected, and I need an explanation.",billing
+"I was charged an unexpected fee on the latest invoice.",billing
+"Could you clarify why the amount shown on my billing statement is higher this time?",billing
+"The billing document has an incorrect charge that I would like reviewed.",billing
+"I need help understanding a line item listed on my invoice.",billing
+"The invoice appears to include a charge that does not match the details I received.",billing
+"Please check the calculation on my latest billing statement because the total seems incorrect.",billing
+"I noticed a discrepancy in the billed amount and would appreciate an explanation.",billing
+"The application becomes unresponsive when I try to upload a file.",technical
+"An error appears whenever I attempt to save my changes.",technical
+"The dashboard loads slowly and sometimes stops before displaying the full page.",technical
+"I am seeing a blank screen instead of the expected report.",technical
+"The export function fails before the file is created.",technical
+"Some settings are not being saved after I update them.",technical
+"The system displays an error when I open the activity section.",technical
+"The search tool is returning no results even for entries that should exist.",technical
