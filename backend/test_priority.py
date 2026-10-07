@@ -1,4 +1,4 @@
-"""Tests for the priority rule documented in docs/priority_rules.md.
+"""Tests for the priority rule documented in docs/priority.md.
 
 Run from the repository root:  python -m unittest discover -s backend -p "test_*.py" -v
 """
@@ -14,7 +14,7 @@ from priority import compute_priority
 
 class ComputePriorityTests(unittest.TestCase):
     def test_documented_examples(self):
-        # The "Examples for Group B" table in docs/priority_rules.md.
+        # The "Examples for Group B" table in docs/priority.md.
         cases = [
             ("Login broken", "I cannot access my account", "urgent"),
             ("Server DOWN", "Site unreachable", "urgent"),
