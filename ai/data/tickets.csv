@@ -1,2 +1,25 @@
-
-"""I was charged twice for the same monthly subscription."",billing ""My invoice shows a tax amount that I do not understand."",billing ""Can you explain why my latest bill is higher than usual?"",billing ""I need a copy of my receipt for last month's payment."",billing ""My credit card was declined even though it works elsewhere."",billing ""I want to change the payment method on my account."",billing ""I was charged after I canceled my subscription."",billing ""How can I update the billing address on my invoices?"",billing ""The payment went through, but my account still says the invoice is unpaid."",billing ""I cannot upload files larger than 10 MB even though my plan should allow it."",technical_support ""The dashboard keeps loading and never displays my reports."",technical_support ""Notifications stopped appearing on my desktop this morning."",technical_support ""The mobile app crashes whenever I open the settings page."",technical_support ""My exported CSV file contains missing rows."",technical_support ""Search results are not matching the keywords I enter."",technical_support ""The website is showing a blank page after I click Save."",technical_support ""Our team's shared folder is not syncing with the latest changes."",technical_support ""The API request returns a timeout when we upload a large batch."",technical_support ""I forgot my password and cannot sign in."",account_access ""The password reset email never arrived in my inbox."",account_access ""My account was locked after several failed login attempts."",account_access ""I changed my phone number and cannot receive the verification code."",account_access ""Two-factor authentication is sending codes to an old device."",account_access ""I need help changing the email address associated with my account."",account_access ""I was signed out of all devices and cannot remember my recovery options."",account_access ""The verification link says it has expired."",account_access ""I cannot log in because the security challenge keeps failing."",account_access"
+ticket_text,category
+I am locked out after several sign-in attempts and need my account unlocked.,access
+Could you enable permission for me to view the team dashboard?,access
+I lost my authentication device and cannot complete the two-step sign-in.,access
+The invitation to join the workspace has expired. Please send a fresh invitation.,access
+Our single sign-on provider says my account is not authorized for this workspace.,access
+Please revoke workspace access for a former team member.,access
+The password recovery link says it is already expired. How can I reset my password?,access
+"My role is read-only, but I need permission to edit support tickets.",access
+My invoice lists five seats even though the plan includes only two.,billing
+I canceled before renewal but another subscription payment was taken. Please refund it.,billing
+The approved refund still has not appeared on my payment statement.,billing
+Could you explain the tax added to my latest subscription invoice?,billing
+My renewal payment was declined. How do I update the payment method?,billing
+"I upgraded halfway through the month, and I do not understand the prorated charge.",billing
+Please provide a receipt for the most recent subscription payment.,billing
+Two payments appear for one renewal. Please reverse the extra payment.,billing
+The application becomes unresponsive whenever I preview a large attachment.,technical
+The CSV export leaves out closed tickets even when I select every status.,technical
+Search results keep showing the old ticket title after I rename it.,technical
+"Every notification arrives twice, even though I created only one ticket.",technical
+"After I press Save, my edited ticket description reverts to the previous version.",technical
+The generated report downloads as an empty file. Can you fix the export?,technical
+"Clicking Submit leaves the form unchanged and displays ""Unexpected error"".",technical
+On a narrow mobile screen the navigation menu covers the ticket details.,technical
