@@ -7,12 +7,19 @@ from datetime import datetime, timezone
 from flask import Flask, jsonify, request
 from database import get_connection, init_db
 from ai.predictor import predict_category
+from priority import compute_priority
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
+init_db()
 
 @app.route("/")
 def serve_index():
     return app.send_static_file("index.html")
+
+@app.get("/")
+def index():
+    return app.send_static_file("index.html")
+
 
 @app.get("/api/health")
 def health():
@@ -21,7 +28,7 @@ def health():
 @app.get("/api/tickets")
 def list_tickets():
     with get_connection() as conn:
-        rows = conn.execute("SELECT * FROM tickets ORDER BY id DESC").fetchall()
+        rows = conn.execute("SELECT * FROM tickets ORDER BY CASE priority WHEN 'urgent' THEN 0 ELSE 1 END, id DESC").fetchall()
     return jsonify([dict(r) for r in rows])
 
 
@@ -43,6 +50,7 @@ def create_ticket():
     if not description or len(description) > 500:
         return jsonify({"error": "Description is required (max 500 characters)"}), 400
     prediction = predict_category(subject + ". " + description)
+    priority = compute_priority(subject, description)
     created_at = datetime.now(timezone.utc).isoformat()
     with get_connection() as conn:
         cur = conn.execute(
@@ -53,7 +61,7 @@ def create_ticket():
                 description,
                 prediction["category"],
                 prediction["confidence"],
-                "normal",
+                priority,
                 created_at,
             ),
         )
@@ -66,7 +74,7 @@ def create_ticket():
                 "description": description,
                 "category": prediction["category"],
                 "confidence": prediction["confidence"],
-                "priority": "normal",
+                "priority": priority,
                 "created_at": created_at,
             }
         ),
