@@ -120,6 +120,17 @@ button:hover {
     color: #6b7280;
 }
 
+.card .low-confidence {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #92400e;
+    background: #fef3c7;
+}
+
 .card.urgent {
     border: 2px solid #dc2626;
     border-left-width: 6px;
