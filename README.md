@@ -18,19 +18,6 @@ tests/      Test plan, held-out data, bug template    Group B
 docs/       Architecture, model card, reports         All groups
 ```
 
-## How to run SmartDesk
-
-Please set up a [venv](https://www.w3schools.com/python/python_virtualenv.asp) and source it according to your shell.
-to launch the frontend:
-```python
-python -m http.server 8000 -d frontend
-```
-
-to launch the backend:
-```python
-python backend/app.py
-```
-
 ## How we work
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short version:
@@ -86,7 +73,13 @@ Your prompt should now start with `(.venv)`. In every new terminal, activate the
 
 ### 3. Start the server
 
-From the repository root:
+to launch the frontend:
+```python
+python -m http.server 8000 -d frontend
+```
+
+to launch the backend:
+from the repository root:
 
 **Windows:** `python backend/app.py`
 **Mac / Linux:** `python3 backend/app.py`
