@@ -44,8 +44,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ### 1. Get the code
 
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage
+cd smartdesk-ai-ticket-triage
 ```
 
 Then check out the branch that matches what you want to run:
