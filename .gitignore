@@ -20,3 +20,6 @@ env/
 *.sqlite
 *.sqlite3
 model.joblib
+backend/smartdesk.db
+backend/.venv
+backend/venv

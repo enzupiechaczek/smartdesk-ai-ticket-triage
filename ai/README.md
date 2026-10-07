@@ -1,5 +1,10 @@
 # AI folder
 
+## Ticket categories
+- billing: charges, invoices, payments, subscriptions, receipts and refunds.
+- technical: software errors, freezes, slow pages, uploads, exports and saving problems.
+- access: signing in, passwords, verification codes, account recovery and permissions.
+
 Placeholder. Group A2 explains the categories in task A2-1.1.
 There are 37 ticket description in ticket.csv file.
 ## Training dataset
@@ -30,5 +35,3 @@ These rules guide this draft and still need agreement during teammate peer revie
 Reviewers should check label consistency, distinct wording and tone, CSV quoting, duplicate text, and the absence of real data. Teammate peer review and agreement on the edge-case rules are pending; automated validation does not complete that requirement.
 
 
-## ROW Count
-Currently we have 26 ticket information in ticket.csv file to be processed.
