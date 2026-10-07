@@ -1,3 +1,11 @@
+function formatLocalTime(iso) {
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) {
+        return iso;
+    }
+    return date.toLocaleString();
+}
+
 async function loadTickets() {
     const container = document.getElementById('tickets');
     const response = await fetch('/api/tickets');
@@ -16,13 +24,14 @@ async function loadTickets() {
         desc.textContent = t.description;
         const meta = document.createElement('p');
         meta.className = 'meta';
-        let text = 'Category: ' + t.category + ' (' + Math.round(t.confidence * 100) + '%) | Priority: ' + t.priority + ' | ' + t.created_at;
+        let text = 'Category: ' + t.category + ' (' + Math.round(t.confidence * 100) + '%) | Priority: ' + t.priority + ' | ' + formatLocalTime(t.created_at);
         if (t.confidence < 0.5) {
-            text += ' | Low confidence';
+            text += ' | ⚠️ Low confidence ⚠️';
         }
         meta.textContent = text;
         card.append(title, desc, meta);
         container.appendChild(card);
+
     }
 }
 
@@ -51,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     statusElement.textContent = data.error;
                     return;
                 }
+                const { created_at } = data;
+                console.log(formatLocalTime(created_at));
+                data.created_at = formatLocalTime(created_at);
+
 
                 statusElement.textContent = `Ticket saved. Category: ${data.category}, priority: ${data.priority}.`;
                 ticketForm.reset();

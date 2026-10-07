@@ -12,9 +12,6 @@ from priority import compute_priority
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
 init_db()
 
-@app.route("/")
-def serve_index():
-    return app.send_static_file("index.html")
 
 @app.get("/")
 def index():
@@ -25,10 +22,13 @@ def index():
 def health():
     return jsonify({"status": "ok", "service": "SmartDesk local API"})
 
+
 @app.get("/api/tickets")
 def list_tickets():
     with get_connection() as conn:
-        rows = conn.execute("SELECT * FROM tickets ORDER BY CASE priority WHEN 'urgent' THEN 0 ELSE 1 END, id DESC").fetchall()
+        rows = conn.execute(
+            "SELECT * FROM tickets ORDER BY CASE priority WHEN 'urgent' THEN 0 ELSE 1 END, id DESC"
+        ).fetchall()
     return jsonify([dict(r) for r in rows])
 
 
