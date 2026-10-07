@@ -1,0 +1,196 @@
+{
+  "info": {
+    "_postman_id": "865153a3-2fdc-484c-b82a-d94ea35376df",
+    "name": "SmartDesk API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56205669"
+  },
+  "item": [
+    {
+      "name": "valid-ticket",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"subject\" : \"Unable to access my account\",\r\n    \"description\" : \"I cannot log into my account\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "blank subject",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"subject\" : \"\",\r\n    \"description\" : \"i need tech support cuz i can't use this platform easily\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "blank description",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"subject\":\"Need help with my account settings\",\"description\":\"\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets ",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets "
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "101-character subject",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"subject\" : \"I’m experiencing a technical issue that is preventing the system from working properly. Please investigate and resolve it.\",\r\n    \"description\" : \"i need tech support cuz i can't use this platform easily\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "501-character description",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"subject\" : \"Technical support request\",\r\n    \"description\" : \"I am currently experiencing a technical issue that is affecting the normal operation of the system. The problem occurs unexpectedly and prevents me from completing certain tasks properly. I have already tried restarting the application and checking the basic settings, but the issue still persists. I would appreciate it if the technical team could investigate the problem, identify its cause, and provide a suitable solution as soon as possible. Please let me know if you need any additional information, screenshots, error messages, or steps to reproduce the issue.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "malformed JSON",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"subject\" : \"asdasd\",\r\n    \"description\" :\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "health-check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:5000",
+      "type": "string"
+    }
+  ]
+}
