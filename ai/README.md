@@ -51,3 +51,9 @@ These rules guide this draft and still need agreement during teammate peer revie
 Reviewers should check label consistency, distinct wording and tone, CSV quoting, duplicate text, and the absence of real data. Teammate peer review and agreement on the edge-case rules are pending; automated validation does not complete that requirement.
 
 
+## Setup & Running the Model
+
+> **Note:** Run `python ai/train.py` before starting the server.
+
+The trained model artifact (`ai/model.joblib`) is ignored by version control and must be generated locally before running the server or predictor.
+
