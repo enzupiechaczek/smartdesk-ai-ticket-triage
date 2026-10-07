@@ -1,6 +1,6 @@
 """Validation tests for POST /api/tickets.
 
-Run from the repository root:  python -m unittest discover -s backend -p "test_api.py" -v
+Run from the repository root:  python -m unittest discover -s backend -p "test_*.py" -v
 """
 
 import sys
