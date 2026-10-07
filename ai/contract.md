@@ -9,7 +9,7 @@ Function Signature
 predict_category(text)
 
 Input
-
+      
 text: A plain-text support ticket.
 
 The input should be a string containing the ticket's text.
