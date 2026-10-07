@@ -61,8 +61,8 @@ Run from the repository root.
 
 ```powershell
 python -m venv .venv
-. .venv\Scripts\Activate.ps1
-pip install -r backend/requirements.txt
+. .\backend\.venv\Scripts\Activate.ps1
+pip install -r .\backend\requirements.txt
 ```
 
 **Mac / Linux**
