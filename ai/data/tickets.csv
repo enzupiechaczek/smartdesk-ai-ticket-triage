@@ -1,2 +1,28 @@
-
-"""I was charged twice for the same monthly subscription."",billing ""My invoice shows a tax amount that I do not understand."",billing ""Can you explain why my latest bill is higher than usual?"",billing ""I need a copy of my receipt for last month's payment."",billing ""My credit card was declined even though it works elsewhere."",billing ""I want to change the payment method on my account."",billing ""I was charged after I canceled my subscription."",billing ""How can I update the billing address on my invoices?"",billing ""The payment went through, but my account still says the invoice is unpaid."",billing ""I cannot upload files larger than 10 MB even though my plan should allow it."",technical_support ""The dashboard keeps loading and never displays my reports."",technical_support ""Notifications stopped appearing on my desktop this morning."",technical_support ""The mobile app crashes whenever I open the settings page."",technical_support ""My exported CSV file contains missing rows."",technical_support ""Search results are not matching the keywords I enter."",technical_support ""The website is showing a blank page after I click Save."",technical_support ""Our team's shared folder is not syncing with the latest changes."",technical_support ""The API request returns a timeout when we upload a large batch."",technical_support ""I forgot my password and cannot sign in."",account_access ""The password reset email never arrived in my inbox."",account_access ""My account was locked after several failed login attempts."",account_access ""I changed my phone number and cannot receive the verification code."",account_access ""Two-factor authentication is sending codes to an old device."",account_access ""I need help changing the email address associated with my account."",account_access ""I was signed out of all devices and cannot remember my recovery options."",account_access ""The verification link says it has expired."",account_access ""I cannot log in because the security challenge keeps failing."",account_access"
+ticket_text,category
+"""I was charged twice for the same monthly subscription."",billing 
+""My invoice shows a tax amount that I do not understand."",billing 
+""Can you explain why my latest bill is higher than usual?"",billing 
+""I need a copy of my receipt for last month's payment."",billing 
+""My credit card was declined even though it works elsewhere."",billing 
+""I want to change the payment method on my account."",billing 
+""I was charged after I canceled my subscription."",billing 
+""How can I update the billing address on my invoices?"",billing 
+""The payment went through, but my account still says the invoice is unpaid."",billing 
+""I cannot upload files larger than 10 MB even though my plan should allow it."",support 
+""The dashboard keeps loading and never displays my reports."",support 
+""Notifications stopped appearing on my desktop this morning."",support 
+""The mobile app crashes whenever I open the settings page."",support 
+""My exported CSV file contains missing rows."",technical_support 
+""Search results are not matching the keywords I enter."",support 
+""The website is showing a blank page after I click Save."",support 
+""Our team's shared folder is not syncing with the latest changes."",support 
+""The API request returns a timeout when we upload a large batch."",support 
+""I forgot my password and cannot sign in."",access 
+""The password reset email never arrived in my inbox."",access 
+""My account was locked after several failed login attempts."",access 
+""I changed my phone number and cannot receive the verification code."",access 
+""Two-factor authentication is sending codes to an old device."",access 
+""I need help changing the email address associated with my account."",access 
+""I was signed out of all devices and cannot remember my recovery options."",access 
+""The verification link says it has expired."",access 
+""I cannot log in because the security challenge keeps failing."",access"
