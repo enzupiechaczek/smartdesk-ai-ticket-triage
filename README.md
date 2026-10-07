@@ -55,8 +55,12 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ```bash
 git clone <repository-url>
 cd <repository-folder>
-git checkout a1-day1-foundation
 ```
+
+Then check out the branch that matches what you want to run:
+
+- **Testing this work before it is merged:** `git checkout A1-merge-branch`. This is the A1 feature branch. It merges into the `a1-day2` integration branch first, and into `main` later.
+- **After the work has been merged into `main`:** `git checkout main`.
 
 ### 2. Create the virtual environment (first time only)
 
@@ -80,14 +84,27 @@ pip install -r backend/requirements.txt
 
 Your prompt should now start with `(.venv)`. In every new terminal, activate the environment again before starting the server.
 
-### 3. Start the server
+### 3. Start the backend and the frontend
 
-From the repository root:
+The backend and the frontend are two separate servers. Run each one in its **own terminal**, from the repository root, and leave both terminals open while you use the app.
+
+**Terminal 1: backend (Flask API)**
+
+Activate the virtual environment first (see step 2), then run:
 
 **Windows:** `python backend/app.py`
 **Mac / Linux:** `python3 backend/app.py`
 
-You should see `Running on http://127.0.0.1:5000`. Leave the terminal open.
+You should see `Running on http://127.0.0.1:5000`.
+
+**Terminal 2: frontend (web page)**
+
+Open a second terminal, go to the repository root, and run:
+
+**Windows:** `python -m http.server 8000 -d frontend`
+**Mac / Linux:** `python3 -m http.server 8000 -d frontend`
+
+Then open http://127.0.0.1:8000 in a browser.
 
 ### 4. Check it works
 
@@ -97,9 +114,125 @@ Open http://127.0.0.1:5000/api/health in a browser. You should see:
 { "service": "SmartDesk local API", "status": "ok" }
 ```
 
-Stop the server with `Ctrl+C`.
+To stop the servers, press `Ctrl+C` in each terminal.
 
-### Troubleshooting
+### 5. Run the tests
+
+With the virtual environment active, from the repository root:
+
+```bash
+python -m unittest discover -s backend -p "test_api.py" -v
+```
+
+The current API validation tests live in [backend/test_api.py](backend/test_api.py).
+
+## API routes
+
+| Method | Route          | What it does                                     |
+| ------ | -------------- | ------------------------------------------------ |
+| GET    | `/api/health`  | Checks that the server is running                |
+| GET    | `/api/tickets` | Returns every saved ticket, newest first         |
+| POST   | `/api/tickets` | Validates a new ticket, classifies it, saves it  |
+
+> **Note:** The `category` and `confidence` values in the examples below are illustrative. They show the intended output of the trained model. Until that model replaces the temporary stub in [ai/predictor.py](ai/predictor.py), every ticket is returned as `"category": "technical"` with `"confidence": 0.5`.
+
+### `GET /api/health`
+
+A quick check that the Flask server is up.
+
+**Response `200 OK`**
+
+```json
+{ "status": "ok", "service": "SmartDesk local API" }
+```
+
+### `GET /api/tickets`
+
+Returns all tickets stored in SQLite as a list. Returns an empty list `[]` if there are no tickets yet.
+
+**Response `200 OK`** (illustrative values, see the note above)
+
+```json
+[
+  {
+    "id": 2,
+    "subject": "Cannot log in",
+    "description": "My password reset link has expired.",
+    "category": "access",
+    "confidence": 0.91,
+    "priority": "normal",
+    "created_at": "2026-10-07T07:15:42.120000+00:00"
+  }
+]
+```
+
+### `POST /api/tickets`
+
+Creates a new ticket.
+
+**Request body**
+
+```json
+{
+  "subject": "Cannot log in",
+  "description": "My password reset link has expired."
+}
+```
+
+| Field         | Type   | Rules                         |
+| ------------- | ------ | ----------------------------- |
+| `subject`     | string | Required, 1–100 characters    |
+| `description` | string | Required, 1–500 characters    |
+
+**Response `201 Created`** (illustrative values, see the note above)
+
+```json
+{
+  "id": 3,
+  "subject": "Cannot log in",
+  "description": "My password reset link has expired.",
+  "category": "access",
+  "confidence": 0.91,
+  "priority": "normal",
+  "created_at": "2026-10-07T07:20:05.481000+00:00"
+}
+```
+
+**Response `400 Bad Request`**: returned when the body is not a JSON object, or when a field is missing, not a string, empty, or too long. Arrays, `null`, numbers and other non-object bodies are rejected. The `error` message is one of:
+
+```json
+{ "error": "Request body must be a JSON object" }
+```
+
+```json
+{ "error": "Subject must be a string" }
+```
+
+```json
+{ "error": "Description must be a string" }
+```
+
+```json
+{ "error": "Subject is required (max 100 characters)" }
+```
+
+```json
+{ "error": "Description is required (max 500 characters)" }
+```
+
+### Ticket fields
+
+| Field         | Type    | Meaning                                                      |
+| ------------- | ------- | ------------------------------------------------------------ |
+| `id`          | integer | Unique ticket number, set by the database                    |
+| `subject`     | string  | Short title written by the user                              |
+| `description` | string  | Details of the problem                                       |
+| `category`    | string  | Predicted by the model: `access`, `billing` or `technical`   |
+| `confidence`  | number  | How sure the model is, from 0 to 1                           |
+| `priority`    | string  | `urgent` or `normal`                                         |
+| `created_at`  | string  | When the ticket was created (ISO 8601, UTC)                  |
+
+## Troubleshooting
 
 - **PowerShell blocks the activate script:** run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use `.venv\Scripts\activate.bat` in cmd.
 - **`No module named 'flask'`:** the environment isn't active. Activate it and run `pip install -r backend/requirements.txt` again.
