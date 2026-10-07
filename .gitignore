@@ -20,4 +20,5 @@ env/
 *.sqlite
 *.sqlite3
 model.joblib
+
 tests/held_out_tickets.csv
