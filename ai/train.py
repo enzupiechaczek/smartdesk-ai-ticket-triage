@@ -41,7 +41,7 @@ for text, true, guess in zip(X_test, y_test, pred):
 # 4b. More reliable estimate: 5-fold stratified cross-validation on all rows
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 scores = cross_val_score(model, texts, labels, cv=cv, scoring="accuracy")
-print("Cross-validation accuracy per fold:", [round(s, 3) for s in scores])
+print("Cross-validation accuracy per fold:", [round(float(s), 3) for s in scores])
 print("Cross-validation mean accuracy: %.3f (+/- %.3f)" % (scores.mean(), scores.std()))
 
 
