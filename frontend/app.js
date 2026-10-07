@@ -8,8 +8,17 @@ function formatLocalTime(iso) {
 
 async function loadTickets() {
     const container = document.getElementById('tickets');
-    const response = await fetch('/api/tickets');
-    const tickets = await response.json();
+    let tickets;
+    try {
+        const response = await fetch('/api/tickets');
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+        tickets = await response.json();
+    } catch (error) {
+        container.textContent = 'Could not load tickets. Please refresh the page.';
+        return;
+    }
     container.textContent = '';
     if (tickets.length === 0) {
         container.textContent = 'No tickets yet.';
