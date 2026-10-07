@@ -1,5 +1,10 @@
 # AI folder
 
+## Ticket categories
+- billing: charges, invoices, payments, subscriptions, receipts and refunds.
+- technical: software errors, freezes, slow pages, uploads, exports and saving problems.
+- access: signing in, passwords, verification codes, account recovery and permissions.
+
 ## Training dataset
 
 `data/tickets.csv` contains 24 independently written synthetic support tickets: eight `access`, eight `billing`, and eight `technical`. The two columns are `ticket_text,category`; labels are lowercase, text containing commas is enclosed in double quotes, and embedded double quotes are doubled.
@@ -26,3 +31,5 @@ These rules guide this draft and still need agreement during teammate peer revie
 ## Peer review
 
 Reviewers should check label consistency, distinct wording and tone, CSV quoting, duplicate text, and the absence of real data. Teammate peer review and agreement on the edge-case rules are pending; automated validation does not complete that requirement.
+
+

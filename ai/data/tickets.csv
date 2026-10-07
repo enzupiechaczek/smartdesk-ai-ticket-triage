@@ -1,25 +1,25 @@
 ticket_text,category
-I am locked out after several sign-in attempts and need my account unlocked.,access
-Could you enable permission for me to view the team dashboard?,access
-I lost my authentication device and cannot complete the two-step sign-in.,access
-The invitation to join the workspace has expired. Please send a fresh invitation.,access
-Our single sign-on provider says my account is not authorized for this workspace.,access
-Please revoke workspace access for a former team member.,access
-The password recovery link says it is already expired. How can I reset my password?,access
-"My role is read-only, but I need permission to edit support tickets.",access
-My invoice lists five seats even though the plan includes only two.,billing
-I canceled before renewal but another subscription payment was taken. Please refund it.,billing
-The approved refund still has not appeared on my payment statement.,billing
-Could you explain the tax added to my latest subscription invoice?,billing
-My renewal payment was declined. How do I update the payment method?,billing
-"I upgraded halfway through the month, and I do not understand the prorated charge.",billing
-Please provide a receipt for the most recent subscription payment.,billing
-Two payments appear for one renewal. Please reverse the extra payment.,billing
-The application becomes unresponsive whenever I preview a large attachment.,technical
-The CSV export leaves out closed tickets even when I select every status.,technical
-Search results keep showing the old ticket title after I rename it.,technical
-"Every notification arrives twice, even though I created only one ticket.",technical
-"After I press Save, my edited ticket description reverts to the previous version.",technical
-The generated report downloads as an empty file. Can you fix the export?,technical
-"Clicking Submit leaves the form unchanged and displays ""Unexpected error"".",technical
-On a narrow mobile screen the navigation menu covers the ticket details.,technical
+"I cannot sign in to the portal, even though my password appears to be correct.",access
+"The login page keeps rejecting my credentials after I reset the password.",access
+"I am unable to open my account because the verification step never completes.",access
+"Access to my workspace stopped working after I signed in this morning.",access
+"Please help me regain access to the dashboard after being locked out.",access
+The invitation to join the workspace has expired. Please send me a new one.,access
+"My role is read-only, but I need permission to edit tickets.",access
+"The verification code is not being accepted, so I cannot enter the account.",access
+"I canceled before renewal but was still charged. Please refund me.",billing
+"My renewal payment was declined. How do I update my payment method?",billing
+Please send me a receipt for my most recent payment.,billing
+Why was tax added to my latest invoice?,billing
+I was charged twice for the same month. Please reverse the extra payment.,billing
+My invoice lists five seats but my plan includes only two.,billing
+The refund you approved has not appeared on my card statement.,billing
+"I upgraded mid-month and do not understand the prorated charge.",billing
+"The application becomes unresponsive when I try to upload a file.",technical
+"An error appears whenever I attempt to save my changes.",technical
+"The dashboard loads slowly and sometimes stops before displaying the full page.",technical
+"I am seeing a blank screen instead of the expected report.",technical
+"The export function fails before the file is created.",technical
+"Some settings are not being saved after I update them.",technical
+"The system displays an error when I open the activity section.",technical
+"The search tool is returning no results even for entries that should exist.",technical
