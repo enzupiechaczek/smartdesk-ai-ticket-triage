@@ -46,7 +46,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ```bash
 git clone <repository-url>
 cd <repository-folder>
-git checkout a1-day1-foundation
+git checkout main
 ```
 
 ### 2. Create the virtual environment (first time only)
@@ -71,20 +71,27 @@ pip install -r backend/requirements.txt
 
 Your prompt should now start with `(.venv)`. In every new terminal, activate the environment again before starting the server.
 
-### 3. Start the server
+### 3. Start the backend and the frontend
 
-To launch the frontend:
+The backend and the frontend are two separate servers. Run each one in its **own terminal**, from the repository root, and leave both terminals open while you use the app.
 
-```bash
-python -m http.server 8000 -d frontend
-```
+**Terminal 1: backend (Flask API)**
 
-To launch the backend, from the repository root:
+Activate the virtual environment first (see step 2), then run:
 
 **Windows:** `python backend/app.py`
 **Mac / Linux:** `python3 backend/app.py`
 
-You should see `Running on http://127.0.0.1:5000`. Leave the terminal open.
+You should see `Running on http://127.0.0.1:5000`.
+
+**Terminal 2: frontend (web page)**
+
+Open a second terminal, go to the repository root, and run:
+
+**Windows:** `python -m http.server 8000 -d frontend`
+**Mac / Linux:** `python3 -m http.server 8000 -d frontend`
+
+Then open http://127.0.0.1:8000 in a browser.
 
 ### 4. Check it works
 
@@ -94,7 +101,15 @@ Open http://127.0.0.1:5000/api/health in a browser. You should see:
 { "service": "SmartDesk local API", "status": "ok" }
 ```
 
-Stop the server with `Ctrl+C`.
+To stop the servers, press `Ctrl+C` in each terminal.
+
+### 5. Run the tests
+
+With the virtual environment active, from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+```
 
 ## API routes
 
@@ -166,7 +181,19 @@ Creates a new ticket.
 }
 ```
 
-**Response `400 Bad Request`** — returned when a field is missing, empty, or too long:
+**Response `400 Bad Request`**: returned when the body is not a JSON object, or when a field is missing, not a string, empty, or too long. Arrays, `null`, numbers and other non-object bodies are rejected. The `error` message is one of:
+
+```json
+{ "error": "Request body must be a JSON object" }
+```
+
+```json
+{ "error": "Subject must be a string" }
+```
+
+```json
+{ "error": "Description must be a string" }
+```
 
 ```json
 { "error": "Subject is required (max 100 characters)" }

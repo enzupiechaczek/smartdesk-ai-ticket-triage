@@ -26,9 +26,17 @@ def list_tickets():
 
 @app.post("/api/tickets")
 def create_ticket():
-    data = request.get_json(silent=True) or {}
-    subject = str(data.get("subject", "")).strip()
-    description = str(data.get("description", "")).strip()
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Request body must be a JSON object"}), 400
+    subject = data.get("subject")
+    description = data.get("description")
+    if not isinstance(subject, str):
+        return jsonify({"error": "Subject must be a string"}), 400
+    if not isinstance(description, str):
+        return jsonify({"error": "Description must be a string"}), 400
+    subject = subject.strip()
+    description = description.strip()
     if not subject or len(subject) > 100:
         return jsonify({"error": "Subject is required (max 100 characters)"}), 400
     if not description or len(description) > 500:
