@@ -24,12 +24,14 @@ async function loadTickets() {
         desc.textContent = t.description;
         const meta = document.createElement('p');
         meta.className = 'meta';
-        let text = 'Category: ' + t.category + ' (' + Math.round(t.confidence * 100) + '%) | Priority: ' + t.priority + ' | ' + formatLocalTime(t.created_at);
-        if (t.confidence < 0.5) {
-            text += ' | ⚠️ Low confidence ⚠️';
-        }
-        meta.textContent = text;
+        meta.textContent = 'Category: ' + t.category + ' (' + Math.round(t.confidence * 100) + '%) | Priority: ' + t.priority + ' | ' + formatLocalTime(t.created_at);
         card.append(title, desc, meta);
+        if (t.confidence < 0.5) {
+            const flag = document.createElement('p');
+            flag.className = 'low-confidence';
+            flag.textContent = '⚠️ Low confidence ⚠️';
+            card.appendChild(flag);
+        }
         container.appendChild(card);
 
     }
