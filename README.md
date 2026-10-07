@@ -21,10 +21,22 @@ docs/       Architecture, model card, reports         All groups
 ## How to run SmartDesk
 
 Please set up a [venv](https://www.w3schools.com/python/python_virtualenv.asp) and source it according to your shell.
+first, initialize venv
 
-to launch the backend:
+on Macos/Linux
 ```python
+python3 -m venv ./backend/.venv
+source ./backend/.venv/bin/activate
+pip install -r ./backend/requirements.txt 
 python backend/app.py
+```
+
+on windows (powershell)
+```
+python -m venv .\backend\.venv
+. .\backend\.venv\bin\Activate.ps1 
+pip install -r .\backend\requirements.txt 
+python backend\app.py
 ```
 
 ## How we work
@@ -70,7 +82,7 @@ Run from the repository root.
 
 ```powershell
 python -m venv .venv
-.venv\Scripts\Activate.ps1
+. .venv\Scripts\Activate.ps1
 pip install -r backend/requirements.txt
 ```
 
