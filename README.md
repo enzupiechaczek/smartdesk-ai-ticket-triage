@@ -46,12 +46,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ```bash
 git clone <repository-url>
 cd <repository-folder>
+git checkout main
 ```
-
-Then check out the branch that matches what you want to run:
-
-
-- **After the work has been merged into `main`:** `git checkout main`.
 
 ### 2. Create the virtual environment (first time only)
 
@@ -61,8 +57,8 @@ Run from the repository root.
 
 ```powershell
 python -m venv .venv
-. .\backend\.venv\Scripts\Activate.ps1
-pip install -r .\backend\requirements.txt
+.venv\Scripts\Activate.ps1
+pip install -r backend\requirements.txt
 ```
 
 **Mac / Linux**
@@ -94,7 +90,7 @@ Open http://127.0.0.1:5000/api/health in a browser. You should see:
 { "service": "SmartDesk local API", "status": "ok" }
 ```
 
-To stop the server, press `Ctrl+C` in its terminal.
+To stop the server, press `Ctrl+C` in the terminal.
 
 ### 5. Run the tests
 
