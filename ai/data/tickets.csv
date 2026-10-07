@@ -7,14 +7,7 @@ Our single sign-on provider says my account is not authorized for this workspace
 Please revoke workspace access for a former team member.,access
 The password recovery link says it is already expired. How can I reset my password?,access
 "My role is read-only, but I need permission to edit support tickets.",access
-My invoice lists five seats even though the plan includes only two.,billing
-I canceled before renewal but another subscription payment was taken. Please refund it.,billing
-The approved refund still has not appeared on my payment statement.,billing
-Could you explain the tax added to my latest subscription invoice?,billing
-My renewal payment was declined. How do I update the payment method?,billing
 "I upgraded halfway through the month, and I do not understand the prorated charge.",billing
-Please provide a receipt for the most recent subscription payment.,billing
-Two payments appear for one renewal. Please reverse the extra payment.,billing
 The application becomes unresponsive whenever I preview a large attachment.,technical
 The CSV export leaves out closed tickets even when I select every status.,technical
 Search results keep showing the old ticket title after I rename it.,technical
@@ -30,9 +23,5 @@ accnt locked after tries,access
 2fa code missing + locked out,access
 cant login typo in email,access
 billing info wrong + need password change,billing
-charged twice and cant login,billing
-subscrption cancel + update card,subscription
-payment failed and account locked,billing
 accnt disabled + forgot pass,access
-think hacked and cant signin,security
 login issue + need 2fa setup,access

@@ -31,4 +31,4 @@ Reviewers should check label consistency, distinct wording and tone, CSV quoting
 
 
 ## ROW Count
-Currently we have 36 ticket information in ticket.csv file to be processed.
+Currently we have 26 ticket information in ticket.csv file to be processed.
