@@ -44,14 +44,9 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ### 1. Get the code
 
 ```bash
-git clone https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage
-cd smartdesk-ai-ticket-triage
+git clone <repository-url>
+cd <repository-folder>
 ```
-
-Then check out the branch that matches what you want to run:
-
-
-- **After the work has been merged into `main`:** `git checkout main`.
 
 ### 2. Create the virtual environment (first time only)
 
@@ -94,7 +89,7 @@ Open http://127.0.0.1:5000/api/health in a browser. You should see:
 { "service": "SmartDesk local API", "status": "ok" }
 ```
 
-To stop the server, press `Ctrl+C` in its terminal.
+To stop the server, press `Ctrl+C` in the terminal.
 
 ### 5. Run the tests
 
