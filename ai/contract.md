@@ -1,28 +1,38 @@
-# Model contract
-
 # SmartDesk Prediction Contract
 
 ## Function
 
-`predict_category(text)`
+`predict_category(text)` classifies plain ticket text into one of three categories and returns a confidence score.
 
-The function takes plain ticket text as input and returns a dictionary containing the predicted category and confidence score.
+## Input
 
-### Input
+- `text`: a plain-text string containing the support ticket. No extra metadata is needed.
 
-- `text`: Plain text string representing the support ticket.
+## Output
 
-### Output
+A dictionary with exactly these two keys:
 
-A dictionary with:
-
-- `category`: String, strictly one of `"access"`, `"billing"`, or `"technical"`.
-- `confidence`: Float from `0.0` to `1.0` representing prediction confidence.
+- `category`: a string, exactly one of `"access"`, `"billing"` or `"technical"`.
+- `confidence`: a number from 0 to 1, inclusive. A higher number means more certainty.
 
 Example:
 
 ```python
-{
-    "category": "technical",
-    "confidence": 0.5
-}
+{"category": "access", "confidence": 0.95}
+```
+
+## Categories
+
+- access: login, password, authentication, verification or account recovery problems.
+- billing: payments, invoices, charges, subscriptions, receipts or refunds.
+- technical: software errors, application behaviour, performance, uploads, downloads or other technical problems.
+
+## Rules
+
+- It works fully offline.
+- It never calls Azure, OpenAI or any paid service.
+- It never requires an API key.
+
+## Temporary stub
+
+Until the trained model replaces it on Day 2, `predict_category` always returns `technical` with confidence `0.5`.
