@@ -1,1 +1,48 @@
-<!-- Placeholder. Group A1 builds this page in task A1-1.2. -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartDesk</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <main class="container">
+        <header>
+            <h1>SmartDesk</h1>
+            <p class="tagline">SmartDesk is a streamlined support desk for logging, tracking, and resolving user issues
+                efficiently.</p>
+        </header>
+
+        <section class="form-section">
+            <form id="ticket-form">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" maxlength="100" required
+                        placeholder="Brief summary of the issue">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="5" maxlength="500" required
+                        placeholder="Provide relevant details about your request..."></textarea>
+                </div>
+
+                <button type="submit">Submit Ticket</button>
+            </form>
+
+            <p id="status"></p>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Ticket Dashboard</h2>
+            <div id="tickets"></div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

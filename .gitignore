@@ -21,3 +21,6 @@ env/
 *.sqlite3
 model.joblib
 tests/held_out_tickets.csv
+backend/smartdesk.db
+backend/.venv
+backend/venv
