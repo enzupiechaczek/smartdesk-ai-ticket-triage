@@ -18,27 +18,6 @@ tests/      Test plan, held-out data, bug template    Group B
 docs/       Architecture, model card, reports         All groups
 ```
 
-## How to run SmartDesk
-
-Please set up a [venv](https://www.w3schools.com/python/python_virtualenv.asp) and source it according to your shell.
-first, initialize venv
-
-on Macos/Linux
-```python
-python3 -m venv ./backend/.venv
-source ./backend/.venv/bin/activate
-pip install -r ./backend/requirements.txt 
-python backend/app.py
-```
-
-on windows (powershell)
-```
-python -m venv .\backend\.venv
-. .\backend\.venv\bin\Activate.ps1
-pip install -r .\backend\requirements.txt
-python backend\app.py
-```
-
 ## How we work
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short version:
@@ -96,20 +75,16 @@ pip install -r backend/requirements.txt
 
 Your prompt should now start with `(.venv)`. In every new terminal, activate the environment again before starting the server.
 
-### 3. Start the backend and the frontend
+### 3. Start SmartDesk
 
-The backend and the frontend are two separate servers. Run each one in its **own terminal**, from the repository root, and leave both terminals open while you use the app.
-
-**Terminal 1: backend (Flask API)**
-
-Activate the virtual environment first (see step 2), then run:
+Flask serves both the API and the web page, so you only need **one terminal**. From the repository root, with the virtual environment active (see step 2), run:
 
 **Windows:** `python backend/app.py`
 **Mac / Linux:** `python3 backend/app.py`
 
-You should see `Running on http://127.0.0.1:5000`.
+You should see `Running on http://127.0.0.1:5000`. Leave this terminal open while you use the app.
 
-Then open http://127.0.0.1:8000 in a browser.
+Then open **http://127.0.0.1:5000** in a browser. You should see the ticket form and the ticket dashboard.
 
 ### 4. Check it works
 
@@ -119,25 +94,26 @@ Open http://127.0.0.1:5000/api/health in a browser. You should see:
 { "service": "SmartDesk local API", "status": "ok" }
 ```
 
-To stop the servers, press `Ctrl+C` in each terminal.
+To stop the server, press `Ctrl+C` in its terminal.
 
 ### 5. Run the tests
 
 With the virtual environment active, from the repository root:
 
 ```bash
-python -m unittest discover -s backend -p "test_api.py" -v
+python -m unittest discover -s backend -p "test_*.py" -v
 ```
 
-The current API validation tests live in [backend/test_api.py](backend/test_api.py).
+This runs the API validation tests in [backend/test_api.py](backend/test_api.py) and the priority rule tests in [backend/test_priority.py](backend/test_priority.py). The priority rule itself is documented in [docs/priority.md](docs/priority.md).
 
 ## API routes
 
-| Method | Route          | What it does                                     |
-| ------ | -------------- | ------------------------------------------------ |
-| GET    | `/api/health`  | Checks that the server is running                |
-| GET    | `/api/tickets` | Returns every saved ticket, newest first         |
-| POST   | `/api/tickets` | Validates a new ticket, classifies it, saves it  |
+| Method | Route          | What it does                                                |
+| ------ | -------------- | ----------------------------------------------------------- |
+| GET    | `/`            | Serves the SmartDesk web page                               |
+| GET    | `/api/health`  | Checks that the server is running                           |
+| GET    | `/api/tickets` | Returns every saved ticket, urgent first, then newest first |
+| POST   | `/api/tickets` | Validates a new ticket, classifies it, saves it             |
 
 > **Note:** The `category` and `confidence` values in the examples below are illustrative. They show the intended output of the trained model. Until that model replaces the temporary stub in [ai/predictor.py](ai/predictor.py), every ticket is returned as `"category": "technical"` with `"confidence": 0.5`.
 
@@ -153,7 +129,7 @@ A quick check that the Flask server is up.
 
 ### `GET /api/tickets`
 
-Returns all tickets stored in SQLite as a list. Returns an empty list `[]` if there are no tickets yet.
+Returns all tickets stored in SQLite as a list, with `urgent` tickets first and the newest tickets first within each priority. Returns an empty list `[]` if there are no tickets yet.
 
 **Response `200 OK`** (illustrative values, see the note above)
 
