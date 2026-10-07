@@ -34,8 +34,8 @@ python backend/app.py
 on windows (powershell)
 ```
 python -m venv .\backend\.venv
-. .\backend\.venv\bin\Activate.ps1 
-pip install -r .\backend\requirements.txt 
+. .\backend\.venv\bin\Activate.ps1
+pip install -r .\backend\requirements.txt
 python backend\app.py
 ```
 
@@ -71,7 +71,7 @@ cd <repository-folder>
 
 Then check out the branch that matches what you want to run:
 
-- **Testing this work before it is merged:** `git checkout A1-merge-branch`. This is the A1 feature branch. It merges into the `a1-day2` integration branch first, and into `main` later.
+
 - **After the work has been merged into `main`:** `git checkout main`.
 
 ### 2. Create the virtual environment (first time only)
@@ -108,13 +108,6 @@ Activate the virtual environment first (see step 2), then run:
 **Mac / Linux:** `python3 backend/app.py`
 
 You should see `Running on http://127.0.0.1:5000`.
-
-**Terminal 2: frontend (web page)**
-
-Open a second terminal, go to the repository root, and run:
-
-**Windows:** `python -m http.server 8000 -d frontend`
-**Mac / Linux:** `python3 -m http.server 8000 -d frontend`
 
 Then open http://127.0.0.1:8000 in a browser.
 

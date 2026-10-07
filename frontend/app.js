@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 const { created_at } = data;
-                console.log(formatLocalTime(created_at));
                 data.created_at = formatLocalTime(created_at);
 
 
