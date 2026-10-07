@@ -1,13 +1,29 @@
 # AI folder
 
+## Dataset Breakdown
+
+The training dataset `ai/data/tickets.csv` contains 36 synthetic support ticket examples balanced across three categories (12 per class):
+
+- **access**: 12 rows
+- **billing**: 12 rows
+- **technical**: 12 rows
+- **Total**: 36 rows
+
+### Hard Cases Included
+
+- **Multi-topic tickets**: Labeled strictly by the root/primary issue (e.g., tickets mentioning checkout UI bugs vs. unauthorized card charges are routed to `billing` if the underlying request is financial reversal).
+- **Short queries**: e.g., `"cant log in, fix pls"`, `"Refund pls"`, `"App crash"`.
+- **Typo-heavy text**: Real-world phonetics and misspellings (e.g., `"accout is loocked"`, `"invoyce"`, `"downlaod botton throwss"`).
+
 ## Ticket categories
 - billing: charges, invoices, payments, subscriptions, receipts and refunds.
 - technical: software errors, freezes, slow pages, uploads, exports and saving problems.
 - access: signing in, passwords, verification codes, account recovery and permissions.
 
+
 ## Training dataset
 
-`data/tickets.csv` contains 24 independently written synthetic support tickets: eight `access`, eight `billing`, and eight `technical`. The two columns are `ticket_text,category`; labels are lowercase, text containing commas is enclosed in double quotes, and embedded double quotes are doubled.
+`data/tickets.csv` contains 36 independently written synthetic support tickets: twelve  `access`, twelve `billing`, and twelve `technical`. The two columns are `ticket_text,category`; labels are lowercase, text containing commas is enclosed in double quotes, and embedded double quotes are doubled.
 
 All examples are fictional and contain no real names, emails, IDs, or incidents. Group B's held-out examples were not consulted and must remain separate from the training data.
 
@@ -27,6 +43,8 @@ These rules guide this draft and still need agreement during teammate peer revie
 - Missing password recovery or invitation messages are `access`; duplicate routine ticket notifications are `technical`.
 - A request to correct an invoice amount is `billing`; a malfunction when downloading an otherwise correct invoice is `technical`.
 - If a ticket contains unrelated problems with no clear primary request, split it into separate examples or hold it for team review instead of guessing a label.
+- If a ticket mixes two problems, label the main problem the user wants solved. Example: a paid-fine card plus an unauthorized role error is `access`.
+- A sign-in or lockout caused by a server error (for example a 502) is `technical`, because the fix is on the server, not the account.
 
 ## Peer review
 
