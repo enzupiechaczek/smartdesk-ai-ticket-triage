@@ -28,3 +28,7 @@ These rules guide this draft and still need agreement during teammate peer revie
 ## Peer review
 
 Reviewers should check label consistency, distinct wording and tone, CSV quoting, duplicate text, and the absence of real data. Teammate peer review and agreement on the edge-case rules are pending; automated validation does not complete that requirement.
+
+
+## ROW Count
+Currently we have 36 ticket information in ticket.csv file to be processed.
