@@ -3,7 +3,8 @@
 Placeholder. Group B writes the test plan in task B-1.1.
 
 | Test ID | Input | Steps | Expected result | Actual result | Pass/Fail | Evidence |
-| TC-HTMLLikeText-009 | {"subject":"<b>Login Problem</b>","description":"I cannot login to my account. <b>Please help.</b>"} | 1. Navigate to support portal. -> 2. Enter HTML-like text in Subject and Description. -> 3. Click Submit. -> 4. Check the response/UI. | 201 -> {"id","same subject as plain text not html","same description as plain text not html","category","confidence","priority","created_at"} | --- | --- | --- |
+|---|---|---|---|---|---|---|
+| TC-HTMLLikeText-009 | `{"subject":"<b>Login Problem</b>","description":"I cannot login to my account. <b>Please help.</b>"}` | 1. Navigate to support portal.<br>2. Enter HTML-like text in Subject and Description.<br>3. Click Submit.<br>4. Check the response/UI. | Status Code: 201 — The ticket is created successfully. The Subject is stored and displayed as plain text: `<b>Login Problem</b>`. The Description is stored and displayed as plain text, with `<b>Please help.</b>` not rendered as HTML. | --- | --- | --- |
 
 # TASK 2934 - Test unsafe and unusual input
 | Test ID | Input | Steps | Expected result | Actual result | Pass/Fail | Evidence |
