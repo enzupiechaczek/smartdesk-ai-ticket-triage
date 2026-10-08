@@ -14,6 +14,5 @@ def predict_category(text):
         _model = joblib.load(MODEL_PATH)
     probs = _model.predict_proba([text])[0]
     best = probs.argmax()
-    return {"category": str(_model.classes_[best]),
-            "confidence": round(float(probs[best]), 3)}
-            
+    return {"category": str(_model.classes_[best]),"confidence": round(float(probs[best]), 3)}
+    
