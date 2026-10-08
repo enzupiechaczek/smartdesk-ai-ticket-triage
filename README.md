@@ -58,6 +58,7 @@ Run from the repository root.
 python -m venv .venv
 . .\.venv\Scripts\Activate.ps1
 pip install -r .\backend\requirements.txt
+python ai\train.py
 ```
 
 **Mac / Linux**
@@ -66,6 +67,7 @@ pip install -r .\backend\requirements.txt
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r backend/requirements.txt
+python ai/train.py
 ```
 
 Your prompt should now start with `(.venv)`. In every new terminal, activate the environment again before starting the server.
