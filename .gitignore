@@ -1,25 +1,89 @@
-# Python
+# Python bytecode & cache
 __pycache__/
 *.py[cod]
 *.pyo
+*$py.class
+
+# Virtual environments
 .venv/
 venv/
 env/
+ENV/
+env.bak/
+venv.bak/
+backend/.venv/
+backend/venv/
+
+# Package & distribution artifacts
 *.egg-info/
+*.egg
+build/
+dist/
+develop-eggs/
+eggs/
+.installed.cfg
+
+# Testing & coverage
 .pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
 
-# Secrets and local files
+# Environment variables & local secrets
 .env
-*.log
-.DS_Store
-.vscode/
-.idea/
+.env.*
+!.env.example
+*.env
 
-# Local data and models (regenerate with the project commands)
+# SQLite databases & runtime data
 *.db
 *.sqlite
 *.sqlite3
-model.joblib
+*.db-journal
+*.db-wal
 backend/smartdesk.db
-backend/.venv
-backend/venv
+
+# Machine learning models & training artifacts
+model.joblib
+ai/model.joblib
+*.joblib
+*.pkl
+*.pickle
+
+# Backups & temporary files
+*.bak
+*.backup
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Operating System files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE & Editor settings
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Node / Frontend artifacts
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
