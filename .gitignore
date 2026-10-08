@@ -1,89 +1,25 @@
-# Python bytecode & cache
+# Python
 __pycache__/
 *.py[cod]
 *.pyo
-*$py.class
-
-# Virtual environments
 .venv/
 venv/
 env/
-ENV/
-env.bak/
-venv.bak/
-backend/.venv/
-backend/venv/
-
-# Package & distribution artifacts
 *.egg-info/
-*.egg
-build/
-dist/
-develop-eggs/
-eggs/
-.installed.cfg
-
-# Testing & coverage
 .pytest_cache/
-.coverage
-.coverage.*
-htmlcov/
-.tox/
-.nox/
-.hypothesis/
-.mypy_cache/
-.ruff_cache/
 
-# Environment variables & local secrets
+# Secrets and local files
 .env
-.env.*
-!.env.example
-*.env
+*.log
+.DS_Store
+.vscode/
+.idea/
 
-# SQLite databases & runtime data
+# Local data and models (regenerate with the project commands)
 *.db
 *.sqlite
 *.sqlite3
-*.db-journal
-*.db-wal
-backend/smartdesk.db
-
-# Machine learning models & training artifacts
 model.joblib
-ai/model.joblib
-*.joblib
-*.pkl
-*.pickle
-
-# Backups & temporary files
-*.bak
-*.backup
-*.tmp
-*.temp
-*~
-*.swp
-*.swo
-
-# Logs
-*.log
-logs/
-
-# Operating System files
-.DS_Store
-.DS_Store?
-._*
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# IDE & Editor settings
-.vscode/
-.idea/
-*.sublime-workspace
-*.sublime-project
-
-# Node / Frontend artifacts
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+backend/smartdesk.db
+backend/.venv
+backend/venv
