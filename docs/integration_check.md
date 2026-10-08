@@ -1,11 +1,11 @@
-{
-    "category": "billing",
-    "confidence": 0.847,
-    "created_at": "2026-10-08T16:47:53.686106+00:00",
-    "description": "Why was tax added to my latest invoice?",
-    "id": 13,
+ {
+    "category": "access",
+    "confidence": 0.855,
+    "created_at": "2026-10-08T16:46:13.245204+00:00",
+    "description": "Tried multiple times to sign in but the portal is not responding properly.",
+    "id": 6,
     "priority": "normal",
-    "subject": "Why was tax added to my latest invoice?"
+    "subject": "I cannot sign in to the portal, even though my password appears to be correct."
   },
   {
     "category": "technical",
