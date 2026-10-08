@@ -19,9 +19,11 @@ database.DB_PATH = Path(_tmp_dir.name) / "test.db"
 
 from app import app
 
-
 class CreateTicketValidationTests(unittest.TestCase):
     def setUp(self):
+        if database.DB_PATH.exists():
+            database.DB_PATH.unlink()
+        database.init_db()
         self.client = app.test_client()
 
     def post_json(self, body):
