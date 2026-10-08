@@ -1,0 +1,22 @@
+[
+  {
+    "subject": "Cannot sign in to portal",
+    "description": "I cannot sign in to the portal, even though my password appears to be correct.",
+    "category": "access"
+  },
+  {
+    "subject": "Charged twice this month",
+    "description": "I was charged twice for the same month. Please reverse the extra payment.",
+    "category": "access"
+  },
+  {
+    "subject": "Error when saving changes",
+    "description": "An error appears whenever I attempt to save my changes.",
+    "category": "technical"
+  },
+  {
+    "subject": "App crash",
+    "description": "App crash",
+    "category": "technical"
+  }
+]
