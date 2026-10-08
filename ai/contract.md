@@ -6,6 +6,7 @@
 
 ## Input
 
+- `text`: a plain-text string containing the support ticket. No extra metadata is needed.
 - If `text` is empty, `None`, or contains only whitespace, the function raises a `ValueError("Ticket text must not be empty")`.
 
 ## Output
