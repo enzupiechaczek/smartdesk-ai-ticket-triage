@@ -3,14 +3,11 @@
 Placeholder. Group B writes the test plan in task B-1.1.
 
 | Test ID | Input | Steps | Expected result | Actual result | Pass/Fail | Evidence |
-| TC-ValidAccess-001 |---|---|---|---|---|---|
-| TC-ValidBilling-002 |---|---|---|---|---|---|
-| TC-ValidTechnical-003 |---|---|---|---|---|---|
-| TC-BlankSubject-004 |---|---|---|---|---|---|
-| TC-BlankDescription-005 |---|---|---|---|---|---|
-| TC-101CharacterSubject-006 |---|---|---|---|---|---|
-| TC-501CharacterDescription-007 |---|---|---|---|---|---|
-| TC-CharacterDescription-008 |---|---|---|---|---|---|
-| TC-DuplicateTicket-009 |---|---|---|---|---|---|
-| TC-HTMLLikeText-010 |---|---|---|---|---|---|
-| TC-AmbiguousTicket-011 |---|---|---|---|---|---|
+| TC-HTMLLikeText-009 | {"subject":"<b>Login Problem</b>","description":"I cannot login to my account. <b>Please help.</b>"} | 1. Navigate to support portal. -> 2. Enter HTML-like text in Subject and Description. -> 3. Click Submit. -> 4. Check the response/UI. | 201 -> {"id","same subject as plain text not html","same description as plain text not html","category","confidence","priority","created_at"} | --- | --- | --- |
+
+# TASK 2934 - Test unsafe and unusual input
+| Test ID | Input | Steps | Expected result | Actual result | Pass/Fail | Evidence |
+| TC-HTMLBold-001 | {"subject":"HTML bold test","description":"<b>bold</b>"} | 1. Enter HTML bold test as Subject. -> 2. Enter <b>bold</b> as Description. -> 3. Click Submit Ticket. -> 4. Check the Ticket Dashboard. | Status Code: 200 — The exact text <b>bold</b> is displayed as plain text. It is not rendered as bold HTML. | Status Code: 200 — The exact text <b>bold</b> is displayed as plain text and is not rendered as bold HTML. | [PASS] | Screenshot: HTML bold |
+| TC-Script-002 | {"subject":"Script test","description":"<script>alert(1)</script>"} | 1. Enter Script test as Subject. -> 2. Enter <script>alert(1)</script> as Description. -> 3. Click Submit Ticket. -> 4. Check the Ticket Dashboard. | Status Code: 200 — The exact script text <script>alert(1)</script> is displayed as plain text. No JavaScript executes and no alert popup appears. | Status Code: 200 — The exact script text <script>alert(1)</script> is displayed as plain text. No JavaScript executes and no alert popup appears. | [PASS] | Screenshot: Script |
+| TC-Image-003 | {"subject":"Image test","description":"<img src=x>"} | 1. Enter Image test as Subject. -> 2. Enter <img src=x> as Description. -> 3. Click Submit Ticket. -> 4. Check the Ticket Dashboard. | Status Code: 200 — The exact text <img src=x> is displayed as plain text. No image is rendered. | Status Code: 200 — The exact text <img src=x> is displayed as plain text. No image is rendered. | [PASS] | Screenshot: img |
+| TC-Spaces-004 | 	{"subject":"Spaces test","description":" "} | 1. Enter Spaces test as Subject. -> 2. Enter only spaces in Description. -> 3. Click Submit Ticket. -> 4. Verify the validation message. | Status Code: 400 — An error message is displayed and the spaces-only ticket is not accepted/created. Error message: Description is required (max 500 characters) | Status Code: 400 — The spaces-only ticket is not accepted/created. The system displays: Description is required (max 500 characters) | [PASS] | Screenshot: space |
