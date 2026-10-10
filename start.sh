@@ -1,10 +1,15 @@
-#!/bin/env bash
-if [[ ! -d "backend/.venv" ]]; then
-	echo "Initiating .venv for backend"
-	python3 -m venv backend/.venv
-	exit 0
+#!/usr/bin/env bash
+set -e
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$REPO_ROOT"
+
+if [[ ! -d ".venv" ]]; then
+	echo "Creating .venv"
+	python3 -m venv .venv
 fi
-source backend/.venv/bin/activate
+
+source .venv/bin/activate
 pip install -r backend/requirements.txt
 python ai/train.py
 python backend/app.py

@@ -50,7 +50,16 @@ cd <repository-folder>
 
 ### 2. Create the virtual environment (first time only)
 
+
 Run from the repository root.
+
+**Linux/Macos (bash)**
+for systems with bash and python3.10 or higher, just run the start.sh command
+
+```bash
+chmod +x ./start.sh
+./start.sh
+```
 
 **Windows (PowerShell)**
 
@@ -61,14 +70,6 @@ pip install -r .\backend\requirements.txt
 python ai\train.py
 ```
 
-**Mac / Linux**
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r backend/requirements.txt
-python ai/train.py
-```
 
 Your prompt should now start with `(.venv)`. In every new terminal, activate the environment again before starting the server.
 
