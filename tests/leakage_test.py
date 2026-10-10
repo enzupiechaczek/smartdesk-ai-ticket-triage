@@ -26,5 +26,5 @@ held_out = load(HELD_OUT)
 overlap = train & held_out
 print("Training rows (unique):", len(train))
 print("Held-out rows (unique):", len(held_out))
-print("Overlap:", overlap)
+print("Overlap count:", len(overlap))
 sys.exit(1 if overlap else 0)
