@@ -19,9 +19,12 @@ open bugs. They are listed here so the reclassification is visible rather than s
 
 ## Open observations, not API bugs
 
-- The trained model scores about 0.625 in cross-validation and mislabels some tickets, for example
-  TC-Priority-015 in the priority PR was classified billing for a printer problem. This is model
-  quality for the A2 owners, not an API defect.
-- TC-HTMLLikeText-009: this PR verified that the API stores and returns the `<b>` tags literally. It
-  did not independently verify browser rendering. The Task 2934 rows in `tests/test_cases.md` cover
-  rendering and reload with their own evidence.
+- Model quality, not an API defect. docs/model_evaluation.md reports 0.625 for the 20% test split,
+  which holds only 8 tickets, and 0.632 (+/- 0.198) for the 5-fold cross-validation mean, which that
+  report calls the more reliable figure. The model also mislabels some tickets, for example
+  TC-Priority-015 in the priority PR was classified billing for a printer problem. This is a quality
+  observation for the A2 owners.
+- TC-HTMLLikeText-009: the API stores and returns the `<b>` tags literally, which is evidenced in
+  tests/evidences/API-current-model-evidence.md. Browser rendering was observed separately in Chrome
+  and has its own screenshot, tests/evidences/TC-HTMLLikeText-009-rendering.png. Script and image
+  behaviour are not claimed here; the Task 2934 rows cover those with their own evidence.
