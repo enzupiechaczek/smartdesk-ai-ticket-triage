@@ -2,18 +2,17 @@
   "info": {
     "_postman_id": "865153a3-2fdc-484c-b82a-d94ea35376df",
     "name": "SmartDesk API",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "56205669"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "valid-ticket",
+      "name": "TC-ValidAccess-001",
       "request": {
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"subject\" : \"Unable to access my account\",\r\n    \"description\" : \"I cannot log into my account\"\r\n}",
+          "raw": "{\"subject\":\"Unable to access my account\",\"description\":\"I cannot log into my account\"}",
           "options": {
             "raw": {
               "language": "json"
@@ -34,13 +33,13 @@
       "response": []
     },
     {
-      "name": "blank subject",
+      "name": "TC-ValidBilling-002",
       "request": {
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"subject\" : \"\",\r\n    \"description\" : \"i need tech support cuz i can't use this platform easily\"\r\n}",
+          "raw": "{\"subject\":\"Billing inquiry regarding invoice #12345\",\"description\":\"I would like to request an itemized breakdown for my latest invoice.\"}",
           "options": {
             "raw": {
               "language": "json"
@@ -61,7 +60,61 @@
       "response": []
     },
     {
-      "name": "blank description",
+      "name": "TC-ValidTechnical-003",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"subject\":\"PDF upload failed\",\"description\":\"The app freezes when I upload a PDF\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TC-BlankSubject-004",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"subject\":\"\",\"description\":\"Need help with my account settings\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TC-BlankDescription-005",
       "request": {
         "method": "POST",
         "header": [],
@@ -75,26 +128,26 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/api/tickets ",
+          "raw": "{{base_url}}/api/tickets",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "api",
-            "tickets "
+            "tickets"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "101-character subject",
+      "name": "TC-101CharacterSubject-006",
       "request": {
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"subject\" : \"I’m experiencing a technical issue that is preventing the system from working properly. Please investigate and resolve it.\",\r\n    \"description\" : \"i need tech support cuz i can't use this platform easily\"\r\n}",
+          "raw": "{\"subject\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"description\":\"I need help logging in\"}",
           "options": {
             "raw": {
               "language": "json"
@@ -115,13 +168,13 @@
       "response": []
     },
     {
-      "name": "501-character description",
+      "name": "TC-501CharacterDescription-007",
       "request": {
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"subject\" : \"Technical support request\",\r\n    \"description\" : \"I am currently experiencing a technical issue that is affecting the normal operation of the system. The problem occurs unexpectedly and prevents me from completing certain tasks properly. I have already tried restarting the application and checking the basic settings, but the issue still persists. I would appreciate it if the technical team could investigate the problem, identify its cause, and provide a suitable solution as soon as possible. Please let me know if you need any additional information, screenshots, error messages, or steps to reproduce the issue.\"\r\n}",
+          "raw": "{\"subject\":\"Technical support request\",\"description\":\"yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\"}",
           "options": {
             "raw": {
               "language": "json"
@@ -142,13 +195,13 @@
       "response": []
     },
     {
-      "name": "malformed JSON",
+      "name": "TC-DuplicateTicket-008",
       "request": {
         "method": "POST",
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"subject\" : \"asdasd\",\r\n    \"description\" :\r\n}",
+          "raw": "{\"subject\":\"Unable to access my account\",\"description\":\"I cannot log into my account using my correct credentials.\"}",
           "options": {
             "raw": {
               "language": "json"
@@ -169,17 +222,99 @@
       "response": []
     },
     {
-      "name": "health-check",
+      "name": "TC-HTMLLikeText-009",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"subject\":\"<b>Login Problem</b>\",\"description\":\"I cannot login to my account. <b>Please help.</b>\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TC-AmbiguousTicket-010",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"subject\":\"Help needed\",\"description\":\"i need help\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TC-MalformedJson-011",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"subject\":\"Help needed\",\"description\":}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "health",
       "request": {
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/",
+          "raw": "{{base_url}}/api/health",
           "host": [
             "{{base_url}}"
           ],
           "path": [
-            ""
+            "api",
+            "health"
           ]
         }
       },
