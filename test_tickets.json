@@ -1,0 +1,26 @@
+[
+  {
+    "subject": "Cannot access account",
+    "description": "I cannot access my account today",
+    "expected_priority": "urgent",
+    "expected_category": "access"
+  },
+  {
+    "subject": "Cannot sign in to portal",
+    "description": "I cannot sign in to the portal, even though my password appears to be correct.",
+    "expected_priority": "normal",
+    "expected_category": "access"
+  },
+  {
+    "subject": "Charged twice this month",
+    "description": "I was charged twice for the same month. Please reverse the extra payment.",
+    "expected_priority": "normal",
+    "expected_category": "billing"
+  },
+  {
+    "subject": "Error when saving changes",
+    "description": "An error appears whenever I attempt to save my changes.",
+    "expected_priority": "normal",
+    "expected_category": "technical"
+  }
+]
