@@ -35,3 +35,9 @@ App crash,technical
 "The downlaod botton throwss a 500 internal serer errror",technical
 "I got locked out yesterday because the server throws a 502 bad gateway on the backend api whenever it tries to fetch records",technical
 "We updated our billing card details successfully, but the data export script hangs indefinitely at 99%",technical
+"The report page returns an internal server error whenever I open it.",technical
+"The application crashes when I try to upload a document.",technical
+"The search results stop loading after I change the filter.",technical
+"The dashboard displays a timeout message when retrieving records.",technical
+"The export process fails with an error before generating the download.",technical
+"Changes to notification preferences are not saved after I click Save.",technical
