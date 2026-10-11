@@ -30,36 +30,22 @@ class ComputePriorityTests(unittest.TestCase):
                 self.assertEqual(compute_priority(subject, description), expected)
 
     def test_download_does_not_trigger_down(self):
-        self.assertEqual(
-            compute_priority("Downloads", "downloading the report is slow"), "normal"
-        )
+        self.assertEqual(compute_priority("Downloads", "downloading the report is slow"), "normal")
 
     def test_down_as_a_whole_word_is_urgent(self):
         self.assertEqual(compute_priority("Help", "The server is down"), "urgent")
 
     def test_every_urgent_phrase_matches(self):
-        for phrase in [
-            "cannot access",
-            "locked out",
-            "outage",
-            "down",
-            "all users",
-            "everyone",
-            "production",
-            "data loss",
-        ]:
+        for phrase in ["cannot access", "locked out", "outage", "down",
+                       "all users", "everyone", "production", "data loss"]:
             with self.subTest(phrase=phrase):
-                self.assertEqual(
-                    compute_priority("Issue", "We have " + phrase + " today"), "urgent"
-                )
+                self.assertEqual(compute_priority("Issue", "We have " + phrase + " today"), "urgent")
 
     def test_phrase_in_subject_only_is_urgent(self):
         self.assertEqual(compute_priority("Outage", "Please help"), "urgent")
 
     def test_no_phrase_is_normal(self):
-        self.assertEqual(
-            compute_priority("Question", "How do I change my display name?"), "normal"
-        )
+        self.assertEqual(compute_priority("Question", "How do I change my display name?"), "normal")
 
 
 if __name__ == "__main__":

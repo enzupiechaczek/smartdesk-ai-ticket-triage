@@ -48,37 +48,38 @@ git clone <repository-url>
 cd <repository-folder>
 ```
 
-### 2. Create the virtual environment (first time only)
 
+## Running The Application
+for linux users, you can use the launcher script , for windows users please follow the README
 
+### 2. Running Under Linux/MacOS System
+for systems with bash and python3 , just run the start.sh command
 Run from the repository root.
-
-**Linux/Macos (bash)**
-for systems with bash and python3.10 or higher, just run the start.sh command
+> ⚠️ This is a Bash script, not a powershell script
 
 ```bash
 chmod +x ./start.sh
 ./start.sh
 ```
 
-**Windows (PowerShell)**
+You should see `Running on http://127.0.0.1:5000`. Leave this terminal open while you use the app.
 
+Then open **http://127.0.0.1:5000** in a browser. You should see the ticket form and the ticket dashboard.
+
+### 3. Running Under **Windows (PowerShell)**
+
+#### Create the virtual environment (first time only)
 ```powershell
 python -m venv .venv
 . .\.venv\Scripts\Activate.ps1
 pip install -r .\backend\requirements.txt
-python ai\train.py
+
 ```
+#### Start SmartDesk
 
-
-Your prompt should now start with `(.venv)`. In every new terminal, activate the environment again before starting the server.
-
-### 3. Start SmartDesk
-
-Flask serves both the API and the web page, so you only need **one terminal**. From the repository root, with the virtual environment active (see step 2), run:
-
-**Windows:** `python backend/app.py`
-**Mac / Linux:** `python3 backend/app.py`
+```powershell
+python backend/app.py
+```
 
 You should see `Running on http://127.0.0.1:5000`. Leave this terminal open while you use the app.
 
