@@ -42,8 +42,8 @@
           "exit_code": 0,
           "stdout_file": "baseline-train.txt",
           "stderr_file": "baseline-train-stderr.txt",
-          "stdout_sha256": "d34b0137c72b92919055dcd16fbef1f291a8bfe726b4f1a8d40ce22bf9ab878b",
-          "stderr_sha256": "680b0790040d2ee431b7e7682be246bcf9494e74ccddb8783cb8144aa84ba8ad"
+          "stdout_sha256": "188a6611fdabd2d741267ad4a83390980f799b17af9e8a3bced15d33b0facb52",
+          "stderr_sha256": "588bddaa3e76cf33b2a3de604713d744a9e9d5aa219e978a65ef1b2fff2bc5f7"
         },
         {
           "name": "evaluation",
@@ -59,8 +59,8 @@
           "exit_code": 0,
           "stdout_file": "baseline-evaluation.txt",
           "stderr_file": "baseline-evaluation-stderr.txt",
-          "stdout_sha256": "18decd30de3f5b8d545bc5e3a116be78fa03eaf4502307f1914b9456c6b42962",
-          "stderr_sha256": "680b0790040d2ee431b7e7682be246bcf9494e74ccddb8783cb8144aa84ba8ad"
+          "stdout_sha256": "13e9963476dd1735cb6fb1c17b99915e5415440539d893ad7bf4108935d997b0",
+          "stderr_sha256": "588bddaa3e76cf33b2a3de604713d744a9e9d5aa219e978a65ef1b2fff2bc5f7"
         }
       ],
       "split_accuracy": 0.625,
@@ -98,8 +98,8 @@
           "exit_code": 0,
           "stdout_file": "updated-train.txt",
           "stderr_file": "updated-train-stderr.txt",
-          "stdout_sha256": "c620086e8199877977d5d6bc89ad1b0232057206e2e600100db71cb93c29d9ef",
-          "stderr_sha256": "680b0790040d2ee431b7e7682be246bcf9494e74ccddb8783cb8144aa84ba8ad"
+          "stdout_sha256": "dafc82754a02a3678674f910ca300023c057f57479dc3256e231cf1feaca3340",
+          "stderr_sha256": "588bddaa3e76cf33b2a3de604713d744a9e9d5aa219e978a65ef1b2fff2bc5f7"
         },
         {
           "name": "evaluation",
@@ -115,8 +115,8 @@
           "exit_code": 0,
           "stdout_file": "updated-evaluation.txt",
           "stderr_file": "updated-evaluation-stderr.txt",
-          "stdout_sha256": "99567f008af90458e65947672dee6d00e4d53408b79198d96380ea7e53a26f3b",
-          "stderr_sha256": "680b0790040d2ee431b7e7682be246bcf9494e74ccddb8783cb8144aa84ba8ad"
+          "stdout_sha256": "428f84828951910f6c390a9b815c99b43ec02615aa208aa31d5bf6b1a306689e",
+          "stderr_sha256": "588bddaa3e76cf33b2a3de604713d744a9e9d5aa219e978a65ef1b2fff2bc5f7"
         }
       ],
       "split_accuracy": 0.5555555555555556,
@@ -127,5 +127,6 @@
       "saved_model_sha256": "62d91c3edcebe7c67ad497c10d2dcd0cfb5e95c944f6eca57acad8bf6d3e744c",
       "saved_model_training_rows": 42
     }
-  }
+  },
+  "capture_format": "UTF-8; LF line endings normalized for shared artifact hashes; output values unchanged. Empty stderr uses a No stderr output. marker."
 }

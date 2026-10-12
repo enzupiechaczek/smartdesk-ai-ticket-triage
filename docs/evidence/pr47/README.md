@@ -17,6 +17,8 @@ The first command performs split evaluation and five-fold CV, then fits and save
 
 Files prefixed `baseline-` capture the 36-row version; `updated-` captures the 42-row version. `*-train.txt` includes the real split report and CV output. `*-evaluation.txt` includes only case IDs, labels, confidences, file hash and counts. Matching stderr captures are provided; no stderr was produced in these runs.
 
+Shared text captures use UTF-8 with LF line endings so their manifest hashes match the committed GitHub artifacts. Only line endings are normalized; output values are unchanged. Empty stderr is represented by `No stderr output.` in its artifact.
+
 The 36-row replay is balanced (12 per category). The 42-row replay has 12 access, 12 billing and 18 technical examples. Both separate-set scores are 4/6. Split/CV scores across the two training datasets are not controlled measurements on identical evaluation cases.
 
 This previously exposed evaluation set is not a blind benchmark. The original historical reports lacked tested-run metadata; this evidence describes the fresh source-pinned replays instead. Group discussion and supervisor approval remain pending.
