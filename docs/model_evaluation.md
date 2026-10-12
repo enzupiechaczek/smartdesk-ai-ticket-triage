@@ -13,9 +13,9 @@
 
 * **Split model:** trained on the 28-row stratified training split (80%). Produces the Day 2 validation result.
 * **Cross-validation fold models:** five pipelines, each trained on four of the five folds (28 or 29 rows). Produce the Day 2 cross-validation result.
-* **Final saved model (`ai/model.joblib`):** refitted on all 36 rows after the split and cross-validation steps. This is the model the application uses and the only model evaluated in Day 3.
+* **Final-model recipe:** after the split and cross-validation steps, the recorded training script refits a model on all 36 rows and saves it as `ai/model.joblib`. This describes the script's intended output; it does not establish how or when a particular local artifact was created.
 
-None of the Day 2 figures were measured on the final saved model. This report covers only models trained on the 36-row dataset. A model trained on changed data (such as the 42-row dataset proposed in PR #47) is a different version and needs its own results.
+None of the Day 2 figures were measured on the local artifact evaluated in Day 3. Day 3 used a pre-existing local artifact identified by its recorded SHA-256; its original training session and dataset association were not independently verified from artifact metadata. A model trained on changed data (such as the 42-row dataset proposed in PR #47) is a different version and needs its own results.
 
 ## 2. Day 2 — Validation Results
 
@@ -65,9 +65,9 @@ Cross-validation mean accuracy: 0.632 (+/- 0.198)
 
 ### Evaluation Method
 
-The final saved model (`ai/model.joblib`, trained on all 36 rows) was evaluated against the six held-out tickets supplied by Group B in `tests/held_out_tickets.csv`. The evaluation script (`ai/evaluate_heldout.py`) passed each ticket to the existing prediction function and compared the predicted category with the expected category.
+The pre-existing local `ai/model.joblib` artifact, identified by SHA-256 `bddcbfa2781a0bdb5b2a3ba0a99a8d9d4d965001603c79025ecf2e8113696a92`, was evaluated against the six tickets supplied by Group B in `tests/held_out_tickets.csv`. The evaluation script (`ai/evaluate_heldout.py`) passed each ticket to the existing prediction function and compared the predicted category with the expected category.
 
-The script normalizes category labels by converting them to lowercase and removing surrounding whitespace before comparison. None of the six ticket texts appear in the training dataset, and the existing saved model was used without retraining during this evaluation.
+The script normalizes category labels by converting them to lowercase and removing surrounding whitespace before comparison. None of the six ticket texts appear in the recorded `ai/data/tickets.csv`; however, that CSV's association with the evaluated artifact was not independently verified, so this does not establish that the tickets were absent from the artifact's training data. The artifact was used without retraining during this evaluation.
 
 ### Fresh Held-Out Results
 
@@ -82,7 +82,7 @@ The script normalizes category labels by converting them to lowercase and removi
 * **Model artifact:** local, Git-ignored `ai/model.joblib`; SHA-256 `bddcbfa2781a0bdb5b2a3ba0a99a8d9d4d965001603c79025ecf2e8113696a92`
 * **Training script:** `ai/train.py`; SHA-256 `60ab4a8dacc05d06da053c2a75c75cbe20e85d3b92150b27b84b6877da35af01`
 * **Training CSV:** `ai/data/tickets.csv` (36 rows); SHA-256 `f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71`
-* **Model provenance:** The recorded training recipe builds a lowercase unigram/bigram TF-IDF and Logistic Regression (`C=10`, `max_iter=1000`) pipeline, evaluates it, refits it on all 36 training rows, and saves it with `joblib`. That script was not run for this evaluation; the pre-existing local artifact was used. Because the artifact is ignored and carries no recorded training metadata, its creation history cannot be independently verified from the repository.
+* **Model provenance:** The recorded training recipe builds a lowercase unigram/bigram TF-IDF and Logistic Regression (`C=10`, `max_iter=1000`) pipeline, evaluates it, refits it on all 36 training rows, and saves it with `joblib`. This recipe describes intended model construction, not independently established provenance of the evaluated artifact. The script was not run for this evaluation; the pre-existing local artifact identified by the SHA-256 above was used. Its original training session and dataset association were not independently verified from recorded artifact metadata.
 * **Exact command:** `.venv/bin/python ai/evaluate_heldout.py`
 
 Captured output from that command:
@@ -119,7 +119,7 @@ The three accuracy figures in this report measure different models on different 
 | -------------------------------- | ------------------------------------- | -------------------------------------------------------------------- | ----------: |
 | Day 2 validation split           | Split model (28 training rows)        | 8 tickets held back from the training dataset                        | 62.5% (5/8) |
 | Day 2 five-fold cross-validation | Five fold models (28 or 29 rows each) | All 36 training rows, each scored by the fold model that excluded it |  63.2% mean |
-| Day 3 held-out set               | Final saved model (all 36 rows)       | 6 Group B tickets, separate from training but previously exposed     | 66.7% (4/6) |
+| Day 3 held-out set               | Pre-existing local artifact (SHA-256 recorded above; training provenance unverified) | 6 Group B tickets, absent from the recorded CSV but previously exposed; artifact training data unverified | 66.7% (4/6) |
 
 Because the models and evaluation cases differ, these figures are not a controlled comparison and should not be read as evidence that the model improved between Day 2 and Day 3. The differences between the Day 3 figure and the two Day 2 figures (4.2 and 3.5 percentage points) are smaller than the effect of a single prediction on either the validation split (12.5 points) or the held-out set (16.7 points).
 
@@ -135,4 +135,4 @@ Because the models and evaluation cases differ, these figures are not a controll
 
 ## 5. Conclusion
 
-The final saved model, trained on all 36 rows, correctly classified four of the six held-out tickets, achieving an accuracy of 66.7%. Because this set was previously exposed, the result is not a blind benchmark. It is also not directly comparable with the Day 2 validation (62.5%) and cross-validation (63.2%) figures, which were measured on different models and cases. The evaluation identified confusion between access and technical requests involving email updates, providing a concrete area for future improvement while highlighting the need for a larger evaluation dataset.
+The pre-existing local artifact identified by SHA-256 `bddcbfa2781a0bdb5b2a3ba0a99a8d9d4d965001603c79025ecf2e8113696a92` correctly classified four of the six Group B tickets, achieving an accuracy of 66.7% (4/6). The recorded training script's all-36-row refit and save procedure is a recipe, not verified provenance for this artifact; its original training session and dataset association were not independently verified from artifact metadata. The result therefore belongs to this identified artifact and does not establish that it was trained on all 36 rows or that the tickets were unseen by its training process. Because this set was previously exposed, the result is not a blind benchmark. It is also not directly comparable with the Day 2 validation (62.5%) and cross-validation (63.2%) figures, which were measured on different models and cases. The evaluation identified confusion between access and technical requests involving email updates, providing a concrete area for future improvement while highlighting the need for a larger evaluation dataset. Any newly trained artifact needs a separately identified evaluation session and result.
