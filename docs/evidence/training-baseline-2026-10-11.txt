@@ -1,3 +1,4 @@
+Privacy note: Local Windows user-profile and repository path prefixes have been redacted from pip and package-location output. Package versions, commands, and observed training results are unchanged.
 Verification date: 2026-10-11 18:59:05 +02:00
 Commit: 6be765d874141750d1b4cac81bb1d410aa51edda
 Dataset SHA-256: 525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1
@@ -6,7 +7,7 @@ Python version:
 Python 3.14.4
 
 pip version:
-pip 26.0.1 from C:\Users\Whitney.Adm\Documents\smartdesk-ai-ticket-triage\.venv\Lib\site-packages\pip (python 3.14)
+pip 26.0.1 from .venv\Lib\site-packages\pip (python 3.14)
 
 Installed AI dependencies:
 Name: joblib
@@ -23,7 +24,7 @@ Author-email: Gael Varoquaux <gael.varoquaux@normalesup.org>
 
 License-Expression: BSD-3-Clause
 
-Location: C:\Users\Whitney.Adm\Documents\smartdesk-ai-ticket-triage\.venv\Lib\site-packages
+Location: .venv\Lib\site-packages
 
 Requires: cloudpickle
 
@@ -45,7 +46,7 @@ Author-email:
 
 License-Expression: BSD-3-Clause
 
-Location: C:\Users\Whitney.Adm\Documents\smartdesk-ai-ticket-triage\.venv\Lib\site-packages
+Location: .venv\Lib\site-packages
 
 Requires: joblib, narwhals, numpy, scipy, threadpoolctl
 

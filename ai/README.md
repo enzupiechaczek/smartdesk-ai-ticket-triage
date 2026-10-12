@@ -68,18 +68,20 @@ The trained model artifact, `ai/model.joblib`, is ignored by version control and
 
 This section documents the 36-row dataset baseline, the training procedure, the historical two-run comparison, and a separately captured fresh verification.
 
-### Baseline and environment
+### Captured baseline environment — 2026-10-11
 
 The baseline is tied to the versioned dataset `ai/data/tickets.csv`, containing 36 synthetic tickets.
 
 - **Baseline dataset SHA-256:** `525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1`
-- **Commit tested during fresh verification:** `6be765d874141750d1b4cac81bb1d410aa51edda`
+- **Commit recorded for the October 11 captured verification:** `6be765d874141750d1b4cac81bb1d410aa51edda`
 - **Operating system:** Microsoft Windows 11 Pro, version 10.0.22000, build 22000
 - **Python:** 3.14.4
 - **pip:** 26.0.1
 - **AI dependencies:** `joblib` 1.6.0 and `scikit-learn` 1.9.1
 
-The complete installed package versions are recorded in [`docs/evidence/requirements-ai-baseline-2026-10-11.txt`](../docs/evidence/requirements-ai-baseline-2026-10-11.txt). The fresh verification output, timestamp, commit, dataset hash, operating system, and package details are recorded in [`docs/evidence/training-baseline-2026-10-11.txt`](../docs/evidence/training-baseline-2026-10-11.txt).
+The environment details above describe the October 11 captured verification session. The earlier historical two-run comparison is documented separately; its original raw logs and complete run metadata are unavailable. These details must not be interpreted as complete provenance for those historical runs.
+
+The complete installed package versions are recorded in [`docs/evidence/requirements-ai-baseline-2026-10-11.txt`](../docs/evidence/requirements-ai-baseline-2026-10-11.txt). The captured verification output, timestamp, commit, dataset hash, operating system, and package details are recorded in [`docs/evidence/training-baseline-2026-10-11.txt`](../docs/evidence/training-baseline-2026-10-11.txt).
 
 ### Fresh-environment setup
 
