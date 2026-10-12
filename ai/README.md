@@ -96,6 +96,46 @@ python -m pip show joblib scikit-learn
 
 Confirm that `python --version` reports Python 3.14.4 before proceeding. The requirements snapshot pins the packages observed in the verification environment; it does not install Python itself or guarantee identical behavior on other operating systems.
 
+### Clean-environment verification — 2026-10-12 (Git Bash)
+
+A separate clean-environment verification was completed on Microsoft Windows (build 10.0.26300.9550) using Python 3.14.8 and pip 26.0.1.
+
+The verification used commit `0c65c2fb6f7afccec91c980d69476a6b2a24ce80` and the existing 36-row dataset in `ai/data/tickets.csv`.
+
+Dataset SHA-256:
+
+`525ac01b9a55b86bb69d77b17128d5529535d1844f9018cf8dce1db4c2f896a1`
+
+The following commands were used from the repository root in Git Bash:
+
+```bash
+py -3.14 -m venv .venv-repro-check
+source .venv-repro-check/Scripts/activate
+python --version
+python -m pip install --upgrade pip==26.0.1
+python -m pip install -r docs/evidence/requirements-ai-baseline-2026-10-11.txt
+python -m pip check
+python -m pip show scikit-learn numpy scipy joblib
+python ai/train.py
+```
+
+All seven pinned dependencies installed successfully in the separate virtual environment. `pip check` reported no broken requirements.
+
+The requirements snapshot initially contained a UTF-8 BOM, which was removed without changing the pinned dependency versions. The corrected file was subsequently accepted by pip with all requirements already satisfied. This subsequent check was not a second clean installation.
+
+Training completed with exit status `0` and reproduced the previously documented printed results:
+
+- Test accuracy: **0.625 (62.5%)**
+- Cross-validation mean accuracy: **0.632**
+- Cross-validation standard deviation: **0.198**
+- Incorrect test predictions: **3**
+
+The classification report, cross-validation fold scores and incorrect predictions matched the previously documented baseline.
+
+The captured verification is available in [`docs/evidence/training-clean-setup-2026-10-12.txt`](../docs/evidence/training-clean-setup-2026-10-12.txt).
+
+**Limitations:** This verification used Python 3.14.8 rather than the previously recorded Python 3.14.4. Matching printed results do not establish byte-identical model artifacts or reproducibility across different environments. The original historical two-run logs remain unavailable. These results apply only to the existing 36-row dataset baseline; PR #47 proposes a different dataset version.
+
 ### Training procedure
 
 Run the following command from the repository root:
