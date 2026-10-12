@@ -20,6 +20,18 @@ def index():
 
 @app.get("/api/health")
 def health():
+    model_path = Path("ai/model.joblib")
+    if not model_path.exists():
+        return (
+            jsonify(
+                {
+                    "status": "error",
+                    "message": "Model not trained. Run python ai/train.py",
+                }
+            ),
+            503,
+        )
+
     return jsonify({"status": "ok", "service": "SmartDesk local API"})
 
 
