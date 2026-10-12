@@ -7,6 +7,7 @@
 ## Input
 
 - `text`: a plain-text string containing the support ticket. No extra metadata is needed.
+- If `text` is empty, `None`, or contains only whitespace, the function raises a `ValueError("Ticket text must not be empty")`.
 
 ## Output
 
@@ -33,6 +34,6 @@ Example:
 - It never calls Azure, OpenAI or any paid service.
 - It never requires an API key.
 
-## Temporary stub
+## Trained model
 
-Until the trained model replaces it on Day 2, `predict_category` always returns `technical` with confidence `0.5`.
+`predict_category` loads the trained model from `ai/model.joblib`, which is created by `python ai/train.py`. If the file does not exist it raises `RuntimeError("Run python ai/train.py first")`. The confidence is the highest class probability, rounded to 3 decimals.
