@@ -90,7 +90,7 @@ The merged PR #46 evaluator's clear missing-file failure, label normalization, c
 
 ## Task ownership and next steps
 
-Task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46), is now approved and merged; its report is preserved in the historical archive. The historical integration report belongs to task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43); its expanded integration changes are not supplied by this PR. Enzu and the task owners still need to agree the remaining #43 dependency and the shared #47 evaluator/report ownership. The remaining agreements are not implied by the already completed #46 merge.
+Task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46), owned by WhitneyKataka, is now approved and merged; its report is preserved in the historical archive. The historical integration report belongs to task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43), owned by AakashAaku; its expanded integration changes are not supplied by this PR. Enzu and the task owners still need to agree the remaining #43 dependency and the shared #47 evaluator/report ownership. The remaining agreements are not implied by the already completed #46 merge.
 
 Discuss the ambiguous failure categories with A2 and ask Group B about support-routing impact. Record the discussion after it happens. Generate `ai/model.joblib` locally; keep it and the local evaluation CSV out of Git. Enzu approval and merge remain pending.
 

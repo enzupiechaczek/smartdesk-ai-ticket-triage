@@ -44,6 +44,17 @@ The additions are synthetic examples, not copies of evaluation rows. Both traini
 
 The six-case accuracy stays at 4/6 (66.7%) and both analysed errors remain. The concrete improvement is additional training coverage for technical issues; this experiment does not show improved accuracy on the separate evaluation set. The higher CV mean uses a different training dataset and different folds and must not be presented as a controlled improvement on identical test cases.
 
+## Contributor review of CASE-001 and CASE-005
+
+**Review date:** 2026-10-13 (local date, UTC+07:00)  
+**Reviewer:** waitwhat2231; not a member of Group A2 or Group B  
+**Evidence reviewed:** the source-pinned case/count captures, the versioned evaluator report, and the proposed category rules. The evaluation CSV is intentionally not included in shared artifacts, so this review does not reproduce or disclose the ticket text.
+
+- **CASE-001:** expected `access`; predicted `billing` at `0.413` in the 36-row replay and `0.396` in the 42-row replay. The recorded metadata supports an ambiguity between an account/profile change and a billing-related request, but it does not establish which operational team should own the case without the underlying ticket text and human routing review. The expected `access` label is retained.
+- **CASE-005:** expected `technical`; predicted `access` at `0.465` in the 36-row replay and `0.439` in the 42-row replay. The recorded metadata supports an ambiguity between a profile/account request and an application malfunction, but it does not establish the correct support route without the underlying ticket text and human routing review. The expected `technical` label is retained.
+
+**Unresolved after this review:** A2 has not confirmed the failure hypotheses; Group B has not confirmed the support-routing impact; no A2/Group B label-boundary agreement has been recorded; and no decision has been made to change either expected label. A designated A2 member and designated Group B members must review the original local cases and record their actual feedback, date, participants, and any follow-ups. This contributor review does not satisfy those team decisions.
+
 ## Team discussion and dependencies
 
 - [ ] Discuss both failure hypotheses together in A2.
@@ -69,15 +80,15 @@ No completed team discussion or dependency agreement has been reported. The foll
 
 ### Participant boundary
 
-The current writerr of this section is not a member of Group A2 or Group B and cannot claim or complete those teams' discussion decisions. A designated A2 member must review the two failure hypotheses, and designated Group B members must provide the routing-impact feedback and agree any label boundaries. The actual date, participants, feedback, and unresolved follow-ups must be recorded after those discussions occur.
+The current contributor is not a member of Group A2 or Group B and cannot claim or complete those teams' discussion decisions. A designated A2 member must review the two failure hypotheses, and designated Group B members must provide the routing-impact feedback and agree any label boundaries. The actual date, participants, feedback, and unresolved follow-ups must be recorded after those discussions occur.
 
 ### Evidence and ownership boundaries to confirm
 
-The following boundaries are the proposed handoff for review; they are not recorded as completed agreement:
+PR metadata confirms that AakashAaku owns merged PR #43 / task 2929 and WhitneyKataka owns merged PR #46 / task 2930. Their documented scopes support the boundaries below. Confirmation of the remaining cross-PR handoff and merge order is still pending; these statements are not recorded as completed team agreement:
 
 - **PR #47** owns the updated evaluator implementation and the versioned 42-row failure-analysis/evaluation report, including the CLI failure handling and its tests.
-- **PR #46** remains the source of the preserved historical 36-row report and its original artifact-provenance limitations. The archive must not be rewritten with #47 metrics.
-- **PR #43** remains authoritative for the expanded integration report. PR #47 must not add or replace a competing integration report.
+- **PR #46** (WhitneyKataka) remains the source of the preserved historical 36-row report and its original artifact-provenance limitations. The archive must not be rewritten with #47 metrics.
+- **PR #43** (AakashAaku) remains authoritative for the expanded integration report. PR #47 must not add or replace a competing integration report.
 - **PR #48** preserves the reproducibility evidence for the historical 36-row training baseline.
 - **PR #49** preserves the model-card/evaluation documentation for the 36-row baseline and should add any 42-row material as a separately identified version.
 - **PR #50** preserves demo observations tied to the model and versions actually tested. A current-model live demo, if required, needs a separate focused verification record.
