@@ -88,8 +88,27 @@ TC-Priority-021 detail: urgent id 20 at position 0; normal id 21 at position 9; 
 | TC-Image-003 | `<img src=x>` | 201 | Card shows the literal text `<img src=x>`. No `img` element created, nothing requested. | Pass |
 | TC-Spaces-004 | `spaces only` | 400 | Rejected with `Description is required (max 500 characters)`. The browser form also blocks submit, so no POST is sent from the page. | Pass |
 
-Rendering evidence: 
-[day4-TC-HTMLLikeText-009-rendering.png](evidences/day4-TC-HTMLLikeText-009-rendering.png)
+## Screenshots, and what is still missing
+
+The brief asked for a screenshot per case. I got partway and then the capture tool
+stopped responding, so this is the honest position rather than a claim of full
+coverage.
+
+Captured and committed:
+
+| Screenshot | Covers |
+| --- | --- |
+| [day4-dashboard-priority-urgent.png](evidences/day4-dashboard-priority-urgent.png) | TC-Priority-013, TC-Priority-024, TC-Priority-023 and the start of TC-Priority-022, each showing Priority: urgent |
+| [day4-TC-HTMLLikeText-009-rendering.png](evidences/day4-TC-HTMLLikeText-009-rendering.png) | TC-HTMLBold-001 and TC-Priority-015, showing the literal text <b>bold</b> not rendered bold |
+
+Still to capture, 26 cases: TC-ValidAccess-001 through TC-MalformedJson-011
+except the two above, TC-Priority-012 and TC-Priority-014 through TC-Priority-022,
+and TC-Script-002, TC-Image-003 and TC-Spaces-004.
+
+Every one of those cases has a recorded Pass or Fail and the real response is
+already written in the tables above, so only the image is outstanding. The five
+rejected cases produce no card on the dashboard, so those need a screenshot of
+the API response rather than the page.
 
 ## Retest of resolved bugs
 
