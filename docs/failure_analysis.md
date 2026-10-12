@@ -52,7 +52,7 @@ The six-case accuracy stays at 4/6 (66.7%) and both analysed errors remain. The 
 - [ ] Agree ownership/dependency handling with Enzu for task 2930 / PR #46 and task 2929 / PR #43.
 - [ ] Agree the 42-row README/evaluation/model-card/demo transition with the owners of PR #48, #49 and #50.
 
-The historical six-line `docs/integration_check.md` is preserved as inherited task 2929 work; the expanded integration update belongs in PR #43. Evaluator/report work inherited from PR #46 is identified rather than silently removed or treated as independently approved.
+The obsolete six-line `docs/integration_check.md` addition was backed up outside the repository and removed while honoring its deletion in main from approved/merged PR #46 (`df294c84fed1108c820447f2591e4d9202b442e4`). This PR does not introduce a competing integration report; the expanded report belongs in PR #43. PR #46's complete historical report is preserved in [a versioned archive](model_evaluation_pr46_baseline.md). Final shared evaluator/report ownership for #47 remains pending.
 
 ### Proposed coordination plan — not yet agreed
 
@@ -60,8 +60,8 @@ No completed team discussion or dependency agreement has been reported. The foll
 
 | PR / task | Owner | Proposed action | Status |
 | --- | --- | --- | --- |
-| [#43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) / 2929 | AakashAaku | Keep the expanded integration report authoritative. Agree removal of this PR's obsolete six-line addition or an explicit merge plan that preserves #43's report. | Pending agreement |
-| [#46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46) / 2930 | WhitneyKataka | Preserve the 36-row evaluation evidence as historical. Agree ownership and merge order for the shared evaluator/report versions. | Pending agreement |
+| [#43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) / 2929 | AakashAaku | Keep the expanded integration report authoritative. The obsolete addition is removed in line with merged main; agree the remaining integration dependency plan without replacing #43's expanded report. | Pending agreement |
+| [#46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46) / 2930 | WhitneyKataka | The approved report is now archived intact after #46 merged. Agree remaining shared evaluator/report ownership for #47. | #46 merged; #47 agreement pending |
 | #47 / 2931 | WhitneyKataka and A2 | Keep the source-pinned 42-row failure analysis/results; agree the canonical evaluator including CLI failure handling and tests. | Pending agreement |
 | [#48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) / 2938 | WhitneyKataka | Preserve the reproducibility captures for the 36-row baseline. Agree the shared README's current dataset/version wording and separate 42-row evidence links. | Pending agreement |
 | [#49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) / 2939 | WhitneyKataka | Keep baseline model-card metrics versioned; agree a separate 42-row dataset/metric/limitation section after transition. | Pending agreement |

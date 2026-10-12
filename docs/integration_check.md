@@ -1,6 +1,0 @@
-| Ticket | Exact subject and description | Expected category | Actual category | Confidence | Priority | POST status | ID | Result |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | Subject: "I cannot sign in to the portal, even though my password appears to be correct." - Description: "Tried multiple times to sign in but the portal is not responding properly." | access | access | 0.855 | normal | 201 Created | 6 | Pass |
-| 2 | Subject: "The system displays an error when I open the activity section." - Description: "The system displays an error when I open the activity section." | technical | technical | 0.866 | normal | 201 Created | 12 | Pass |
-| 3 | Subject: "I can sign into the workspace without issue, but the system billed our company credit card twice for" - Description: "I can sign into the workspace without issue, but the system billed our company credit card twice for this month" | billing | billing | 0.831 | normal | 201 Created | 11 | Pass |
-| 4 | Subject: "The downlaod botton throwss a 500 internal serer errror" - Description: "The downlaod botton throwss a 500 internal serer errror" | technical | technical | 0.854 | normal | 201 Created | 10 | Pass |

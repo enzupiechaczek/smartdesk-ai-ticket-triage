@@ -82,8 +82,14 @@ The original PR report described a 36-row model with split accuracy 62.5%, CV me
 
 The original updated-model report described a 42-row model with split accuracy 55.6%, CV mean 78.3%, and separate-set score 4/6. The fresh updated run also reproduces these values. Refer to its own captured outputs and model hash, rather than attributing historical baseline evidence to the updated saved model.
 
+## Preserved PR #46 report after synchronization
+
+PR #46 was approved and merged into main at `df294c84fed1108c820447f2591e4d9202b442e4` during this follow-up. Its complete report is preserved in [the historical PR #46 archive](model_evaluation_pr46_baseline.md), including its recorded artifact-provenance limitations and original case/count output. Its distinct CSV/model hashes remain separate from this PR's replay metadata.
+
+The merged PR #46 evaluator's clear missing-file failure, label normalization, case/count output and prediction call are retained by this PR's tested implementation. The latter additionally validates malformed/invalidly encoded CSV and emits path-safe errors with exit status 1. The evaluator source remains byte-identical to the CLI source tested at `57a4de72e286d6bf07b2e6ea221ea83869b7a4e9`; source hashes and eight-test outputs are retained in the follow-up evidence. Final shared evaluator/report ownership for #47 still needs agreement.
+
 ## Task ownership and next steps
 
-The evaluator/report were inherited from task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46). The historical integration report belongs to task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43); its expanded integration changes are not supplied by this PR. Enzu and the task owners still need to agree how these dependencies will be reviewed/merged. Neither dependency is treated as approved by this report.
+Task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46), is now approved and merged; its report is preserved in the historical archive. The historical integration report belongs to task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43); its expanded integration changes are not supplied by this PR. Enzu and the task owners still need to agree the remaining #43 dependency and the shared #47 evaluator/report ownership. The remaining agreements are not implied by the already completed #46 merge.
 
 Discuss the ambiguous failure categories with A2 and ask Group B about support-routing impact. Record the discussion after it happens. Generate `ai/model.joblib` locally; keep it and the local evaluation CSV out of Git. Enzu approval and merge remain pending.

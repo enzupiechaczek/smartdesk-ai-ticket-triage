@@ -130,5 +130,13 @@
   },
   "capture_format": "UTF-8; LF line endings normalized for shared artifact hashes; output values unchanged. Empty stderr uses a No stderr output. marker.",
   "source_comparison_file": "source-comparison.json",
-  "cli_followup_file": "cli-followup.json"
+  "cli_followup_file": "cli-followup.json",
+  "inherited_pr46_report": {
+    "source_commit": "df294c84fed1108c820447f2591e4d9202b442e4",
+    "original_path": "docs/model_evaluation.md",
+    "original_report_byte_sha256": "fc4c8f5ec9724809b91c94ba31aeae1f41514ca37f803b56b2932b4a8dad5ac5",
+    "archive_path": "docs/model_evaluation_pr46_baseline.md",
+    "archive_prefix_byte_length": 964,
+    "preservation": "Original report body follows the explicit historical-version note byte-for-byte; no rerun or metric replacement."
+  }
 }
