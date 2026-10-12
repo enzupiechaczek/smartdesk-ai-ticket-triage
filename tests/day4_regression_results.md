@@ -164,7 +164,7 @@ after an earlier reclassification, and they have not been triaged.
 | D3 | Medium | After the failed activation, `pip install -r requirements.txt` exits 0 while installing into the global interpreter | `pip install -r .\backend\requirements.txt` | `Requirement already satisfied ... in C:\Users\youse\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages`, while `backend\venv\Lib\site-packages` held 0 packages |
 | D4 | Low | The PowerShell troubleshooting note gives the wrong path too | `.venv\Scripts\activate.bat` | that path does not exist; the real one is `backend\venv\Scripts\activate.bat` |
 | D5 | Low | `backend/test_api.py` leaves a sqlite connection open | `python -m unittest discover -s backend` | `ResourceWarning: unclosed database in <sqlite3.Connection object>` |
-| D6 | Medium | `tests/test_cases.md` states that browser validation blocked the spaces-only ticket and that no POST was sent. Observed on this fresh clone, the browser does send the POST and the server rejects it with 400. The recorded cause is wrong | `tests/test_cases.md`, TC-Spaces-004, Actual result column | see section 7.2 |
+| D6 | Medium | `tests/test_cases.md` states that browser validation blocked the spaces-only ticket and that no POST was sent. Observed on this fresh clone, the browser does send the POST and the server rejects it with 400. The recorded cause was wrong. **Fixed in this branch** - see section 7.2 | `tests/test_cases.md`, TC-Spaces-004, Actual result column | see section 7.2 |
 
 **D3 is a consequence of D1**, not an independent fault in pip. It is listed separately because a
 silent install into the global interpreter is its own hazard once activation has failed. The
@@ -173,8 +173,9 @@ interpreter that ran the failing `pip install` was the global one at
 
 D1, D2 and D4 are README defects. D5 is test-code. D6 is a test-documentation defect. All of these
 should be coordinated with Hassan's startup work in PR #44 rather than duplicated, and nothing here
-overwrites a fix that has landed there. **This branch changes no README, no test code and no
-application code**; it only adds a report and evidence.
+overwrites a fix that has landed there. **This branch changes no README and no application code**, and
+its only change to existing content is the D6 correction in `tests/test_cases.md`, which fixes a false
+record rather than altering any test outcome. The rest is a report and its evidence.
 
 ## 5. API contract evidence
 
@@ -305,6 +306,12 @@ The API 400 and the browser behaviour are reported here as two separate observat
 from sending the body straight to the API with a request tool; the browser behaviour above came from
 clicking Submit on the form. Neither is used as evidence for the other.
 
+**D6 is fixed in this branch.** The Actual result cell for TC-Spaces-004 in `tests/test_cases.md` now
+records that the browser did send the POST and the server returned the 400, with the reason `required`
+is satisfied by a space. The Expected result and the Pass/Fail outcome are unchanged, because the
+behaviour the case asserts was always correct; only the recorded explanation was wrong. A note in the
+"How each result was produced" section of that file records the re-verification and points here.
+
 ## 8. Evidence coverage for all 28 cases
 
 Complete means the case has its own recorded evidence of its own input and its own result. Every one
@@ -393,7 +400,7 @@ separate work.
 - 4 historical findings retested, all four still reclassified, none reopened.
 - 6 new findings, severity proposed and ownership pending, for coordination with PR #44. D2 is the
   one that blocks a new user: the README never says to train the model, and `/api/health` still
-  reports 200 while every ticket submission fails.
+  reports 200 while every ticket submission fails. D6 is fixed in this branch.
 - Evidence: all 28 cases complete, each with its own image and a full recorded request and response.
 - The 28 passes come from Stage C, after corrections. Stage A, the README exactly as written, did
   not succeed.
