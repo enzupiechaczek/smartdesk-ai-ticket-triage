@@ -57,16 +57,34 @@ The saved model (`ai/model.joblib`) was evaluated against the six held-out ticke
 
 The script normalizes category labels by converting them to lowercase and removing surrounding whitespace before comparison. The held-out tickets were kept separate from the training dataset, and the existing saved model was used without retraining during this evaluation.
 
-### Held-Out Results
+### Fresh Held-Out Results
 
-|  # | Expected Category | Predicted Category | Confidence | Result    |
-| -: | ----------------- | ------------------ | ---------: | --------- |
-|  1 | access            | billing            |      0.413 | Incorrect |
-|  2 | access            | access             |      0.814 | Correct   |
-|  3 | billing           | billing            |      0.682 | Correct   |
-|  4 | billing           | billing            |      0.690 | Correct   |
-|  5 | technical         | access             |      0.465 | Incorrect |
-|  6 | technical         | technical          |      0.763 | Correct   |
+#### Reproducibility Evidence
+
+* **Run date:** 2026-10-12
+* **Checkout commit:** `f0c684a4cc0ea78c254eeb932314cf3bc603e1a5`
+* **Evaluator SHA-256:** `99dec36583039c9344d0a910c97c40fee6d6bbe09880f0e3edab5275254c664b`
+  The evaluator was a staged working-tree change during this run, so this hash identifies the exact tested evaluator source; it is not part of the checkout commit above.
+* **Evaluation CSV:** `tests/held_out_tickets.csv`
+* **Evaluation CSV SHA-256:** `994997e3f47ae53eef85e38d344c6a9ae726f2df5bcbd2b18a3daa65e270ebaf`
+* **Model artifact:** local, Git-ignored `ai/model.joblib`; SHA-256 `bddcbfa2781a0bdb5b2a3ba0a99a8d9d4d965001603c79025ecf2e8113696a92`
+* **Training script:** `ai/train.py`; SHA-256 `60ab4a8dacc05d06da053c2a75c75cbe20e85d3b92150b27b84b6877da35af01`
+* **Training CSV:** `ai/data/tickets.csv` (36 rows); SHA-256 `f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71`
+* **Model provenance:** The recorded training recipe builds a lowercase unigram/bigram TF-IDF and Logistic Regression (`C=10`, `max_iter=1000`) pipeline, evaluates it, refits it on all 36 training rows, and saves it with `joblib`. That script was not run for this evaluation; the pre-existing local artifact was used. Because the artifact is ignored and carries no recorded training metadata, its creation history cannot be independently verified from the repository.
+* **Exact command:** `.venv/bin/python ai/evaluate_heldout.py`
+
+Captured output from that command:
+
+```text
+MISS | case-01 | expected=access | predicted=billing | confidence=0.413
+OK | case-02 | expected=access | predicted=access | confidence=0.814
+OK | case-03 | expected=billing | predicted=billing | confidence=0.682
+OK | case-04 | expected=billing | predicted=billing | confidence=0.69
+MISS | case-05 | expected=technical | predicted=access | confidence=0.465
+OK | case-06 | expected=technical | predicted=technical | confidence=0.763
+
+Accuracy: 4/6 (66.7%)
+```
 
 **Correct predictions:** 4 out of 6
 
