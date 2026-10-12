@@ -10,8 +10,8 @@ SmartDesk, built by the EARTech Information Technology interns.
 | 1:05 – 1:25 | 4. Submit the normal ticket                         | Majd             |
 | 1:25 – 1:55 | 5. Explain category, confidence and priority        | Mohammad Ghassan |
 | 1:55 – 2:15 | 6. Show urgent first                                | Mohammad Ghassan |
-| 2:15 – 2:35 | 7. Stop and restart the server                      | Mahmood          |
-| 2:35 – 3:00 | 8. Refresh and show the same ticket IDs and data    | Mahmood          |
+| 2:15 – 2:35 | 7. Stop and restart the server                      | Mahmoud          |
+| 2:35 – 3:00 | 8. Refresh and show the same ticket IDs and data    | Mahmoud          |
 
 ## Before the demo
 
@@ -70,6 +70,15 @@ Submit ticket 1:
 - Subject: `Cannot access account`
 - Description: `I cannot access my account today`
 
+The form sends this request body to `POST /api/tickets`:
+
+```json
+{
+  "subject": "Cannot access account",
+  "description": "I cannot access my account today"
+}
+```
+
 **Says:** "First, a customer who is locked out. I enter the subject and the description and press *Submit Ticket*. The page confirms it was saved, shows the category and priority, and the ticket appears on the dashboard straight away."
 
 ## 4. Submit the normal ticket (1:05 – 1:25): Majd
@@ -78,6 +87,13 @@ Submit ticket 2:
 
 - Subject: `Cannot sign in to portal`
 - Description: `I cannot sign in to the portal, even though my password appears to be correct.`
+
+```json
+{
+  "subject": "Cannot sign in to portal",
+  "description": "I cannot sign in to the portal, even though my password appears to be correct."
+}
+```
 
 **Says:** "Now a second ticket. It is also a sign-in problem, but it is less severe. We submit it *after* the urgent one on purpose, so it is the newest ticket."
 
@@ -93,7 +109,7 @@ Read out the real percentages on the cards. Do not quote numbers from this scrip
 
 **Says:** "Look at the order. The normal ticket is the newest, but the urgent ticket is still at the top, with a red border. The dashboard sorts urgent tickets first, then newest first within each priority. That way an agent always sees the most important ticket first."
 
-## 7. Stop and restart the server (2:15 – 2:35): Mahmood
+## 7. Stop and restart the server (2:15 – 2:35): Mahmoud
 
 In the server terminal, press `Ctrl+C`, then start the server again.
 
@@ -111,7 +127,7 @@ python backend/app.py
 
 **Says:** "Now I stop the server completely, as if the machine had restarted, and start it again."
 
-## 8. Refresh and show the same ticket IDs and data (2:35 – 3:00): Mahmood
+## 8. Refresh and show the same ticket IDs and data (2:35 – 3:00): Mahmoud
 
 Refresh **http://127.0.0.1:5000**, then open **http://127.0.0.1:5000/api/tickets** in a new tab. The cards do not show IDs, but the API does.
 
@@ -146,10 +162,6 @@ How it was run: `start.sh` started and restarted the server. Tickets were sent a
 | 6. Urgent first       | The page showed id 1 (urgent, red border) above id 2 (normal), although id 2 is newer. |
 | 7. Stop and restart   | The server stopped completely (health stopped answering), then `./start.sh` brought it back in 8 s. |
 | 8. Refresh            | `/api/tickets` returned identical data for ids 1 and 2. The page showed the same two cards in the same order. |
-
-> **Still to do: a live team rehearsal.** The four speakers should run the script once in the browser, typing into the form, and time the full three minutes with speaking. Add the result as "Rehearsal 2" below.
->
-> Timing note: on a fresh clone the first `start.sh` takes about 50 seconds, which is longer than the 25 seconds planned for moment 1. Do the "Before the demo" setup first. With `.venv` already installed, the restart in moment 7 took only a few seconds.
 
 ## Next parts of the demo
 
