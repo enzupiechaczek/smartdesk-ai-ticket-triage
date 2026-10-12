@@ -48,34 +48,65 @@ git clone <repository-url>
 cd <repository-folder>
 ```
 
-### 2. Create the virtual environment (first time only)
 
-Run from the repository root.
+## Running The Application
 
-**Windows (PowerShell)**
+Linux and macOS users can use the Bash launcher (step 2). Windows PowerShell users follow step 3 instead.
+
+### 2. Running Under Linux/MacOS System
+
+> ⚠️ `start.sh` is a Bash script, not a PowerShell script. It needs `bash` and Python 3.
+
+From the repository root, run:
+
+```bash
+chmod +x ./start.sh
+./start.sh
+```
+
+The script changes to the repository folder itself, so `path/to/repository/start.sh` also works from another folder. Each run:
+
+1. creates the virtual environment `.venv` in the repository root, only if it is missing,
+2. activates `.venv` and installs `backend/requirements.txt`,
+3. trains the model with `python ai/train.py`,
+4. starts the server with `python backend/app.py`.
+
+If installing or training fails, the script stops and does not start the server.
+
+You should see `Running on http://127.0.0.1:5000`. Leave this terminal open while you use the app.
+
+Then open **http://127.0.0.1:5000** in a browser. You should see the ticket form and the ticket dashboard.
+
+macOS is untested.
+
+### 3. Running Under **Windows (PowerShell)**
+
+Run every command from the repository root.
+
+#### Create the virtual environment and install requirements (first time only)
 
 ```powershell
-python -m venv .\backend\venv
-. .\backend\.venv\Scripts\Activate.ps1
+python -m venv .venv
+. .\.venv\Scripts\Activate.ps1
 pip install -r .\backend\requirements.txt
 ```
 
-**Mac / Linux**
+#### Activate the environment (every new PowerShell terminal)
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r backend/requirements.txt
+```powershell
+. .\.venv\Scripts\Activate.ps1
 ```
 
-Your prompt should now start with `(.venv)`. In every new terminal, activate the environment again before starting the server.
+Your prompt should now start with `(.venv)`.
 
-### 3. Start SmartDesk
+#### Train the model, then start SmartDesk
 
-Flask serves both the API and the web page, so you only need **one terminal**. From the repository root, with the virtual environment active (see step 2), run:
+```powershell
+python ai/train.py
+python backend/app.py
+```
 
-**Windows:** `python backend/app.py`
-**Mac / Linux:** `python3 backend/app.py`
+Training creates `ai/model.joblib`, which the server needs to classify tickets.
 
 You should see `Running on http://127.0.0.1:5000`. Leave this terminal open while you use the app.
 
@@ -88,6 +119,8 @@ Open http://127.0.0.1:5000/api/health in a browser. You should see:
 ```json
 { "service": "SmartDesk local API", "status": "ok" }
 ```
+
+If the model has not been trained yet, the same address returns HTTP 503 with `"status": "error"`. Run `python ai/train.py`, then check again.
 
 To stop the server, press `Ctrl+C` in the terminal.
 
@@ -106,7 +139,7 @@ This runs the API validation tests in [backend/test_api.py](backend/test_api.py)
 | Method | Route          | What it does                                                |
 | ------ | -------------- | ----------------------------------------------------------- |
 | GET    | `/`            | Serves the SmartDesk web page                               |
-| GET    | `/api/health`  | Checks that the server is running                           |
+| GET    | `/api/health`  | Checks that the server is running and the model is trained  |
 | GET    | `/api/tickets` | Returns every saved ticket, urgent first, then newest first |
 | POST   | `/api/tickets` | Validates a new ticket, classifies it, saves it             |
 
@@ -114,12 +147,18 @@ This runs the API validation tests in [backend/test_api.py](backend/test_api.py)
 
 ### `GET /api/health`
 
-A quick check that the Flask server is up.
+A quick check that the Flask server is up and the model file `ai/model.joblib` exists.
 
 **Response `200 OK`**
 
 ```json
 { "status": "ok", "service": "SmartDesk local API" }
+```
+
+**Response `503 Service Unavailable`**: returned when the model has not been trained yet.
+
+```json
+{ "status": "error", "message": "Model not trained. Run python ai/train.py" }
 ```
 
 ### `GET /api/tickets`
