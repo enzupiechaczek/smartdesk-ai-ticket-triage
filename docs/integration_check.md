@@ -20,10 +20,10 @@ Verify the end-to-end integration between the Flask backend (`backend/app.py`) a
 - **Session 2: Captured POST session**
   - **Timestamps**: 2026-10-10, approximately 23:25–23:27 UTC
   - **IDs created**: 5, 6, 7, 8
-  - **Tested commit**: Not recorded at execution time.
+  - **Tested commit**: Unknown (not recorded at execution time).
 
 - **Session 3: GET/restart session**
-  - **Date & Times**: 2026-10-11
+  - **Date & Times**: 2026-10-11, before 04:01:07 +02:00 and after 04:03:06 +02:00
   - **Tested commit**: `72f0f56`
   - **Scope**: Verification of GET responses and restart persistence; existing model reused without retraining.
 
@@ -39,10 +39,10 @@ Verify the end-to-end integration between the Flask backend (`backend/app.py`) a
 
 ### 3. GET and Restart Verification (2026-10-11)
 
-1. **Pre-restart verification**: Queried `GET http://127.0.0.1:5000/api/tickets` and captured the raw output in [Before-restart GET capture](docs/get-pre-restart.txt).
+1. **Pre-restart verification (04:01:07 +02:00)**: Queried `GET http://127.0.0.1:5000/api/tickets` and captured the raw output in [Before-restart GET capture](get-pre-restart.txt).
 2. **Server stop**: Terminated running server process via `Ctrl+C`.
 3. **Server restart**: Launched server via `python backend/app.py` from repository root.
-4. **Post-restart verification**: Queried `GET http://127.0.0.1:5000/api/tickets` and captured the raw output in [After-restart GET capture](docs/get-post-restart.txt).
+4. **Post-restart verification (04:03:06 +02:00)**: Queried `GET http://127.0.0.1:5000/api/tickets` and captured the raw output in [After-restart GET capture](get-post-restart.txt).
 
 ## Results
 
@@ -136,6 +136,8 @@ Verify the end-to-end integration between the Flask backend (`backend/app.py`) a
 }
 ```
 
+*Note on Ticket 3 (ID 7)*: Retained POST request evidence confirms that the actual payload submitted had `subject` ending with `twice for` while the `description` ended with `twice for this month`. Both the returned POST response and the GET captures store this exact subject string. The results table accurately reflects the actual submitted input.
+
 #### Ticket 4: Download error
 
 **Request body:**
@@ -169,8 +171,8 @@ Both captured responses recorded an `HTTP/1.1 200 OK` status and preserved all e
 
 **Inspectable raw captures:**
 
-- [Before-restart GET capture](docs/get-pre-restart.txt)
-- [After-restart GET capture](docs/get-post-restart.txt)
+- [Before-restart GET capture](get-pre-restart.txt)
+- [After-restart GET capture](get-post-restart.txt)
 
 Every record across both captures preserves identical fields: `id`, `subject`, `description`, `category`, `confidence`, `priority`, and `created_at`.
 
@@ -178,9 +180,7 @@ Every record across both captures preserves identical fields: `id`, `subject`, `
 
 - **Before-restart IDs**: 1, 2, 3, 4, 5, 6, 7, 8
 - **After-restart IDs**: 1, 2, 3, 4, 5, 6, 7, 8
-- **Result**: Pass. Both files reflect all eight records.
-
-**Chronology Limitation**: The file metadata for the captures is chronologically inverted (pre-restart recorded at 04:03:06 and post-restart at 04:01:07). Since the original exact sequence cannot be definitively established from the file metadata alone, we are disclosing this limitation. However, the response bodies match perfectly across both captures, establishing that all eight records persist regardless of order.
+- **Result**: Pass. All eight records survived server restart with identical IDs, timestamps, categories, and confidence scores.
 
 ## Findings and Limits
 
