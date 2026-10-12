@@ -16,7 +16,7 @@ SmartDesk, built by the EARTech Information Technology interns.
 ## Before the demo
 
 - Clone the latest `main` and complete README step 2 (Linux/macOS) or step 3 (Windows PowerShell) once, so `.venv` exists and packages are installed.
-- For a clean dashboard, stop the server and delete `backend/smartdesk.db`. The server creates an empty one on start. The file is not tracked by Git.
+- Use a disposable demo checkout and a synthetic-only database. If an empty dashboard is needed, stop the server and back up any database you need before removing the disposable demo database (`backend/smartdesk.db`; the server creates an empty one on start). Never clear the database between the before and after restart checks in moments 7 and 8.
 - Open `test_tickets.json` so the subjects and descriptions can be copied.
 - Keep one terminal at the repository root and one browser window ready.
 
@@ -24,10 +24,10 @@ SmartDesk, built by the EARTech Information Technology interns.
 
 The payloads in [test_tickets.json](../test_tickets.json) contain only `subject` and `description`, so each one can be pasted into the form or posted to `POST /api/tickets` as it is.
 
-The table below lists the **expected** labels separately from the **observed** results. Expected labels come from the priority rule in [priority.md](priority.md) and from the meaning of each ticket. Observed results are what the app returned in the rehearsal recorded below. Confidence can change whenever the model is retrained on different data, so read the real values from the cards during the demo.
+The table below lists the **expected** labels separately from the **observed** results. Expected labels come from the priority rule in [priority.md](priority.md) and from the meaning of each ticket. Observed results are what the app returned in the automated technical verification recorded below, not in a speaker rehearsal. Confidence can change whenever the model is retrained on different data, so read the real values from the cards during the demo.
 
-| # | Subject                   | Expected category | Expected priority | Observed in rehearsal (category / confidence / priority) |
-| - | ------------------------- | ----------------- | ----------------- | -------------------------------------------------------- |
+| # | Subject                   | Expected category | Expected priority | Observed in automated verification (category / confidence / priority) |
+| - | ------------------------- | ----------------- | ----------------- | ---------------------------------------------------------------------- |
 | 1 | Cannot access account     | access            | urgent            | access / 74% / urgent                                    |
 | 2 | Cannot sign in to portal  | access            | normal            | access / 87% / normal                                    |
 | 3 | Charged twice this month  | billing           | normal            | billing / 88% / normal                                   |
@@ -135,37 +135,78 @@ Refresh **http://127.0.0.1:5000**, then open **http://127.0.0.1:5000/api/tickets
 
 ---
 
-## Rehearsal record
+## Automated technical verification
 
-### Rehearsal 1: automated technical run
+These are automated technical checks run by Claude Code (an AI assistant). **The speakers did not take part and nothing was spoken.** They are not a rehearsal and do not measure presentation time. Tickets were sent as the same JSON `POST /api/tickets` request the form makes, not typed into the form. Headless Chrome loaded the page to check what the cards showed. That checks the card fields, not the spoken explanation in moment 5.
 
-| Field                                         | Value |
-| --------------------------------------------- | ----- |
-| Date                                          | 2026-10-12, 17:33 – 17:34 (local time) |
-| Tested commit                                 | Fresh clone of `main` at `0706db3`, fast-forwarded to `A1-merge-branch` at `0cc6af7`, plus the uncommitted A1 changes in this PR (model-path fix in `backend/app.py`, this script) |
-| Machine                                       | Windows 11, Git Bash, Python 3.12 |
-| Participants                                  | Automated run by Claude Code (AI assistant) for Mohammad Ghassan. The four speakers did not take part, so nothing was spoken. |
-| Model trained                                 | Yes. `start.sh` ran `python ai/train.py` ("Accuracy: 0.625", "Saved model.joblib"). |
-| All eight moments completed?                  | Yes, see the results below |
-| A1 segment duration                           | 1:07 machine time for all eight moments, including 53 s for the first `start.sh` run (venv creation, package install and training on a fresh clone). Speaking time is not included. |
-| Persistence: same IDs and data after restart? | Yes. IDs 1 and 2, with the same subjects, categories, confidences, priorities and timestamps, before and after a full stop and restart. |
+### Run 1: 2026-10-12, 17:33 – 17:34 (local time, time zone not recorded)
 
-How it was run: `start.sh` started and restarted the server. Tickets were sent as the same JSON `POST /api/tickets` request the form makes, not typed into the form. Headless Chrome loaded http://127.0.0.1:5000 after moments 2, 6 and 8 to check what the page actually showed.
+| Field                      | Value |
+| -------------------------- | ----- |
+| Run for                    | Mohammad Ghassan |
+| Tested code                | Fresh clone of `main` at `0706db3`, fast-forwarded to `A1-merge-branch` at `0cc6af7`, plus uncommitted changes to `backend/app.py` (model path) and this script. The patch was not saved, so its exact content is not recorded. Commit `0c4d631` committed an `app.py` model-path change at 17:45; whether it is identical to the tested patch was not recorded. At `0cc6af7`, `app.py` also stopped at startup when the model was missing; that check has since been removed (see Run 2). |
+| Machine                    | Windows 11, Git Bash, Python 3.12 (exact versions not recorded) |
+| Model trained              | Yes. `start.sh` ran `python ai/train.py` ("Accuracy: 0.625", "Saved model.joblib"). |
+| Technical checks exercised | Server start and restart with `start.sh`, `/api/health`, page load, two `POST /api/tickets` requests, card fields and order in headless Chrome, `/api/tickets` before and after the restart. See the table below. |
+| Machine execution time     | 1:07 from the first `start.sh` to the last check, including 53 s for the first `start.sh` run (venv creation, package install and training). This is machine time, not presentation duration. |
+| Persistence                | IDs 1 and 2, with the same subjects, categories, confidences, priorities and timestamps, before and after a full stop and restart. |
 
-| Moment                | Result |
-| --------------------- | ------ |
-| 1. Start the server   | One `bash ./start.sh` on a fresh clone (no `.venv`, no model). `/api/health` returned 200 `ok` after 53 s. |
-| 2. Open the page      | HTTP 200. Form shown, dashboard showed "No tickets yet." |
-| 3. Submit urgent      | 201, id 1: access, 74%, urgent |
-| 4. Submit normal      | 201, id 2: access, 87%, normal |
-| 5. Explain the fields | Each card showed the category, confidence % and priority, matching the API response. |
-| 6. Urgent first       | The page showed id 1 (urgent, red border) above id 2 (normal), although id 2 is newer. |
-| 7. Stop and restart   | The server stopped completely (health stopped answering), then `./start.sh` brought it back in 8 s. |
-| 8. Refresh            | `/api/tickets` returned identical data for ids 1 and 2. The page showed the same two cards in the same order. |
+| Check                     | Result |
+| ------------------------- | ------ |
+| 1. Start the server       | One `bash ./start.sh` on a fresh clone (no `.venv`, no model). `/api/health` returned 200 `ok` after 53 s. |
+| 2. Open the page          | HTTP 200. Form shown, dashboard showed "No tickets yet." |
+| 3. Submit urgent          | 201, id 1: access, 74%, urgent |
+| 4. Submit normal          | 201, id 2: access, 87%, normal |
+| 5. Card fields            | Each card showed the category, confidence % and priority, matching the API response. No explanation was spoken. |
+| 6. Urgent first           | The page showed id 1 (urgent, red border) above id 2 (normal), although id 2 is newer. |
+| 7. Stop and restart       | The server stopped completely (health stopped answering), then `./start.sh` brought it back in 8 s. |
+| 8. Refresh and compare    | `/api/tickets` returned identical data for ids 1 and 2. The page showed the same two cards in the same order. |
+
+### Run 2: 2026-10-12, 18:14 – 18:16 (+03:00), final code
+
+| Field                      | Value |
+| -------------------------- | ----- |
+| Tested code                | Fresh clone of `A1-merge-branch` at `e5d3f96` (which includes `main` at `0706db3`), with one uncommitted change: the startup exit removed from `backend/app.py`. The tested `backend/app.py` is blob `7bdd2a98443f42b02f96c9ffab990c4a082fd9e3`, the same file as in the commit that adds this record (check with `git rev-parse HEAD:backend/app.py`). No other code file differed from `e5d3f96`. |
+| Machine                    | Windows 11 Pro 10.0.26300, Git Bash (bash 5.3.15), Python 3.12.7, headless Chrome for the page checks |
+| Start state                | No `.venv`, no `ai/model.joblib`, no `backend/smartdesk.db` |
+| Model trained              | Yes. `start.sh` ran `python ai/train.py` ("Accuracy: 0.625", "Saved model.joblib"). |
+| Technical checks exercised | The same checks as Run 1, listed below. The restart was started from outside the repository folder. |
+| Machine execution time     | 1:58 from the first `start.sh` to the after-restart comparison, including pauses between steps that were run one at a time. This is machine time, not presentation duration. |
+| Persistence                | IDs 1 and 2, every field identical in `/api/tickets` before and after the restart. The page showed the same two cards in the same order. |
+
+| Check                     | Result |
+| ------------------------- | ------ |
+| 1. Start the server       | `./start.sh` from the repository root created `.venv`, installed the requirements, trained and started. `/api/health` returned 200 `{"service": "SmartDesk local API", "status": "ok"}` after 71 s. |
+| 2. Open the page          | `GET /` returned 200 with the ticket form. `/api/tickets` returned `[]`. |
+| 3. Submit urgent          | 201, id 1: access, 0.739, urgent |
+| 4. Submit normal          | 201, id 2: access, 0.867, normal |
+| 5. Card fields            | Chrome showed "Category: access (74%) \| Priority: urgent" and "Category: access (87%) \| Priority: normal". No explanation was spoken. |
+| 6. Urgent first           | Chrome showed the urgent card (id 1) above the newer normal card (id 2). `/api/tickets` listed id 1 first. |
+| 7. Stop and restart       | The server process was ended and `/api/health` refused connections; `backend/smartdesk.db` was kept. `start.sh`, run from the folder above the repository, brought the server back: `/api/health` 200 after 7 s. |
+| 8. Refresh and compare    | `/api/tickets` returned the same ids 1 and 2 with identical data. Chrome showed the same two cards in the same order. |
+
+The missing-model behaviour and the unit tests on this code are recorded in [startupevidence.md](../startupevidence.md).
+
+## Speaker rehearsal
+
+**Pending: not yet performed.** Fill in each field only after the four speakers have run the script once from a fresh clone of `main`, in a browser, typing into the form and speaking their lines.
+
+| Field                                                   | Value     |
+| ------------------------------------------------------- | --------- |
+| Date, time and time zone                                | [pending] |
+| Tested version (`git rev-parse HEAD`, fresh clone)      | [pending] |
+| Environment (OS, Python version, startup command)       | [pending] |
+| Participants                                            | [pending] |
+| Measured spoken duration of the A1 part (target 3:00)   | [pending] |
+| Urgent ticket: id, category, confidence, priority       | [pending] |
+| Normal ticket: id, category, confidence, priority       | [pending] |
+| Urgent card above the newer normal card?                | [pending] |
+| Same IDs and data after the restart?                    | [pending] |
+| Problems seen and changes made                          | [pending] |
 
 ## Next parts of the demo
 
-These scripts are written by Groups A2 and B in their own pull requests. The links below will not work until those pull requests are merged.
+These scripts are written by Groups A2 and B in their own pull requests, so the links below are pending and will not work until those pull requests are merged. On 12 October 2026 the AI demo was in PR #50 (open, not merged) and no QA demo pull request existed yet. The hand-over order (A1 shows the app, A2 explains the model, B explains the testing) and the three-minute limits still have to be agreed with the A2 and B owners.
 
 - [AI demo](demo_ai.md)
 - [QA demo](demo_qa.md)
