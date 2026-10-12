@@ -44,4 +44,4 @@ Cross-validation mean accuracy: 0.632 (+/- 0.198)
 - One billing ticket ("Please send me a receipt for my most recent payment.") was predicted as access. It is short and has no strong billing word such as invoice or charge.
 - The saved model (ai/model.joblib) is trained on all 36 rows after the evaluation, so these scores describe the 80% model, not the final one.
 - The dataset is small (36 synthetic rows). More and more varied rows are the most likely way to improve the scores.
-- Next step: ai/predictor.py will load model.joblib to replace the temporary stub (task A2-2.3).
+- Implementation status: ai/predictor.py loads ai/model.joblib for category prediction. The model must be generated with python ai/train.py before the API is used.
