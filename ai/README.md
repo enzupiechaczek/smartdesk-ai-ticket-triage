@@ -68,5 +68,7 @@ python ai/evaluate_heldout.py --csv PATH_TO_LOCAL_EVALUATION_CSV
 
 The evaluator reports stable row-based case identifiers, expected/predicted labels, confidence values, the CSV SHA-256, and an aggregate score. It does not print ticket text. Case identifiers refer to that file hash and row order; keep the file unchanged when comparing model versions.
 
+Unreadable, malformed, invalidly encoded or validation-failing evaluation CSVs produce a concise text-safe message on stderr and exit status 1. Successful evaluation exits with status 0. Error messages do not include ticket contents or raw exception values.
+
 See `docs/model_evaluation.md` and `docs/failure_analysis.md` for versioned results and limitations. Do not commit `ai/model.joblib` or `tests/held_out_tickets.csv`.
 

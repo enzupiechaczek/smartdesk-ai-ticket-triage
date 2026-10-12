@@ -6,6 +6,8 @@ The baseline replay uses the training data, training script and predictor from c
 
 Both runs used the same unchanged local evaluation CSV. Its contents are not included; its SHA-256 and the exact executed argument lists and working directories are in [manifest.json](manifest.json). Case IDs map to file rows under that hash.
 
+[source-comparison.json](source-comparison.json) preserves the original executed training/evaluator/predictor hashes and compares their content after replacing CRLF with LF only. Baseline sources use LF; updated sources use CRLF. All three normalized sources are identical and match their recorded source commits. This is source-format evidence, distinct from normalization of shared output captures. The subsequent CLI error handler is a later source version and does not replace the hashes or results of these historical replays.
+
 For either source snapshot, with its dependencies installed and a private local evaluation CSV available, the model commands are:
 
 ```text

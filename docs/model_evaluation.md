@@ -7,10 +7,24 @@ Both models were trained and evaluated locally on **2026-10-12 (UTC+03:00, Asia/
 - Reviewed PR #47 head: `3698de47425d1a0dcd60fec5c3c8f654f7517c82`.
 - Historical baseline source for the fresh replay: `4267ae5495b83b28b2f079803726cfa345a29429` (36-row training data, training script, and predictor).
 - Tested local code commit: `213281c9cc717f1677451cb31db8c47b50d81173`. It merges current main `0706db3add33fab7f5007049d30be6ef25a81115` and uses the original six additional technical examples.
-- Both replays use the same corrected evaluator from the tested local code commit. Training/predictor source code is unchanged between the two versions; only the training dataset grows from 36 to 42 rows.
+- Both replays use the evaluator content from the tested local code commit. The executed snapshots have different LF/CRLF line endings; training, predictor and evaluator contents are identical after CRLF-to-LF normalization only. Original byte hashes are preserved rather than relabelled. The training dataset grows from 36 to 42 rows.
 - Evaluation-file SHA-256: `043a43417794e25e405d418248110d5cf7b1b2957706da782887927bfdc571c1`. Case IDs identify rows in this unchanged file and are not ticket text.
 
 The six evaluation cases were previously exposed in Git history. These scores are for a **separate evaluation set, not a genuinely blind benchmark**. Removing tracking does not undo that exposure.
+
+## Executed-source comparison
+
+[The source comparison](evidence/pr47/source-comparison.json) records an actual comparison of the executed baseline snapshot and the executed updated files before the CLI follow-up edits. The updated files' original hashes were checked against the manifest; copies of both source snapshots were retained outside the repository. Each normalized source was also checked against its recorded Git source commit.
+
+| Source | Baseline CRLF sequences | Updated CRLF sequences | Equal after CRLF-to-LF only |
+| --- | ---: | ---: | --- |
+| `ai/train.py` | 0 | 51 | Yes |
+| `ai/evaluate_heldout.py` | 0 | 81 | Yes |
+| `ai/predictor.py` | 0 | 17 | Yes |
+
+Both original-byte hashes and normalized-content hashes are in that artifact. No trimming, BOM removal or other source rewriting was used in this comparison. The replay sources differ only in line endings; no training, prediction or evaluation logic difference was found between those two executed versions.
+
+The later CLI error-handling change is a follow-up evaluator version. It must not be attributed to the already captured baseline/updated runs. Their original evaluator hashes, model hashes, dates, metrics and output captures remain unchanged; no new training run was needed to explain the verified formatting differences.
 
 ## Actual fresh results
 

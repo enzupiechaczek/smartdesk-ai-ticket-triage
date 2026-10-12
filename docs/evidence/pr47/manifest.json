@@ -128,5 +128,6 @@
       "saved_model_training_rows": 42
     }
   },
-  "capture_format": "UTF-8; LF line endings normalized for shared artifact hashes; output values unchanged. Empty stderr uses a No stderr output. marker."
+  "capture_format": "UTF-8; LF line endings normalized for shared artifact hashes; output values unchanged. Empty stderr uses a No stderr output. marker.",
+  "source_comparison_file": "source-comparison.json"
 }

@@ -50,8 +50,24 @@ The six-case accuracy stays at 4/6 (66.7%) and both analysed errors remain. The 
 - [ ] Ask Group B whether each routing mistake matters to a support agent and record the actual feedback.
 - [ ] Agree any label-boundary clarification with the team; do not change expected labels just to raise the score.
 - [ ] Agree ownership/dependency handling with Enzu for task 2930 / PR #46 and task 2929 / PR #43.
+- [ ] Agree the 42-row README/evaluation/model-card/demo transition with the owners of PR #48, #49 and #50.
 
 The historical six-line `docs/integration_check.md` is preserved as inherited task 2929 work; the expanded integration update belongs in PR #43. Evaluator/report work inherited from PR #46 is identified rather than silently removed or treated as independently approved.
+
+### Proposed coordination plan — not yet agreed
+
+No completed team discussion or dependency agreement has been reported. The following proposals need confirmation from Enzu and the task owners; they are not completed work or permission to merge.
+
+| PR / task | Owner | Proposed action | Status |
+| --- | --- | --- | --- |
+| [#43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) / 2929 | AakashAaku | Keep the expanded integration report authoritative. Agree removal of this PR's obsolete six-line addition or an explicit merge plan that preserves #43's report. | Pending agreement |
+| [#46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46) / 2930 | WhitneyKataka | Preserve the 36-row evaluation evidence as historical. Agree ownership and merge order for the shared evaluator/report versions. | Pending agreement |
+| #47 / 2931 | WhitneyKataka and A2 | Keep the source-pinned 42-row failure analysis/results; agree the canonical evaluator including CLI failure handling and tests. | Pending agreement |
+| [#48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) / 2938 | WhitneyKataka | Preserve the reproducibility captures for the 36-row baseline. Agree the shared README's current dataset/version wording and separate 42-row evidence links. | Pending agreement |
+| [#49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) / 2939 | WhitneyKataka | Keep baseline model-card metrics versioned; agree a separate 42-row dataset/metric/limitation section after transition. | Pending agreement |
+| [#50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) / 2940 | WhitneyKataka | Keep existing demo observations attached to their tested baseline. Agree whether the demo stays historical or needs focused verification with the 42-row model. | Pending agreement |
+
+After the discussions actually happen, record the date, participants, A2 feedback for CASE-001/CASE-005, Group B's routing-impact feedback, agreed label boundaries, and the owner/merge order of each shared update. Expected evaluation labels must remain unchanged merely to raise the score.
 
 ## Evidence
 
@@ -60,5 +76,6 @@ The historical six-line `docs/integration_check.md` is preserved as inherited ta
 - [Updated training output](evidence/pr47/updated-train.txt).
 - [Updated count-only separate-set evaluation](evidence/pr47/updated-evaluation.txt).
 - [Actual run dates, tested commits, dataset/model hashes and exact commands](evidence/pr47/manifest.json).
+- [Original executed-source hashes and LF/CRLF content comparison](evidence/pr47/source-comparison.json).
 
 The technical fixes and captured evidence are prepared for PR #47. Team discussion, dependency agreement, Enzu recheck/approval, and merge remain pending. Add the merged PR link to the task only after the actual merge.

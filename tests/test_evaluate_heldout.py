@@ -2,6 +2,8 @@ import contextlib
 import hashlib
 import io
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -24,7 +26,8 @@ class SeparateEvaluationTests(unittest.TestCase):
         output = io.StringIO()
         with patch.object(evaluate_heldout, "predict_category", predictor):
             with contextlib.redirect_stdout(output):
-                evaluate_heldout.main(["--csv", str(self.path)])
+                exit_code = evaluate_heldout.main(["--csv", str(self.path)])
+        self.assertEqual(exit_code, 0)
         text = output.getvalue()
         self.assertIn("CASE-001 | OK | expected=access", text)
         self.assertIn("Accuracy: 1/1 (100.0%)", text)
@@ -61,6 +64,60 @@ class SeparateEvaluationTests(unittest.TestCase):
                 with self.assertRaises(ValueError) as error:
                     evaluate_heldout.evaluate_csv(self.path, Mock())
                 self.assertNotIn("PRIVATE_SYNTHETIC_SENTINEL", str(error.exception))
+
+    def test_cli_handles_missing_csv_without_disclosing_path(self):
+        missing = self.path.parent / "PRIVATE_SYNTHETIC_SENTINEL.csv"
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with patch.object(evaluate_heldout, "predict_category") as predictor:
+            with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                exit_code = evaluate_heldout.main(["--csv", str(missing)])
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stdout.getvalue(), "")
+        self.assertEqual(stderr.getvalue(), "Error: Cannot read the local evaluation CSV.\n")
+        self.assertNotIn("PRIVATE_SYNTHETIC_SENTINEL", stderr.getvalue())
+        predictor.assert_not_called()
+
+    def test_cli_handles_malformed_and_invalid_csv_without_private_text(self):
+        for content in (
+            'ticket_text,category\n"PRIVATE_SYNTHETIC_SENTINEL,access\n',
+            "ticket_text,category\nPRIVATE_SYNTHETIC_SENTINEL,unknown\n",
+        ):
+            with self.subTest(content=content):
+                self.write_csv(content)
+                stdout, stderr = io.StringIO(), io.StringIO()
+                with patch.object(evaluate_heldout, "predict_category") as predictor:
+                    with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+                        exit_code = evaluate_heldout.main(["--csv", str(self.path)])
+                self.assertEqual(exit_code, 1)
+                self.assertEqual(stdout.getvalue(), "")
+                self.assertEqual(stderr.getvalue(), "Error: Invalid evaluation CSV or prediction data.\n")
+                self.assertNotIn("PRIVATE_SYNTHETIC_SENTINEL", stderr.getvalue())
+                predictor.assert_not_called()
+
+    def test_cli_handles_invalid_utf8_without_raw_byte_disclosure(self):
+        self.path.write_bytes(b"ticket_text,category\nPRIVATE_SYNTHETIC_SENTINEL\xff,access\n")
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            exit_code = evaluate_heldout.main(["--csv", str(self.path)])
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stdout.getvalue(), "")
+        self.assertEqual(stderr.getvalue(), "Error: Invalid evaluation CSV or prediction data.\n")
+        self.assertNotIn("PRIVATE_SYNTHETIC_SENTINEL", stderr.getvalue())
+
+    def test_process_exits_nonzero_with_safe_stderr_for_csv_failures(self):
+        malformed = 'ticket_text,category\n"PRIVATE_SYNTHETIC_SENTINEL,access\n'
+        self.write_csv(malformed)
+        for path in (self.path.parent / "PRIVATE_SYNTHETIC_SENTINEL.csv", self.path):
+            with self.subTest(path=path):
+                process = subprocess.run(
+                    [sys.executable, str(Path(evaluate_heldout.__file__)), "--csv", str(path)],
+                    capture_output=True, text=True, check=False,
+                )
+                self.assertEqual(process.returncode, 1)
+                self.assertEqual(process.stdout, "")
+                self.assertIn("Error:", process.stderr)
+                self.assertNotIn("PRIVATE_SYNTHETIC_SENTINEL", process.stderr)
+                self.assertNotIn("Traceback", process.stderr)
 
 
 if __name__ == "__main__":

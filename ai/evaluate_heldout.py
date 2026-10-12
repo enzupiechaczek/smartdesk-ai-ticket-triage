@@ -66,7 +66,14 @@ def main(argv=None):
     parser.add_argument("--csv", type=Path, default=CSV_PATH,
                         help="Path to the local-only evaluation CSV.")
     args = parser.parse_args(argv)
-    results = evaluate_csv(args.csv, predict_category)
+    try:
+        results = evaluate_csv(args.csv, predict_category)
+    except OSError:
+        print("Error: Cannot read the local evaluation CSV.", file=sys.stderr)
+        return 1
+    except (UnicodeError, csv.Error, ValueError):
+        print("Error: Invalid evaluation CSV or prediction data.", file=sys.stderr)
+        return 1
     print("Separate evaluation set; ticket text is omitted.")
     print("Evaluation CSV SHA-256:", results["csv_sha256"])
     for case in results["cases"]:
@@ -75,7 +82,8 @@ def main(argv=None):
               f"predicted={case['predicted']} | confidence={case['confidence']:.3f}")
     correct, total = results["correct"], results["total"]
     print(f"Accuracy: {correct}/{total} ({correct / total:.1%})")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
