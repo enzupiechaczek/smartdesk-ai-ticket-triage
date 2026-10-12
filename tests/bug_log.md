@@ -33,6 +33,20 @@ open bugs. They are listed here so the reclassification is visible rather than s
 
 > **Note:** The statement 'No genuine bugs found' applies specifically to earlier API-contract and payload validation checks (which strictly met backend specifications), and does not contradict the new model-quality classification entry below.
 
+> **Task 2933 Bug Log Audit & Verification Notes (Original vs. Updated)**
+> 
+> * **Preservation of Exact Tested Inputs & Typos:**
+>   * **What was previously recorded:** The bug log used generalized or polished input strings.
+>   * **What was changed:** Restored the exact, authentic submitted test input including historical transcription variants (such as subject `"accesss issue"` with triple 's') to match the recorded retest payload and screenshot evidence precisely.
+> 
+> * **Session Attribution & Explicit Timestamps:**
+>   * **What was previously recorded:** Test timing and commit references were loosely described.
+>   * **What was changed:** Explicitly documented the exact commit hash `880adfa49912bb0e213c11f63ddbf73cd7657cf4` alongside the precise timestamp `2026-10-09 18:51:00 EEST` for the retest session.
+> 
+> * **Payload Verification & Historical Comparison:**
+>   * **What was previously recorded:** The result was noted without structured verification of the JSON response fields.
+>   * **What was changed:** Added explicit verification against the response payload evidence confirming ID 24, category `billing`, confidence `0.444`, and priority `normal`. Also explicitly contrasted this with the earlier run on `2026-10-08` which returned `access` at `0.41` confidence.
+
 | Title | Steps to reproduce | Expected | Actual | Severity (high, medium, low) | Evidence | Owner |
 | --- | --- | --- | --- | --- | --- | --- |
 | Email-update request classified as billing instead of access | 1. Check commit `880adfa49912bb0e213c11f63ddbf73cd7657cf4` on 2026-10-09 18:51:00 EEST.<br>2. Open ticket form.<br>3. Enter subject `"accesss issue"` and description `"How can I update the registered email address on my workspace account?"`.<br>4. Click submit.<br>5. Check created ticket #24 and observe returned AI category in API response and Dashboard. | Create ticket successfully with category "access". | The form submitted successfully. In DevTools Network, `POST /api/tickets` returned HTTP 201 Created with generated ID 24 on commit `880adfa49912bb0e213c11f63ddbf73cd7657cf4` (tested 2026-10-09 18:51:00 EEST). The AI categorized it as billing with 0.444 confidence and normal priority. After reloading the dashboard, ticket #24 remained visible with all data intact. Note: Verified against response payload evidence confirming ID 24, category 'billing', confidence 0.444, and priority 'normal'. An earlier run on 2026-10-08 returned access at 0.41 confidence. | Pending triage | ![retest screenshot](evidences/task-2933/vaildaccessonpageretest.png) | Pending coordination |
