@@ -25,22 +25,45 @@ It was retried with `--depth 1` and with `--filter=blob:none` and failed the sam
 clone of a small unrelated repository completed in 2 seconds, so the network was up; transfers above
 roughly 120 KB were being reset.
 
-The fresh clone was therefore taken from the local repository, which already had `origin/main`
-fetched from GitHub. The comparison that establishes equivalence:
+The fresh clone was therefore taken from the local repository. This is not inferred; it is recorded in
+the clone's own reflog, which is the oldest entry in it:
 
 ```
-$ git rev-parse 57a7fae^{tree}
-464d4c2c05097043baf739580dc761c0c1069ed9
-$ git rev-parse origin/main^{tree}
-464d4c2c05097043baf739580dc761c0c1069ed9
-$ git ls-tree -r 57a7fae
-$ git ls-tree -r origin/main
-$ compare both listings
-file-by-file listing IDENTICAL, 79 entries
+$ git reflog show --date=iso | Select-Object -Last 3
+d310d2b HEAD@{2026-10-12 03:57:57 +0400}: commit: Day 4 regression test of merged main on a fresh clone
+57a7fae HEAD@{2026-10-12 03:57:57 +0400}: checkout: moving from merged-main to b-username123212312-day4-regression
+57a7fae HEAD@{2026-10-12 02:13:30 +0400}: clone: from D:\programming_projects\smartdesk-ai-ticket-triage
 ```
 
-The trees are identical and the 79-entry listing matches line for line, so the tested code is
-byte-for-byte the code on GitHub `main`.
+The refspec in `.git/config` confirms which branch was taken:
+
+```
+fetch = +refs/heads/merged-main:refs/remotes/origin/merged-main
+```
+
+That local repository had `origin/main` fetched from GitHub, and its `merged-main` branch is at the
+same commit, `57a7fae`.
+
+The comparison below was run against GitHub on 2026-10-12, not paraphrased. `main` was re-fetched
+first, and the two listings were written to files and compared:
+
+```
+$ git fetch origin main
+$ git ls-tree -r 57a7fae            > a.txt
+$ git ls-tree -r 57a7fae65a7e8df9ec2fb35a131291ff93c6ddb9 > b.txt
+$ Compare-Object (Get-Content a.txt) (Get-Content b.txt)
+  (no output)
+  entries in each listing : 79
+  SHA256 of 57a7fae listing : 43D2F2755D1EBD3D4E5DA5F841AED43D78C849B613075E9DD34591E9C4B857F0
+  SHA256 of main    listing : 43D2F2755D1EBD3D4E5DA5F841AED43D78C849B613075E9DD34591E9C4B857F0
+
+$ git rev-parse 57a7fae^{tree}   -> 464d4c2c05097043baf739580dc761c0c1069ed9
+$ git rev-parse main^{tree}      -> 464d4c2c05097043baf739580dc761c0c1069ed9
+```
+
+`main` resolved to `57a7fae65a7e8df9ec2fb35a131291ff93c6ddb9` at the time of that fetch. The tree
+objects are equal, the two 79-entry listings are byte-identical by SHA256, and `Compare-Object`
+returned nothing, so the tested code is byte-for-byte the code on GitHub `main`.
 
 ### 1.2 What this does and does not establish
 
@@ -173,9 +196,21 @@ interpreter that ran the failing `pip install` was the global one at
 
 D1, D2 and D4 are README defects. D5 is test-code. D6 is a test-documentation defect. All of these
 should be coordinated with Hassan's startup work in PR #44 rather than duplicated, and nothing here
-overwrites a fix that has landed there. **This branch changes no README and no application code**, and
-its only change to existing content is the D6 correction in `tests/test_cases.md`, which fixes a false
-record rather than altering any test outcome. The rest is a report and its evidence.
+overwrites a fix that has landed there. **No acknowledgement or linked discussion on #44 exists yet,
+so coordination and ownership remain pending.**
+
+This branch changes no README and no application code. Its contents are:
+
+| File | Status |
+| --- | --- |
+| `tests/day4_regression_results.md` | added, this report |
+| `tests/evidences/day4-api-evidence.md` | added, full requests and responses |
+| `tests/evidences/day4-*.png` | added, 29 images, one per case plus one dashboard view |
+| `tests/test_cases.md` | **modified**, one cell corrected, finding D6 |
+
+The `tests/test_cases.md` change is the TC-Spaces-004 Actual result, which recorded a cause that was
+not observed. It corrects the explanation only. The Expected result, the Steps, the Pass/Fail outcome
+and every other row are unchanged, and the case still passes.
 
 ## 5. API contract evidence
 
@@ -243,15 +278,37 @@ priority is one of the two valid values; `created_at` present. There is no tag h
 The case submits the urgent ticket TC-Priority-013 first, then the normal ticket TC-Priority-015,
 then reads `GET /api/tickets`. The database was emptied first, so this rerun produced its own ids.
 
-| Ticket | id | created_at | priority | position in GET |
-| --- | --- | --- | --- | --- |
-| Server DOWN, urgent, submitted first | 25 | 2026-10-12T03:00:21.738225+00:00 | urgent | 0 |
-| Printer issue, normal, submitted second | 26 | 2026-10-12T03:00:21.751422+00:00 | normal | 6 |
+**There were three observations, at three different times, against three different database states.
+They are not in conflict and are listed separately here.**
 
-Both creation timestamps are 13 ms apart and the urgent ticket is the older of the two. After
-reloading the dashboard in Chrome the same order was still shown, with `Server DOWN` at position 0 and
-`Printer issue` at position 6 of 7 cards. Ordering therefore does not follow creation order alone.
-**Pass.**
+| # | When | What was read | urgent `Server DOWN` | normal `Printer issue` |
+| --- | --- | --- | --- | --- |
+| A | 2026-10-12 06:00:21 | `GET /api/tickets`, database cleared, only these two tickets existed | id 25, position 0 of 2 | id 26, position 1 of 2 |
+| B | 2026-10-12 about 06:48 | dashboard reloaded in Chrome after the unsafe-input and duplicate tickets were added | id 25, position 0 of 7 | id 26, position 6 of 7 |
+| C | 2026-10-12 14:03:33 | `GET /api/tickets`, after TC-Priority-024 was submitted for its image | id 25, position 1 of 8 | id 26, position 7 of 8 |
+
+Observation A is the isolated API check the test case describes: only the two tickets under test are
+present, so the urgent ticket is first and the normal ticket second. Its position listing is saved in
+[day4-api-evidence.md](evidences/day4-api-evidence.md). The raw JSON body of that particular GET was
+not written to a file, only the position listing derived from it, so it is not reproduced here.
+
+Observation B is the browser reload check. The database had grown to seven tickets, and the urgent
+ticket was still above the normal one. Positions 0 and 6 are positions within those seven cards.
+
+Observation C was taken later still, after one more urgent ticket had been submitted. The absolute
+positions differ because the list is longer, and `Server DOWN` is no longer at position 0 because a
+newer urgent ticket sorts above it. The urgent ticket is still above the normal one. The complete JSON
+of observation C is saved in [day4-api-evidence.md](evidences/day4-api-evidence.md).
+
+In all three the older urgent ticket sits above the newer normal ticket, so ordering does not follow
+creation order alone. **Pass.**
+
+| Ticket | id | created_at | priority |
+| --- | --- | --- | --- |
+| Server DOWN, urgent, submitted first | 25 | 2026-10-12T03:00:21.738225+00:00 | urgent |
+| Printer issue, normal, submitted second | 26 | 2026-10-12T03:00:21.751422+00:00 | normal |
+
+The two creation timestamps are 13 ms apart, so the urgent ticket is the older of the two.
 
 Full requests, responses, the complete `GET /api/tickets` listing and the reload positions are in
 [day4-api-evidence.md](evidences/day4-api-evidence.md).
@@ -404,3 +461,52 @@ separate work.
 - Evidence: all 28 cases complete, each with its own image and a full recorded request and response.
 - The 28 passes come from Stage C, after corrections. Stage A, the README exactly as written, did
   not succeed.
+
+## 13. Markdown, link and whitespace verification
+
+Run on 2026-10-12 over the three documentation files in this branch. The output below is the actual
+output, not a description of what was expected.
+
+```
+tests/day4_regression_results.md
+   trailing whitespace : none
+   tabs                : none
+   CRLF line endings   : False
+   single final newline: True
+   ragged tables       : none
+   code fences         : 22 (balanced)
+tests/evidences/day4-api-evidence.md
+   trailing whitespace : none
+   tabs                : none
+   CRLF line endings   : False
+   single final newline: True
+   ragged tables       : none
+   code fences         : 128 (balanced)
+tests/test_cases.md
+   trailing whitespace : none
+   tabs                : none
+   CRLF line endings   : False
+   single final newline: True
+   ragged tables       : none
+   code fences         : 0 (balanced)
+```
+
+"ragged tables" means every row of a Markdown table was checked to carry the same number of `|`
+characters as its header, so no table is misaligned.
+
+Relative links were resolved against the file's own directory:
+
+```
+tests/day4_regression_results.md
+   OK       evidences/day4-api-evidence.md
+tests/evidences/day4-api-evidence.md
+   no relative links
+```
+
+The one relative link resolves. `day4_regression_results.md` was also rendered in the preview pane and
+reads correctly: the headings, the tables and the fenced code blocks all display, and the table
+columns line up.
+
+Staged content was inspected before pushing with `git diff --cached --name-status` and `git status
+--porcelain`. Only the four documentation and evidence paths in the table in section 4 are staged,
+there are no deletions, and no model, database, secret or held-out CSV is included.

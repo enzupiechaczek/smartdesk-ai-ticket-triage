@@ -83,8 +83,100 @@ The urgent ticket was created first and carries the lower id, so it is the older
 and it appears at position 0, above the newer normal ticket at position 1.
 Ordering therefore does not follow creation order alone; it puts urgent above normal.
 
-The browser reload observation is recorded separately in `day4_regression_results.md` section 7,
+The browser reload observation is recorded separately in `day4_regression_results.md` section 6,
 because it is a different kind of evidence from the API responses above.
+
+
+## Complete `GET /api/tickets` response, observation C
+
+Captured 2026-10-12 14:03:33 +0300, against commit `57a7fae`. This is the complete JSON body, not a
+summary. It is the third of three observations of the same two tickets from TC-Priority-021; see
+the table in `day4_regression_results.md` section 6 that distinguishes them.
+
+State at capture: the four unsafe-input tickets, both duplicate tickets and TC-Priority-024 (id 32)
+had been submitted after the original two-ticket check, so the list holds 8 tickets.
+`Server DOWN` (id 25) is at position 1 and `Printer issue` (id 26) at position 7.
+The urgent ticket is still above the normal one. `Production issue` (id 32) is a newer urgent
+ticket, which is why id 25 is no longer at position 0.
+
+Response: **HTTP 200**
+
+```json
+[
+  {
+    "category": "billing",
+    "confidence": 0.493,
+    "created_at": "2026-10-12T03:46:26.672306+00:00",
+    "description": "Please investigate",
+    "id": 32,
+    "priority": "urgent",
+    "subject": "Production issue"
+  },
+  {
+    "category": "technical",
+    "confidence": 0.477,
+    "created_at": "2026-10-12T03:00:21.738225+00:00",
+    "description": "Site unreachable",
+    "id": 25,
+    "priority": "urgent",
+    "subject": "Server DOWN"
+  },
+  {
+    "category": "access",
+    "confidence": 0.785,
+    "created_at": "2026-10-12T03:00:21.826917+00:00",
+    "description": "I cannot log into my account using my correct credentials.",
+    "id": 31,
+    "priority": "normal",
+    "subject": "Unable to access my account"
+  },
+  {
+    "category": "access",
+    "confidence": 0.785,
+    "created_at": "2026-10-12T03:00:21.814433+00:00",
+    "description": "I cannot log into my account using my correct credentials.",
+    "id": 30,
+    "priority": "normal",
+    "subject": "Unable to access my account"
+  },
+  {
+    "category": "technical",
+    "confidence": 0.382,
+    "created_at": "2026-10-12T03:00:21.797388+00:00",
+    "description": "<img src=x>",
+    "id": 29,
+    "priority": "normal",
+    "subject": "Image test"
+  },
+  {
+    "category": "technical",
+    "confidence": 0.488,
+    "created_at": "2026-10-12T03:00:21.783968+00:00",
+    "description": "<script>alert(1)</script>",
+    "id": 28,
+    "priority": "normal",
+    "subject": "Script test"
+  },
+  {
+    "category": "technical",
+    "confidence": 0.382,
+    "created_at": "2026-10-12T03:00:21.770587+00:00",
+    "description": "<b>bold</b>",
+    "id": 27,
+    "priority": "normal",
+    "subject": "HTML bold test"
+  },
+  {
+    "category": "billing",
+    "confidence": 0.445,
+    "created_at": "2026-10-12T03:00:21.751422+00:00",
+    "description": "Paper jam on floor 2",
+    "id": 26,
+    "priority": "normal",
+    "subject": "Printer issue"
+  }
+]
+```
 
 ## Unsafe input, API responses
 
@@ -393,7 +485,11 @@ POST /api/tickets HTTP/1.1
 Host: 127.0.0.1:5000
 Content-Type: application/json
 
-{"subject": "xxxxx...x" (101 characters), "description": "I need help logging in"}
+{"subject": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+     xxxxxxxxxxxx", "description": "I need help logging in"}
+  subject length 101, description length 22, verified 2026-10-12.
+  Built by the command in the steps column of tests/test_cases.md:
+  python -c "import json; print(json.dumps({'subject': 'x' * 101, 'description': 'I need help logging in'}))"
 ```
 
 Response: **HTTP 400**
@@ -413,7 +509,12 @@ POST /api/tickets HTTP/1.1
 Host: 127.0.0.1:5000
 Content-Type: application/json
 
-{"subject": "Technical support request", "description": "yyyyy...y" (501 characters)}
+{"subject": "Technical support request", "description": "<501 characters, all y>"}
+  subject length 25, description length 501, verified 2026-10-12.
+  Built by the command in the steps column of tests/test_cases.md:
+  python -c "import json; print(json.dumps({'subject': 'Technical support request', 'description': 'y' * 501}))"
+  The literal request is 560 characters long, so it is described rather than pasted in full.
+  The generation command above produces it exactly, and the response returned for it is below.
 ```
 
 Response: **HTTP 400**
@@ -836,18 +937,25 @@ Response: **HTTP 201**
 
 ## Note on the two images captured later
 
-day4-TC-Priority-024.png and day4-TC-HTMLBold-001.png were captured after the runs above, from a
-later submission on the same clone and the same commit. They are images of the dashboard only, so the
-ids they show are later ones than the responses recorded above. The two are reconciled here so the
-records do not silently disagree.
+`day4-TC-Priority-024.png` and `day4-TC-HTMLBold-001.png` were captured after the runs above, on the
+same clone and the same commit. They are dashboard images, so the ticket id shown can differ from the
+id in the response recorded above. The two are reconciled here so the records do not silently
+disagree.
 
-| Case | id in the recorded response | id in the image | created_at in the image |
-| --- | --- | --- | --- |
-| TC-Priority-024 | 19 (main run) | 32 (later submission) | 2026-10-12T03:46:26.672306+00:00 |
-| TC-HTMLBold-001 | 28 (main run) | 28 (same ticket, not resubmitted) | 2026-10-12T03:00:21 |
+| Case | id in the recorded response | id shown in the image | created_at | confidence | how the image was matched |
+| --- | --- | --- | --- | --- | --- |
+| TC-Priority-024 | 19 (main run, 2026-10-11) | 32 (submitted later, for the image) | 2026-10-12T03:46:26.672306+00:00 | 0.493 | card subject "Production issue", Priority: urgent |
+| TC-HTMLBold-001 | 27 | 27 (same ticket, not resubmitted) | 2026-10-12T03:00:21.770587+00:00 | 0.382 | card subject "HTML bold test", shown as Category: technical (38%) |
 
-Both later submissions returned the same results as recorded above. TC-Priority-024 returned
-priority: urgent on both runs, and the image shows the card at the top of the dashboard.
-TC-HTMLBold-001 was already on the dashboard and was not resubmitted, so its id is unchanged.
-The bold image incidentally also shows the <img src=x> and <script>alert(1)</script> cards
-rendered as literal text, which corroborates those two cases as well.
+TC-Priority-024 was resubmitted specifically to produce the image, so it carries a new id. It returned
+`priority: urgent` on both runs, and the image shows that card at the top of the dashboard.
+
+TC-HTMLBold-001 was already on the dashboard and was **not** resubmitted, so its id is unchanged at 27.
+The image shows `Category: technical (38%)`, which matches the recorded confidence 0.382 rounded to a
+percentage, and the visible time 6:00:21 AM local matches the recorded `created_at`. The bold image
+incidentally also shows the `<img src=x>` and `<script>alert(1)</script>` cards rendered as literal
+text, which corroborates those two cases as well.
+
+The ids recorded for the four unsafe cases are **27 bold, 28 script, 29 image**, and TC-Spaces-004 was
+rejected so it received no id. An earlier revision of this note labelled the bold ticket as id 28; that
+was wrong, 28 is TC-Script-002.
