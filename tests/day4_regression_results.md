@@ -44,26 +44,59 @@ fetch = +refs/heads/merged-main:refs/remotes/origin/merged-main
 That local repository had `origin/main` fetched from GitHub, and its `merged-main` branch is at the
 same commit, `57a7fae`.
 
-The comparison below was run against GitHub on 2026-10-12, not paraphrased. `main` was re-fetched
-first, and the two listings were written to files and compared:
+An earlier revision of this section compared `57a7fae` against its own full SHA. That compares a commit
+with itself and proves nothing about GitHub, so it has been replaced. The comparison below is between
+the **tested commit** and the **ref fetched from GitHub**, run on 2026-10-12:
 
 ```
+$ git config --get remote.origin.url
+https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage.git
+
 $ git fetch origin main
-$ git ls-tree -r 57a7fae            > a.txt
-$ git ls-tree -r 57a7fae65a7e8df9ec2fb35a131291ff93c6ddb9 > b.txt
-$ Compare-Object (Get-Content a.txt) (Get-Content b.txt)
-  (no output)
-  entries in each listing : 79
-  SHA256 of 57a7fae listing : 43D2F2755D1EBD3D4E5DA5F841AED43D78C849B613075E9DD34591E9C4B857F0
-  SHA256 of main    listing : 43D2F2755D1EBD3D4E5DA5F841AED43D78C849B613075E9DD34591E9C4B857F0
+ * branch            main       -> FETCH_HEAD
 
-$ git rev-parse 57a7fae^{tree}   -> 464d4c2c05097043baf739580dc761c0c1069ed9
-$ git rev-parse main^{tree}      -> 464d4c2c05097043baf739580dc761c0c1069ed9
+$ git rev-parse FETCH_HEAD
+57a7fae65a7e8df9ec2fb35a131291ff93c6ddb9
+
+$ git rev-parse 57a7fae
+57a7fae65a7e8df9ec2fb35a131291ff93c6ddb9
 ```
 
-`main` resolved to `57a7fae65a7e8df9ec2fb35a131291ff93c6ddb9` at the time of that fetch. The tree
-objects are equal, the two 79-entry listings are byte-identical by SHA256, and `Compare-Object`
-returned nothing, so the tested code is byte-for-byte the code on GitHub `main`.
+`FETCH_HEAD` is what GitHub's `refs/heads/main` resolved to on that fetch, and it equals the tested
+commit, so `main` has not moved since the run.
+
+```
+$ git ls-tree -r 57a7fae      > tested.txt
+$ git ls-tree -r FETCH_HEAD   > fetched.txt
+$ Compare-Object (Get-Content tested.txt) (Get-Content fetched.txt)
+
+  Compare-Object differences : 0 (none)
+  entries, tested listing    : 79
+  entries, fetched listing   : 79
+  SHA256 tested  listing     : 43D2F2755D1EBD3D4E5DA5F841AED43D78C849B613075E9DD34591E9C4B857F0
+  SHA256 fetched listing     : 43D2F2755D1EBD3D4E5DA5F841AED43D78C849B613075E9DD34591E9C4B857F0
+
+$ git rev-parse 57a7fae^{tree}     -> 464d4c2c05097043baf739580dc761c0c1069ed9
+$ git rev-parse FETCH_HEAD^{tree}  -> 464d4c2c05097043baf739580dc761c0c1069ed9
+```
+
+The two tree objects are equal and the two 79-entry listings are byte-identical by SHA256, so the
+tested tree equals the tree on GitHub `main`.
+
+### 1.1a The local clone origin and the GitHub remote
+
+These are two different things and the distinction matters:
+
+| | Value |
+| --- | --- |
+| Where the clone was **taken from** | `D:\programming_projects\smartdesk-ai-ticket-triage`, per the reflog |
+| What `origin` **points at** | `https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage.git`, per `.git/config` |
+| The clone's **tracking refspec** | `+refs/heads/merged-main:refs/remotes/origin/merged-main` |
+| `origin/merged-main` resolves to | `57a7fae65a7e8df9ec2fb35a131291ff93c6ddb9` |
+
+The clone was made from a local path, but its `origin` is the GitHub URL and it tracks `merged-main`.
+`main` is not one of this clone's tracking refs, which is why the comparison above fetches it
+explicitly into `FETCH_HEAD` rather than using `origin/main`.
 
 ### 1.2 What this does and does not establish
 
@@ -201,12 +234,32 @@ so coordination and ownership remain pending.**
 
 This branch changes no README and no application code. Its contents are:
 
-| File | Status |
-| --- | --- |
-| `tests/day4_regression_results.md` | added, this report |
-| `tests/evidences/day4-api-evidence.md` | added, full requests and responses |
-| `tests/evidences/day4-*.png` | added, 29 images, one per case plus one dashboard view |
-| `tests/test_cases.md` | **modified**, one cell corrected, finding D6 |
+| File | Status | Count |
+| --- | --- | --- |
+| `tests/day4_regression_results.md` | added, this report | 1 |
+| `tests/evidences/day4-api-evidence.md` | added, full requests and responses | 1 |
+| `tests/evidences/day4-<case>.png` | added, one image per case | 28 |
+| `tests/evidences/day4-TC-HTMLLikeText-009-rendering.png` | added, second view of one case, so that case has two images | 1 |
+| `tests/evidences/day4-dashboard-priority-urgent.png` | added, general dashboard view, not the evidence for any single case | 1 |
+| `tests/test_cases.md` | **modified**, one cell corrected, finding D6 | 1 |
+
+That is **30 PNG files in total**: 28 case images, plus one additional rendering image for
+TC-HTMLLikeText-009, plus one dashboard image. An earlier revision of this table said 29, which
+undercounted by one.
+
+**Commit-specific inspection.** The most recent commit, `9046b89`, changes only two files, both
+Markdown:
+
+```
+$ git show --name-status 9046b89
+9046b89 Reconcile TC-Priority-021 observations, correct the bold id, record actual checks
+M	tests/day4_regression_results.md
+M	tests/evidences/day4-api-evidence.md
+```
+
+An earlier revision of this section described "four documentation and evidence paths staged" while
+being written about the branch as a whole. The branch-wide figure is the 33 files in the table above;
+the figure for that commit alone is the 2 Markdown files shown here.
 
 The `tests/test_cases.md` change is the TC-Spaces-004 Actual result, which recorded a cause that was
 not observed. It corrects the explanation only. The Expected result, the Steps, the Pass/Fail outcome
@@ -465,48 +518,67 @@ separate work.
 ## 13. Markdown, link and whitespace verification
 
 Run on 2026-10-12 over the three documentation files in this branch. The output below is the actual
-output, not a description of what was expected.
+output of the check, not a description of it.
 
 ```
 tests/day4_regression_results.md
-   trailing whitespace : none
-   tabs                : none
-   CRLF line endings   : False
-   single final newline: True
-   ragged tables       : none
-   code fences         : 22 (balanced)
+   trailing whitespace      : none
+   ragged tables            : none
+   code fences (line-start) : 30, balanced
+   tabs inside code blocks  : [256, 257]
+   tabs in prose            : none
+   CRLF                     : False
+   single final newline     : True
+   relative links           : all resolve
 tests/evidences/day4-api-evidence.md
-   trailing whitespace : none
-   tabs                : none
-   CRLF line endings   : False
-   single final newline: True
-   ragged tables       : none
-   code fences         : 128 (balanced)
+   trailing whitespace      : none
+   ragged tables            : none
+   code fences (line-start) : 128, balanced
+   tabs inside code blocks  : none
+   tabs in prose            : none
+   CRLF                     : False
+   single final newline     : True
+   relative links           : none
 tests/test_cases.md
-   trailing whitespace : none
-   tabs                : none
-   CRLF line endings   : False
-   single final newline: True
-   ragged tables       : none
-   code fences         : 0 (balanced)
+   trailing whitespace      : none
+   ragged tables            : none
+   code fences (line-start) : 0, balanced
+   tabs inside code blocks  : none
+   tabs in prose            : none
+   CRLF                     : False
+   single final newline     : True
+   relative links           : all resolve
 ```
 
-"ragged tables" means every row of a Markdown table was checked to carry the same number of `|`
-characters as its header, so no table is misaligned.
+Notes on what the figures mean:
 
-Relative links were resolved against the file's own directory:
+- **ragged tables** means every row of a Markdown table was checked to carry the same number of `|`
+  characters as its header, so no table is misaligned.
+- **code fences** counts only lines that begin a fence, and compares the total against being even.
+- **the four tabs** are on lines 256, 257, 579 and 580 of this report. All four sit inside fenced
+  blocks that reproduce the output of `git show --name-status`. Git separates the status letter from
+  the path with a tab, so those tabs are part of the captured output and were left as they are rather
+  than being rewritten. There are no tabs anywhere in prose in any of the three files.
+- **relative links** are resolved against each file's own directory, with percent-encoding decoded, so
+  the `html%20bold.png` link in `tests/test_cases.md` is checked against the real
+  `evidences/Task-2934_ScreenShots/html bold.png` and resolves.
+
+`day4_regression_results.md` was also rendered in the preview pane and reads correctly: headings,
+tables and fenced code blocks all display and the table columns line up.
+
+An earlier run of this check reported the evidence file as having unbalanced fences and
+`test_cases.md` as having a broken link. Both were faults in the check, not in the files: it counted
+every occurrence of three backticks rather than only line-start fences, and it compared percent-encoded
+link targets without decoding them.
+
+**Commit-specific staging.** Staged paths were inspected with `git diff --cached --name-status` and
+`git status --porcelain` before each push. For the commit that added these corrections the staged
+paths were exactly:
 
 ```
-tests/day4_regression_results.md
-   OK       evidences/day4-api-evidence.md
-tests/evidences/day4-api-evidence.md
-   no relative links
+M	tests/day4_regression_results.md
+M	tests/evidences/day4-api-evidence.md
 ```
 
-The one relative link resolves. `day4_regression_results.md` was also rendered in the preview pane and
-reads correctly: the headings, the tables and the fenced code blocks all display, and the table
-columns line up.
-
-Staged content was inspected before pushing with `git diff --cached --name-status` and `git status
---porcelain`. Only the four documentation and evidence paths in the table in section 4 are staged,
-there are no deletions, and no model, database, secret or held-out CSV is included.
+Across the branch as a whole there are 33 files, itemised in the table in section 4. There are no
+deletions anywhere on the branch, and no model, database, secret or held-out CSV is included.
