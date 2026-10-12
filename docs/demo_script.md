@@ -101,13 +101,13 @@ Submit ticket 2:
 
 Point at the two cards.
 
-**Says:** "Each card shows three results. The **category** comes from a machine-learning model trained on synthetic tickets, and here it is _access_. The **confidence**, the percentage next to it, is how sure the model is. If it drops below 50%, the card is flagged _Low confidence_ so an agent checks it. The **priority** does not come from the model. It is a business rule: phrases like _cannot access_, _outage_ or _data loss_ make a ticket urgent. The first ticket says _cannot access_, so it is urgent. For the second ticket, the priority rule returns normal because no configured urgent phrase matched. A rule result does not independently establish actual severity."
+**Says:** "Each card shows three results. The **category** comes from a machine-learning model trained on synthetic tickets, and here it is _access_. The **confidence**, the percentage next to it, is the model's reported score, not a guarantee that the category is correct. If it drops below 50%, the card is flagged _Low confidence_ so an agent checks it. The **priority** does not come from the model. It is a business rule: phrases like _cannot access_, _outage_ or _data loss_ make a ticket urgent. The first ticket says _cannot access_, so it is urgent. For the second ticket, the priority rule returns normal because no configured urgent phrase matched. A rule result does not independently establish actual severity."
 
 Read out the real percentages on the cards. Do not quote numbers from this script.
 
 ## 6. Show urgent first (1:55 – 2:15): Mohammad Ghassan
 
-**Says:** "Look at the order. The normal ticket is the newest, but the urgent ticket is still at the top, with a red border. The dashboard sorts urgent tickets first, then newest first within each priority. That way an agent always sees the most important ticket first."
+**Says:** "Look at the order. The normal ticket is the newest, but the urgent ticket is still at the top, with a red border. The dashboard sorts urgent tickets first, then newest first within each priority. That way an agent sees tickets marked urgent first."
 
 ## 7. Stop and restart the server (2:15 – 2:35): Mahmoud
 
@@ -190,7 +190,15 @@ Evidence for these checks is split by session:
 - Unit tests run with and without a trained model: [Test evidence](../testevidence.md). The tests import and are discovered without a model; `test_valid_ticket_is_created` needs one.
 - Earlier manual startup session at commit [3030606](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/commit/3030606b93ff7fac7cc4b901b53f03a37461d5b4), on Windows 11 and Ubuntu 24.04 (WSL): [Startup evidence](../startupevidence.md). That session predates the removal of the startup exit and does not verify the final health behaviour.
 
-The `/api/health` response on an untrained setup, with the final code, is not recorded in either file yet.
+The `/api/health` response on an untrained setup, with the final code, is recorded in [health_check_evidence.md](health_check_evidence.md).
+
+## Demo readiness decision
+
+The written demo plan and startup fixes are ready as the agreed merge
+deliverable. This does not represent a finished live demonstration: the
+four-speaker rehearsal and the A2/B handoffs with their owners remain
+follow-ups. No rehearsal date, participants, spoken duration, or post-run
+results are recorded until that run has actually taken place.
 
 ## Speaker rehearsal
 
