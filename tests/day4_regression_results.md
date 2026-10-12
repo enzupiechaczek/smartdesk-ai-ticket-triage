@@ -380,9 +380,12 @@ the right category for a script-input ticket is a question for the model owners.
 
 ## 11. Task
 
-The task number is **not confirmed**. The branch description lists 2934, which is the unsafe-input
-subset, while the scope of this work is the broader Day 4 regression of all 28 cases. No replacement
-number is guessed here. Enzu to confirm which task this should be recorded against.
+**2941, Run the full regression test from a fresh clone of main.**
+
+The branch description originally listed 2934, which is the unsafe-input subset. That is a subset of
+this work rather than the whole of it: the four unsafe-input cases are included here, alongside the
+other 24, so all 28 cases are covered under 2941. 2934 remains covered by this run and needs no
+separate work.
 
 ## 12. Summary
 
