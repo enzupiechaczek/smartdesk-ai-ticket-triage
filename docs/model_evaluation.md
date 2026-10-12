@@ -40,10 +40,10 @@ Because the test split contains only eight records, one incorrect prediction cha
 
 ## 4. Five-Fold Cross-Validation
 
-The reported fold accuracies were:
+The five cross-validation fold accuracies were:
 
 ```text
-[0.875, 0.429, 0.429, 0.857, 0.571]
+0.875, 0.429, 0.429, 0.857, 0.571
 ```
 
 - **Mean accuracy:** 0.632 (63.2%)
@@ -80,3 +80,5 @@ The receipt request was also misclassified. These examples document observed err
 - **Further evaluation:** Expand the dataset with more varied, representative support tickets, then rerun the evaluation to determine whether performance improves.
 
 The final saved model is trained on all 36 baseline rows. The test-split and cross-validation results above are not an independent evaluation of that final artifact. Any claims about the final model's performance should be supported by an appropriate evaluation of the saved model on data not used for training.
+
+**Dataset provenance note:** The dataset's SHA-256 hash identifies a particular version of the dataset, but the hash alone does not prove that the historical evaluation metrics were generated from those exact bytes. Unless a contemporaneous training or evaluation record establishes that link, the association between the recorded metrics and the hashed dataset remains unverified.
