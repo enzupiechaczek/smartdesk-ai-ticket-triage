@@ -11,7 +11,7 @@ Verify that the SmartDesk API loads the ticket-classification model, accepts val
   - **Scope**: Original ticket submissions via API / Postman and initial model loading.
 - **Session 2 (GET Retrieval & Restart Persistence Verification)**:
   - **Commit Tested**: `72f0f56`
-  - **Branch**: `a2-<githubusername>-day3-integration`
+  - **Branch**: `a2-day3-integration`
   - **Local API Address**: `http://127.0.0.1:5000/api/tickets`
   - **Model Path**: `ai/model.joblib` (pre-existing trained artifact reused; training was not re-executed during this verification session)
 
