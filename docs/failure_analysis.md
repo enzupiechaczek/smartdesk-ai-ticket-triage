@@ -1,8 +1,10 @@
 # Task 2931: Failure Analysis and Training Data Improvement
 
+Historical author-reported results from the original PR #47; original run timestamps, tested revisions, and captured outputs were not supplied. These values are not a fresh verification of the updated 42-row model. The six evaluation cases were previously exposed in Git history, so this is a separate evaluation set rather than a blind benchmark. Versioned fresh-run evidence is being prepared locally.
+
 ## 1. Objective
 
-The objective was to analyse incorrect held-out predictions, add six synthetic training examples for the technical category, retrain the model, and compare performance before and after the change.
+The objective was to analyse incorrect separate-set predictions, add six synthetic training examples for the technical category, retrain the model, and compare performance before and after the change.
 
 ## 2. Baseline
 
@@ -10,14 +12,14 @@ Before adding the six training examples:
 
 * Training dataset: 36 tickets
 * Technical examples: 12
-* Held-out evaluation dataset: 6 tickets
-* Held-out accuracy: 4/6 (66.7%)
+* Separate-set evaluation dataset: 6 tickets
+* Separate-set accuracy: 4/6 (66.7%)
 
 ## 3. Failure Analysis
 
 ### Failure 1: Registered email address update
 
-* **Ticket:** How can I update the registered email address on my workspace account?
+* **Ticket:** CASE-001
 * **True category:** access
 * **Predicted category before improvement:** billing
 * **Confidence before improvement:** 0.413
@@ -31,7 +33,7 @@ Before adding the six training examples:
 
 ### Failure 2: Unable to update email
 
-* **Ticket:** I'm unable to update my email
+* **Ticket:** CASE-005
 * **True category:** technical
 * **Predicted category before improvement:** access
 * **Confidence before improvement:** 0.465
@@ -54,7 +56,7 @@ Added six synthetic examples labelled `technical` to `ai/data/tickets.csv`. They
 5. An export failure before a download is generated.
 6. Notification preferences not being saved.
 
-The training dataset now contains 42 tickets, including 18 technical examples. The held-out dataset remains unchanged at six tickets. No held-out examples were added to the training data.
+The training dataset now contains 42 tickets, including 18 technical examples. The separate-set dataset remains unchanged at six tickets. No separate-set examples were added to the training data.
 
 ## 5. Before-and-After Results
 
@@ -64,14 +66,14 @@ The training dataset now contains 42 tickets, including 18 technical examples. T
 | Technical training examples         |                    12 |          18 |
 | Training script test-split accuracy | Baseline not recorded |       55.6% |
 | Five-fold cross-validation mean     |                 63.2% |       78.3% |
-| Held-out accuracy                   |           4/6 (66.7%) | 4/6 (66.7%) |
-| Incorrect held-out predictions      |                     2 |           2 |
+| Separate-set accuracy                   |           4/6 (66.7%) | 4/6 (66.7%) |
+| Incorrect separate-set predictions      |                     2 |           2 |
 
-The held-out accuracy remained at 66.7% after retraining. Both email-related errors remained unchanged. The cross-validation mean increased from 63.2% to 78.3%, but the small dataset and variation between folds mean that this result should be interpreted cautiously. The training script's test-split accuracy and held-out accuracy come from different evaluation sets and should not be treated as directly comparable.
+The separate-set accuracy remained at 66.7% after retraining. Both email-related errors remained unchanged. The cross-validation mean increased from 63.2% to 78.3%, but the small dataset and variation between folds mean that this result should be interpreted cautiously. The training script's test-split accuracy and separate-set accuracy come from different evaluation sets and should not be treated as directly comparable.
 
 ## 6. Conclusion and Next Steps
 
-Adding six technical examples increased the representation of technical tickets in the training data, but did not resolve the two observed held-out classification errors.
+Adding six technical examples increased the representation of technical tickets in the training data, but did not resolve the two observed separate-set classification errors.
 
 Possible next steps include adding carefully labelled examples that distinguish account-access requests from account-profile changes and technical failures. The team should review the categories and consider whether these routing outcomes would affect real support agents.
 
@@ -80,5 +82,5 @@ Group discussion and supervisor review should be documented once completed.
 ## 7. Evidence
 
 * Training output after adding the six examples.
-* Held-out evaluation output after retraining.
+* Separate-set evaluation output after retraining.
 * Commit and pull request link to be added after submission.

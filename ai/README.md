@@ -2,12 +2,12 @@
 
 ## Dataset Breakdown
 
-The training dataset `ai/data/tickets.csv` contains 36 synthetic support ticket examples balanced across three categories (12 per class):
+The training dataset `ai/data/tickets.csv` contains 42 synthetic support ticket examples. Task 2931 adds six technical examples to the historical 36-row baseline, so the updated dataset is not balanced:
 
 - **access**: 12 rows
 - **billing**: 12 rows
-- **technical**: 12 rows
-- **Total**: 36 rows
+- **technical**: 18 rows
+- **Total**: 42 rows
 
 ### Hard Cases Included
 
@@ -23,9 +23,9 @@ The training dataset `ai/data/tickets.csv` contains 36 synthetic support ticket 
 
 ## Training dataset
 
-`data/tickets.csv` contains 36 independently written synthetic support tickets: twelve  `access`, twelve `billing`, and twelve `technical`. The two columns are `ticket_text,category`; labels are lowercase, text containing commas is enclosed in double quotes, and embedded double quotes are doubled.
+`data/tickets.csv` contains 42 synthetic support tickets: twelve `access`, twelve `billing`, and eighteen `technical`. The two columns are `ticket_text,category`; labels are lowercase, text containing commas is enclosed in double quotes, and embedded double quotes are doubled.
 
-All examples are fictional and contain no real names, emails, IDs, or incidents. Group B's held-out examples were not consulted and must remain separate from the training data.
+Training examples are fictional and contain no real names, emails, IDs, or incidents. Never copy evaluation rows into training data. The six-case evaluation set used in tasks 2930/2931 was previously exposed in Git history; it is a separate evaluation set, not a blind benchmark.
 
 ## Categories
 
@@ -56,4 +56,17 @@ Reviewers should check label consistency, distinct wording and tone, CSV quoting
 > **Note:** Run `python ai/train.py` before starting the server.
 
 The trained model artifact (`ai/model.joblib`) is ignored by version control and must be generated locally before running the server or predictor.
+
+## Separate-set evaluation
+
+Keep the evaluation CSV local and ignored, or pass its private location explicitly:
+
+```text
+python ai/train.py
+python ai/evaluate_heldout.py --csv PATH_TO_LOCAL_EVALUATION_CSV
+```
+
+The evaluator reports stable row-based case identifiers, expected/predicted labels, confidence values, the CSV SHA-256, and an aggregate score. It does not print ticket text. Case identifiers refer to that file hash and row order; keep the file unchanged when comparing model versions.
+
+See `docs/model_evaluation.md` and `docs/failure_analysis.md` for versioned results and limitations. Do not commit `ai/model.joblib` or `tests/held_out_tickets.csv`.
 
