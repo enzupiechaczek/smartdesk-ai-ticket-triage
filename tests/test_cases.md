@@ -48,6 +48,14 @@ adjusted to make a row pass.
 - TC-Priority-021: rerun on 2026-10-10 at commit 936cd04 after clearing the local database, so it shows only
   the two tickets under test, urgent id 1 above newer normal id 2. Its evidence is
   tests/evidences/TC-Priority-021.png.
+- TC-Spaces-004: the Actual result was re-verified on 2026-10-12 at commit 57a7fae during the Day 4
+  regression (task 2941), and the recorded cause was found to be wrong and has been corrected. The
+  earlier record claimed the browser blocked submission and sent no request; measured in Chrome, the
+  browser did send the POST and the server returned the 400. The input is still correctly rejected and
+  the case still passes, so only the explanation changed, not the result. The re-verification and its
+  evidence are in tests/day4_regression_results.md section 7.2 and
+  tests/evidences/day4-api-evidence.md, both on the branch
+  b-username123212312-day4-regression.
 - An earlier rerun at commit a07ed14 on 2026-10-10 produced real results but was recorded only as
   abbreviated text with no saved request or response evidence, so it could not be verified. Its
   table has been replaced by the 2026-10-11 run above rather than kept, because keeping
@@ -119,6 +127,26 @@ That is a quality observation for the model owners, not an API bug.
 
 ## Task 2933
 > **Note on Model Accuracy & Pass Conditions:** General model accuracy is not evaluated as a strict Pass/Fail condition for standard API payload contract and priority checks. However, for Task 2933 end-to-end verification, ticket submission, refresh persistence, and AI classification outcomes are recorded and evaluated separately.
+> **Task 2933 Audit & Verification Notes (Original vs. Updated)**
+> 
+> * **Model Accuracy Scope & Pass Conditions:**
+>   * **What was previously recorded:** The original note stated broadly that model accuracy is not evaluated as a strict Pass/Fail condition for "any row here".
+>   * **What was changed:** Corrected the blanket statement so that model accuracy exemption applies strictly to standard API payload contracts and priority checks. For Task 2933 end-to-end verification, submission success, refresh persistence, and AI classification outcomes are now evaluated and recorded as separate outcomes (e.g., `Classification Pass/Failed`, `Submission Pass`, `Reload Pass`).
+> 
+> * **Preservation of Exact Tested Inputs:**
+>   * **What was previously recorded:** Recent edits cleaned up typos to `access issue` and modified description phrasing (e.g., `'I Can't access to my account anymore , after...'`).
+>   * **What was changed:** Restored the exact, authentic submitted test inputs matching original captures and bug-log entries—including historical transcription variants such as `{"subject":"acess issue"}` in TC-01—ensuring test data remains auditable rather than artificially polished.
+> 
+> * **Evidence Auditing & Transcription Verification:**
+>   * **What was previously recorded:** Notes mentioned what screenshots supposedly show without explicit payload verification for retests.
+>   * **What was changed:** Verified each evidence image against its corresponding test case. Added explicit notes explaining shared screenshots (e.g., Tickets #17 & #18 in `vaildaccessonpage.png`, Tickets #19 & #20 in `vaildbillingonpage.png`). For the retest (`TC-ValidAccessCheckedOnPage-02-Retest-01`), explicitly documented the verified JSON payload (`{"id": 24, "category": "billing", "confidence": 0.444, "priority": "normal"}`) directly supporting the outcome.
+> 
+> * **Session Attribution & Explicit Timestamps:**
+>   * **What was previously recorded:** Dates were ambiguous or loosely formatted (e.g., `10/8/2026`).
+>   * **What was changed:** Updated all session dates to unambiguous formats (`2026-10-08` and `2026-10-09`) with the recorded timezone (`EEST`). Explicitly attributed tested commit hash `880adfa49912bb0e213c11f63ddbf73cd7657cf4` to the 2026-10-09 retest session.
+> 
+> * **Documentation Cleanup & Git Workflow:**
+>   * **What was changed:** Ensured all test files (`tests/test_cases.md` and `tests/bug_log.md`) have final newlines, verified Markdown table formatting, updated the Pull Request description to accurately reflect these audit additions, and confirmed clean staging (`git status` / `git diff --cached`) prior to pushing.
 
 | Test ID | Input | Steps | Expected result | Actual result | Pass/Fail | Evidence |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -129,3 +157,4 @@ That is a quality observation for the model owners, not an API bug.
 |TC-ValidbillingCheckedOnPage-04|`{"subject":"billing support request","description":"The amount charged on my latest statement is higher than the price I was shown"}`|1.Go to tickets form<br>2.Enter your subject and description<br>3.Click Submit|create ticket successfully with the correct category "billing"|The form submitted successfully. In DevTools Network, POST /api/tickets returned status HTTP 201 Created with generated ID 19. The AI categorized it as billing with 0.66 confidence and normal priority. After reloading the dashboard, ticket #19 remained visible with all data intact." Note :Evidence screenshot displays both Tickets #19 and #20 on the dashboard|Classification Pass (Expected "billing", Actual "billing")<br>Submission Pass<br>Reload Pass|![screenshot](evidences/task-2933/vaildbillingonpage.png)|
 |TC-ValidbillingCheckedOnPage-05|`{"subject":"billing support request","description":"I need to know when my most recent payment was processed"}`|1. Go to tickets form<br>2.Enter your subject and description<br>3.Click Submit|create ticket successfully with the correct category "billing"|The form submitted successfully. In DevTools Network, POST /api/tickets returned status HTTP 201 Created with generated ID 20. The AI categorized it as billing with 0.67 confidence and normal priority. After reloading the dashboard, ticket #20 remained visible with all data intact." Note :Evidence screenshot displays both Tickets #19 and #20 on the dashboard|Classification Pass (Expected "billing", Actual "billing" )<br>Submission Pass<br>Reload Pass|![screenshot](evidences/task-2933/vaildbillingonpage.png)|
 | TC-501CharacterServerValidation-06|`subject: "Technical support request" description: 'y' repeated 501 times (generated via python -c "print('y'*501)")` | 1.Open Postman<br>2.Set POST http://127.0.0.1:5000/api/tickets request and set Headers to Content-Type: application/json<br>3.Navigate to Body > raw > JSON and input the payload with a description repeating the character 'y' exactly 501 times(generated via python -c "print('y'*501)")and your subject <br>4.click send and observe the response status and error message| Server rejects request with HTTP 400 and description validation error  |Server returned HTTP 400 Bad Request with response: Description is required (max 500 characters)|Pass|![screenshot](evidences/task-2933/501postman.png)|
+| TC-Spaces-004 | `{"subject":"Spaces test","description":" "}` | 1. Enter Spaces test as Subject.<br>2. Enter only spaces in Description.<br>3. Click Submit Ticket.<br>4. Verify the browser validation behavior in DevTools Network.<br>5. Send the same JSON through Postman to the API. | The spaces-only input is rejected. If browser validation prevents submission, no POST request is sent. The same JSON sent through the API should return an appropriate 400 response. | Clicking Submit with a single space as the description **did send** the POST. The description field carries `required`, and HTML `required` is satisfied by any non-empty string, including a space, so the browser did not block submission. Measured on 2026-10-12 in Chrome: the request went to `POST /api/tickets` and returned Status Code: 400 Bad Request with the response `"Description is required (max 500 characters)"`, the page displayed that message, and no ticket was created. The browser only blocks submission when a field is genuinely empty, which is a different behaviour and is not what this case tested. The same JSON sent through Postman returns the same 400. The expected behaviour above is met: the input is rejected, and the API returns the appropriate 400. | PASS | ![Spaces screenshot](evidences/Task-2934_ScreenShots/space.png) |
