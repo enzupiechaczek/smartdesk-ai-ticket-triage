@@ -93,3 +93,16 @@ The merged PR #46 evaluator's clear missing-file failure, label normalization, c
 Task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46), is now approved and merged; its report is preserved in the historical archive. The historical integration report belongs to task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43); its expanded integration changes are not supplied by this PR. Enzu and the task owners still need to agree the remaining #43 dependency and the shared #47 evaluator/report ownership. The remaining agreements are not implied by the already completed #46 merge.
 
 Discuss the ambiguous failure categories with A2 and ask Group B about support-routing impact. Record the discussion after it happens. Generate `ai/model.joblib` locally; keep it and the local evaluation CSV out of Git. Enzu approval and merge remain pending.
+
+The current contributor is not a member of Group A2 or Group B. A designated member from A2 must conduct or confirm the failure discussion, and designated Group B members must provide or confirm the routing-impact feedback and label-boundary decisions. No discussion outcome is claimed here until those participants and the actual date are recorded.
+
+## Versioned handoff for related PRs
+
+This report is the versioned #47 evaluation record. Its updated evaluator, 42-row results, CLI follow-up, and associated source/file/model hashes belong to #47. The following related evidence remains separate:
+
+- [PR #46's historical report](model_evaluation_pr46_baseline.md) remains an unchanged archive of the historical 36-row evidence and its artifact-provenance limitations.
+- [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) remains authoritative for the expanded integration report; this report does not replace it.
+- [PR #48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) documents reproducibility of the 36-row baseline, not the 42-row replay.
+- [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) and [PR #50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) must keep any 42-row model-card or demo material separately versioned from their historical 36-row material.
+
+The ownership and transition statements above are pending confirmation with Enzu and the task owners. They do not mark the coordination table complete, change expected labels, or authorize merge. Any live demo of the current model requires its own focused verification and must not overwrite the historical captures.

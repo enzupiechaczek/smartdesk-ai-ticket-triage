@@ -32,15 +32,15 @@ The additions are synthetic examples, not copies of evaluation rows. Both traini
 
 ## Honest before-and-after scores
 
-| Metric | Fresh 36-row baseline replay | Fresh 42-row updated replay |
-| --- | ---: | ---: |
-| Training rows | 36 | 42 |
-| access / billing / technical | 12 / 12 / 12 | 12 / 12 / 18 |
-| Stratified 20% split accuracy | 62.5% (5/8) | 55.6% (5/9) |
-| Five-fold CV mean accuracy | 63.2% | 78.3% |
-| CV fold standard deviation | 19.8% | 17.8% |
-| Separate-set accuracy | 4/6 (66.7%) | 4/6 (66.7%) |
-| Separate-set errors | 2 | 2 |
+| Metric                        | Fresh 36-row baseline replay | Fresh 42-row updated replay |
+| ----------------------------- | ---------------------------: | --------------------------: |
+| Training rows                 |                           36 |                          42 |
+| access / billing / technical  |                 12 / 12 / 12 |                12 / 12 / 18 |
+| Stratified 20% split accuracy |                  62.5% (5/8) |                 55.6% (5/9) |
+| Five-fold CV mean accuracy    |                        63.2% |                       78.3% |
+| CV fold standard deviation    |                        19.8% |                       17.8% |
+| Separate-set accuracy         |                  4/6 (66.7%) |                 4/6 (66.7%) |
+| Separate-set errors           |                            2 |                           2 |
 
 The six-case accuracy stays at 4/6 (66.7%) and both analysed errors remain. The concrete improvement is additional training coverage for technical issues; this experiment does not show improved accuracy on the separate evaluation set. The higher CV mean uses a different training dataset and different folds and must not be presented as a controlled improvement on identical test cases.
 
@@ -58,16 +58,33 @@ The obsolete six-line `docs/integration_check.md` addition was backed up outside
 
 No completed team discussion or dependency agreement has been reported. The following proposals need confirmation from Enzu and the task owners; they are not completed work or permission to merge.
 
-| PR / task | Owner | Proposed action | Status |
-| --- | --- | --- | --- |
-| [#43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) / 2929 | AakashAaku | Keep the expanded integration report authoritative. The obsolete addition is removed in line with merged main; agree the remaining integration dependency plan without replacing #43's expanded report. | Pending agreement |
-| [#46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46) / 2930 | WhitneyKataka | The approved report is now archived intact after #46 merged. Agree remaining shared evaluator/report ownership for #47. | #46 merged; #47 agreement pending |
-| #47 / 2931 | WhitneyKataka and A2 | Keep the source-pinned 42-row failure analysis/results; agree the canonical evaluator including CLI failure handling and tests. | Pending agreement |
-| [#48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) / 2938 | WhitneyKataka | Preserve the reproducibility captures for the 36-row baseline. Agree the shared README's current dataset/version wording and separate 42-row evidence links. | Pending agreement |
-| [#49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) / 2939 | WhitneyKataka | Keep baseline model-card metrics versioned; agree a separate 42-row dataset/metric/limitation section after transition. | Pending agreement |
-| [#50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) / 2940 | WhitneyKataka | Keep existing demo observations attached to their tested baseline. Agree whether the demo stays historical or needs focused verification with the 42-row model. | Pending agreement |
+| PR / task                                                                          | Owner                | Proposed action                                                                                                                                                                                         | Status                            |
+| ---------------------------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| [#43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) / 2929 | AakashAaku           | Keep the expanded integration report authoritative. The obsolete addition is removed in line with merged main; agree the remaining integration dependency plan without replacing #43's expanded report. | Pending agreement                 |
+| [#46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46) / 2930 | WhitneyKataka        | The approved report is now archived intact after #46 merged. Agree remaining shared evaluator/report ownership for #47.                                                                                 | #46 merged; #47 agreement pending |
+| #47 / 2931                                                                         | WhitneyKataka and A2 | Keep the source-pinned 42-row failure analysis/results; agree the canonical evaluator including CLI failure handling and tests.                                                                         | Pending agreement                 |
+| [#48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) / 2938 | WhitneyKataka        | Preserve the reproducibility captures for the 36-row baseline. Agree the shared README's current dataset/version wording and separate 42-row evidence links.                                            | Pending agreement                 |
+| [#49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) / 2939 | WhitneyKataka        | Keep baseline model-card metrics versioned; agree a separate 42-row dataset/metric/limitation section after transition.                                                                                 | Pending agreement                 |
+| [#50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) / 2940 | WhitneyKataka        | Keep existing demo observations attached to their tested baseline. Agree whether the demo stays historical or needs focused verification with the 42-row model.                                         | Pending agreement                 |
 
-After the discussions actually happen, record the date, participants, A2 feedback for CASE-001/CASE-005, Group B's routing-impact feedback, agreed label boundaries, and the owner/merge order of each shared update. Expected evaluation labels must remain unchanged merely to raise the score.
+### Participant boundary
+
+The current writerr of this section is not a member of Group A2 or Group B and cannot claim or complete those teams' discussion decisions. A designated A2 member must review the two failure hypotheses, and designated Group B members must provide the routing-impact feedback and agree any label boundaries. The actual date, participants, feedback, and unresolved follow-ups must be recorded after those discussions occur.
+
+### Evidence and ownership boundaries to confirm
+
+The following boundaries are the proposed handoff for review; they are not recorded as completed agreement:
+
+- **PR #47** owns the updated evaluator implementation and the versioned 42-row failure-analysis/evaluation report, including the CLI failure handling and its tests.
+- **PR #46** remains the source of the preserved historical 36-row report and its original artifact-provenance limitations. The archive must not be rewritten with #47 metrics.
+- **PR #43** remains authoritative for the expanded integration report. PR #47 must not add or replace a competing integration report.
+- **PR #48** preserves the reproducibility evidence for the historical 36-row training baseline.
+- **PR #49** preserves the model-card/evaluation documentation for the 36-row baseline and should add any 42-row material as a separately identified version.
+- **PR #50** preserves demo observations tied to the model and versions actually tested. A current-model live demo, if required, needs a separate focused verification record.
+
+The 36-row metrics, demo captures, session/file/model hashes, and archived provenance limits remain historical evidence. The 42-row metrics and any current-model demo evidence must retain their own dataset, source, session, file, and model identifiers. No old result may be relabelled as a 42-row or current-model result.
+
+After the discussions actually happen, record the actual date, participants, A2 feedback for CASE-001/CASE-005, Group B's routing-impact feedback, agreed label boundaries, and the owner/merge order of each shared update. Until then, these items remain follow-ups and the explicit **Do not merge yet** hold remains in force. Expected evaluation labels must remain unchanged merely to raise the score.
 
 ## Evidence
 
