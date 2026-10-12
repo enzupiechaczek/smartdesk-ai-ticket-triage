@@ -3,11 +3,23 @@
 ## 1. Training Overview
 
 * **Algorithm:** Logistic Regression with TF-IDF Vectorizer (unigrams and bigrams)
-* **Training and validation split:** 80% training / 20% validation, stratified
-* **Training dataset size:** 36 synthetic ticket samples
-* **Evaluation tasks:** Day 2 validation and cross-validation (baseline), followed by Day 3 held-out evaluation (Task 2930)
+* **Training dataset:** 36 synthetic ticket samples in `ai/data/tickets.csv` (12 access, 12 billing, 12 technical)
+* **Training script:** `ai/train.py`
+* **Evaluation tasks:** Day 2 validation and cross-validation, followed by Day 3 held-out evaluation (Task 2930)
+
+### Model Versions
+
+`ai/train.py` trains several models from the same 36-row dataset, and each result in this report belongs to a specific one:
+
+* **Split model:** trained on the 28-row stratified training split (80%). Produces the Day 2 validation result.
+* **Cross-validation fold models:** five pipelines, each trained on four of the five folds (28 or 29 rows). Produce the Day 2 cross-validation result.
+* **Final saved model (`ai/model.joblib`):** refitted on all 36 rows after the split and cross-validation steps. This is the model the application uses and the only model evaluated in Day 3.
+
+None of the Day 2 figures were measured on the final saved model. This report covers only models trained on the 36-row dataset. A model trained on changed data (such as the 42-row dataset proposed in PR #47) is a different version and needs its own results.
 
 ## 2. Day 2 — Validation Results
+
+These results come from the split model and the cross-validation fold models, not from the final saved model.
 
 ### Validation Performance
 
@@ -53,9 +65,9 @@ Cross-validation mean accuracy: 0.632 (+/- 0.198)
 
 ### Evaluation Method
 
-The saved model (`ai/model.joblib`) was evaluated against the six held-out tickets supplied by Group B in `tests/held_out_tickets.csv`. The evaluation script (`ai/evaluate_heldout.py`) passed each ticket to the existing prediction function and compared the predicted category with the expected category.
+The final saved model (`ai/model.joblib`, trained on all 36 rows) was evaluated against the six held-out tickets supplied by Group B in `tests/held_out_tickets.csv`. The evaluation script (`ai/evaluate_heldout.py`) passed each ticket to the existing prediction function and compared the predicted category with the expected category.
 
-The script normalizes category labels by converting them to lowercase and removing surrounding whitespace before comparison. The held-out tickets were kept separate from the training dataset, and the existing saved model was used without retraining during this evaluation.
+The script normalizes category labels by converting them to lowercase and removing surrounding whitespace before comparison. None of the six ticket texts appear in the training dataset, and the existing saved model was used without retraining during this evaluation.
 
 ### Fresh Held-Out Results
 
@@ -90,10 +102,6 @@ Accuracy: 4/6 (66.7%)
 
 **Held-out accuracy:** 66.7%
 
-### Comparison with Day 2
-
-The Day 3 held-out accuracy was 66.7%, compared with 62.5% on the Day 2 validation split and a 63.2% mean accuracy in Day 2 cross-validation. Although the held-out score was higher than both Day 2 figures, the six-ticket sample is too small to establish that the model has improved or will perform similarly on future tickets.
-
 ### Day 3 Error Analysis
 
 Two of the six held-out tickets were misclassified:
@@ -103,15 +111,17 @@ Two of the six held-out tickets were misclassified:
 
 Both errors involved email updates, suggesting that short requests about account settings may be difficult to classify consistently. The model may benefit from more varied training examples that distinguish account-access requests from technical problems involving settings or profile updates.
 
-### Comparison Summary
+### Relationship to Day 2 Results
 
-| Metric                          |                     Day 2 |              Day 3 |
-| ------------------------------- | ------------------------: | -----------------: |
-| Validation or held-out accuracy |                     62.5% |              66.7% |
-| Dataset evaluated               | 8-ticket validation split | 6 held-out tickets |
-| Cross-validation mean accuracy  |                     63.2% |     Not calculated |
+The three accuracy figures in this report measure different models on different cases:
 
-The Day 2 validation and Day 3 held-out scores come from different ticket sets and should be treated as separate measurements. The Day 3 result provides an additional check on the saved model, rather than proof of a performance improvement.
+| Measurement                      | Model evaluated                       | Cases evaluated                                                      |    Accuracy |
+| -------------------------------- | ------------------------------------- | -------------------------------------------------------------------- | ----------: |
+| Day 2 validation split           | Split model (28 training rows)        | 8 tickets held back from the training dataset                        | 62.5% (5/8) |
+| Day 2 five-fold cross-validation | Five fold models (28 or 29 rows each) | All 36 training rows, each scored by the fold model that excluded it |  63.2% mean |
+| Day 3 held-out set               | Final saved model (all 36 rows)       | 6 Group B tickets, separate from training but previously exposed     | 66.7% (4/6) |
+
+Because the models and evaluation cases differ, these figures are not a controlled comparison and should not be read as evidence that the model improved between Day 2 and Day 3. The differences between the Day 3 figure and the two Day 2 figures (4.2 and 3.5 percentage points) are smaller than the effect of a single prediction on either the validation split (12.5 points) or the held-out set (16.7 points).
 
 ## 4. Limitations and Next Steps
 
@@ -120,8 +130,9 @@ The Day 2 validation and Day 3 held-out scores come from different ticket sets a
 * **Category overlap:** Short requests involving email updates, account settings, and access may contain similar language across categories.
 * **Confidence interpretation:** Prediction confidence is the model's reported probability for its selected category; it should not automatically be treated as a guarantee that the prediction is correct.
 * **Future improvements:** Add more varied, accurately labelled training examples, particularly for ambiguous account-setting and technical requests, then evaluate changes using a separate held-out dataset.
-* **Evaluation integrity:** Keep held-out tickets separate from training data so that the evaluation remains meaningful.
+* **Evaluation integrity:** This six-ticket set has already been exposed in the repository history and can no longer serve as a blind benchmark. A blind check of a future model needs a new set that is kept local-only and is not consulted when choosing training examples.
+* **Model versions:** Results for any retrained model should name the training dataset and model they were measured on, and should not be combined with the 36-row results above.
 
 ## 5. Conclusion
 
-The saved ticket-classification model correctly classified four of the six held-out tickets, achieving an accuracy of 66.7%. The evaluation identified confusion between access and technical requests involving email updates, providing a concrete area for future improvement while highlighting the need for a larger evaluation dataset.
+The final saved model, trained on all 36 rows, correctly classified four of the six held-out tickets, achieving an accuracy of 66.7%. Because this set was previously exposed, the result is not a blind benchmark. It is also not directly comparable with the Day 2 validation (62.5%) and cross-validation (63.2%) figures, which were measured on different models and cases. The evaluation identified confusion between access and technical requests involving email updates, providing a concrete area for future improvement while highlighting the need for a larger evaluation dataset.
