@@ -24,4 +24,8 @@ model.joblib
 backend/smartdesk.db
 backend/.venv
 backend/venv
+<<<<<<< HEAD
 tests/held_out_tickets.csv
+=======
+tests/held_out_tickets.csv
+>>>>>>> 375f9971091355e1a9c774fd6de41c6b27bfc0c1

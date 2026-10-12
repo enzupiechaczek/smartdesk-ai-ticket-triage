@@ -11,15 +11,19 @@ CSV_PATH = ROOT / "tests" / "held_out_tickets.csv"
 
 
 def main():
-    with open(CSV_PATH, encoding="utf-8", newline="") as f:
-        rows = list(csv.DictReader(f))
+    try:
+        with open(CSV_PATH, encoding="utf-8", newline="") as f:
+            rows = list(csv.DictReader(f))
+    except FileNotFoundError:
+        print(f"Error: held-out CSV not found: {CSV_PATH}", file=sys.stderr)
+        return 1
 
     if not rows:
         raise ValueError("The held-out CSV contains no tickets.")
 
     correct = 0
 
-    for row in rows:
+    for index, row in enumerate(rows, start=1):
         expected = row["category"].strip().lower()
         result = predict_category(row["ticket_text"])
         predicted = result["category"].strip().lower()
@@ -30,10 +34,9 @@ def main():
 
         status = "OK" if matched else "MISS"
         print(
-            f"{status} | expected={expected} | "
+            f"{status} | case-{index:02d} | expected={expected} | "
             f"predicted={predicted} | "
-            f"confidence={result['confidence']} | "
-            f"ticket={row['ticket_text']}"
+            f"confidence={result['confidence']}"
         )
 
     accuracy = correct / len(rows) * 100
@@ -41,4 +44,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
