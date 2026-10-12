@@ -2,7 +2,7 @@
 
 Date: 12/10/2026 (DD/MM/YYYY), no-model run logged at 22:28 (UTC+07:00)
 Checkout: working folder `smartdesk-ai-ticket-triage` (not a disposable clone)
-Commit: <fill in: output of `git rev-parse HEAD` after pulling the exit removal>
+Commit: 853ac6b4913676afa7156c6b2486d962533348d1(recorded at the time of testing, was not added when file was edited later)
 OS: Windows 11 (build number not recorded), PowerShell
 Python: 3.14 (patch version not recorded). The traceback shows the global
 `Python314` install, so no `.venv` was active for this run.
