@@ -74,7 +74,7 @@ New requests may receive different ticket IDs and timestamps. Confirm the live r
 - Date: 12 October 2026.
 - Git commit: `005f1b57e6110d0f45c1c0bb14bfdabf4eb92a5f`.
 - Dataset: `ai/data/tickets.csv`.
-- Dataset SHA-256: `525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1`. This is the hash of a Windows checkout, where Git (`core.autocrlf=true`) writes CRLF line endings. The same file as committed in Git has LF line endings and the SHA-256 `f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71`, the value [PR #47](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/47) reports for the 36-row baseline. Both hashes were reproduced on 12 October 2026 and describe the same 36 rows.
+- Dataset SHA-256: `525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1`. This is the hash of a Windows checkout, where Git (`core.autocrlf=true`) writes CRLF line endings. The same file as committed in Git has LF line endings and the SHA-256 `f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71`, the value recorded for the 36-row training CSV in the [Model Evaluation Report](model_evaluation.md) and in [PR #47](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/47). Both hashes were reproduced on 12 October 2026 and describe the same 36 rows.
 - Dataset size: 36 synthetic rows; 12 per category.
 - Command: `python ai/train.py`.
 - Test-split accuracy: `0.625` (8 test tickets).
@@ -82,7 +82,7 @@ New requests may receive different ticket IDs and timestamps. Confirm the live r
 - Model artifact: `ai/model.joblib` (local, ignored by Git).
 - Exact training start time and Python version were not separately recorded.
 
-The test-split accuracy describes the held-out split used during this training run. The cross-validation mean describes the folds used by the training process. Neither is an independent evaluation of the final model trained on all 36 rows.
+The test-split accuracy describes the eight tickets held back during this training run. The evaluation report calls them the validation split, which is separate from its six-ticket Group B held-out set. The cross-validation mean describes the folds used by the training process. Neither is an independent evaluation of the final model trained on all 36 rows.
 
 ### API captures on 12 October 2026
 
@@ -166,7 +166,7 @@ Status on 12 October 2026: no rehearsal has taken place, and the 105-second timi
 
 ### Related documents
 
-- Evaluation report: [Model Evaluation Report](model_evaluation.md). It covers the 36-row baseline.
+- Evaluation report: [Model Evaluation Report](model_evaluation.md), as updated by [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46). It records the Day 2 split and cross-validation results for the 36-row baseline, and a Day 3 check of a separately identified local model artifact on Group B's six held-out tickets. The report states that this six-ticket set was previously exposed and is not a blind benchmark, and that the artifact's training provenance was not independently verified.
 - Data quality report: [Data Quality Report](data_quality_report.md).
 - Model card: pending. It is proposed as `docs/model_card.md` in [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49), which has not been merged, so this script does not link the file yet.
 
@@ -178,5 +178,8 @@ Status on 12 October 2026: no rehearsal has taken place, and the 105-second timi
 
 As of 12 October 2026, no handoff has been confirmed with Group A1 or Group B.
 
-- From Group A1: A1's script, `docs/demo_script.md` in [PR #44](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/44) (not yet merged), ends by handing over to the AI team and links to this file. A1's moment 5 already explains category, confidence and priority. Still to agree with A1: which segment explains confidence, and whether the AI segment reuses A1's running server and database. If it does, the two requests above will receive the next ticket IDs after A1's tickets, not 13 and 14.
-- To Group B: A1's script links the QA segment as `docs/demo_qa.md`. No branch in the repository contains a written QA script at that path yet. The handoff to Group B's QA segment still needs to be agreed.
+- From Group A1: A1's script, `docs/demo_script.md` in [PR #44](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/44) (not yet merged), ends by handing over to the AI team and links to this file. Still to agree with A1:
+  - Which segment explains confidence. A1's moment 5 already explains category, confidence and priority.
+  - Whether the AI segment reuses A1's running server and database.
+  - How the live ticket IDs are presented. If the database is reused, the two requests above will receive the next IDs after A1's tickets, not 13 and 14.
+- To Group B: A1's script links the QA segment as `docs/demo_qa.md`. No branch in the repository contains a written QA script at that path yet. The handoff to Group B's QA segment still needs to be agreed, including whether QA reuses the same server and database, which would change the ticket IDs QA sees.
