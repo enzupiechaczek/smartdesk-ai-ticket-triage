@@ -106,7 +106,18 @@ That is a quality observation for the model owners, not an API bug.
 - TC-DuplicateTicket-008 has a dashboard image from an earlier rerun in the same session. The ids and
   statuses come from its request and response file, not from that image.
 
+## Task 2933 - The end-to-end test in browser
+
+| Test ID | Input | Steps | Expected result | Actual result | Pass/Fail | Evidence |
+|---|---|---|---|---|---|---|
+TC-ValidTechnical-003 | {"subject":"PDF upload failed","description":"The app freezes when I upload a PDF"} | 1. Open the page.<br>2. Type the subject and description.<br>3. Click Submit Ticket.<br>4. Read the response. | `201 -> {"id","same subject","same description","technical","confidence","priority","created_at"}` |`201 -> {"id": 27, "subject": "Unable to access my account", "description": "I cannot log into my account", "category": "technical", "confidence": 0.5, "priority": "normal", "created_at": "2026-10-08T15:48:59.417316+00:00"}` | Pass | (evidences\TC-api-003.png), (evidences/TC-page-003.png), (evidences\TC-refresh-003.png) | 
+TC-BlankSubject-004 | {"subject":"","description":"I cannot access my account using my password"} | 1. Open the page.<br>2. Type the subject and description.<br>3. Click Submit Ticket.<br>4. Read the response. | `201 -> {"id","same subject","same description","access","confidence","priority","created_at"}` | `201 -> {"id": 27, "subject": "Unable to access my account", "description": "I cannot access my account using my password", "category": "access", "confidence": 0.5, "priority": "normal", "created_at": "2026-10-08T15:48:59.417316+00:00"}`| Pass| (evidences\TC-page-004.png), (evidences\TC-api-004.png)  |
+TC-DuplicateTicket-006 | {"subject":"PDF upload failed","description":"The app freezes when I upload a PDF"} |  1. Open the page.<br>2. Type the subject and description.<br>3. Click Submit Ticket.<br>4. Read the response. | `201 -> {"id","same subject","same description","technical","confidence","priority","created_at"}` | `201 -> {"id": 27, "subject": "Unable to access my account", "description": "I cannot log into my account", "category": "technical", "confidence": 0.5, "priority": "normal", "created_at": "2026-10-08T15:48:59.417316+00:00"}`| Pass| (evidences\TC-page-006.png),(evidences\TC-api-006.png),(evidences\TC-refresh-006.png)|
+
 ## Task 2934 - Unsafe and unusual input
+# SmartDesk test cases
+
+Placeholder. Group B writes the test plan in task B-1.1.
 
 | Test ID | Input | Steps | Expected result | Actual result | Pass/Fail | Evidence |
 | TC-ValidAccess-001 |---|---|---|---|---|---|
