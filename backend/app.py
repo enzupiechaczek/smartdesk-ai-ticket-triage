@@ -6,11 +6,10 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request
 from database import get_connection, init_db
-from ai.predictor import predict_category
+from ai.predictor import MODEL_PATH, predict_category
 from priority import compute_priority
 
-model_path = Path("ai/model.joblib")
-if not model_path.exists():
+if not MODEL_PATH.exists():
     print("CRITICAL ERROR: Model not found. Run python ai/train.py first.")
     sys.exit(1)  # Or raise a RuntimeError that stops startup
 
@@ -25,8 +24,7 @@ def index():
 
 @app.get("/api/health")
 def health():
-    model_path = Path("ai/model.joblib")
-    if not model_path.exists():
+    if not MODEL_PATH.exists():
         return (
             jsonify(
                 {
