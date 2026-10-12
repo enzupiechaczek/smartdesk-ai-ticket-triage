@@ -336,15 +336,15 @@ of the 28 cases has a full request and a full response recorded in
 | TC-Priority-021 | Pass | `day4-TC-Priority-021.png` | both timestamps, full GET listing, reload positions | Complete |
 | TC-Priority-022 | Pass | `day4-TC-Priority-022.png` | full response | Complete |
 | TC-Priority-023 | Pass | `day4-TC-Priority-023.png` | full response | Complete |
-| TC-Priority-024 | Pass | **none** | full response, HTTP 201 priority urgent | Complete on response, image missing |
-| TC-HTMLBold-001 | Pass | **none** | full response, DOM check, 0 network requests | Complete on DOM and response, image missing |
+| TC-Priority-024 | Pass | `day4-TC-Priority-024.png` | full response, HTTP 201 priority urgent | Complete |
+| TC-HTMLBold-001 | Pass | `day4-TC-HTMLBold-001.png` | full response, DOM check, 0 network requests | Complete |
 | TC-Script-002 | Pass | `day4-TC-Script-002.png` | full response, no `script` element, no alert | Complete |
 | TC-Image-003 | Pass | `day4-TC-Image-003.png` | full response, no `img` element, 0 image requests | Complete |
 | TC-Spaces-004 | Pass | `day4-TC-Spaces-004.png` | full 400 response, browser network measurement | Complete |
 
-26 cases are complete on their own evidence. Two, TC-Priority-024 and TC-HTMLBold-001, lack an image
-but both have a full recorded response, and TC-HTMLBold-001 also has a direct DOM and network
-measurement.
+All 28 cases are complete on their own evidence: every case has its own image and a full recorded
+request and response. TC-HTMLBold-001 also carries a direct DOM and network measurement, and
+TC-Image-003 a network log showing no request was made for the image.
 
 `day4-dashboard-priority-urgent.png` shows the top of the dashboard after the main run. It is a
 general view and is not counted as the evidence for any single case.
@@ -394,7 +394,6 @@ separate work.
 - 6 new findings, severity proposed and ownership pending, for coordination with PR #44. D2 is the
   one that blocks a new user: the README never says to train the model, and `/api/health` still
   reports 200 while every ticket submission fails.
-- Evidence: 26 cases complete on their own evidence, 2 missing an image only, every case has a full
-  recorded request and response.
+- Evidence: all 28 cases complete, each with its own image and a full recorded request and response.
 - The 28 passes come from Stage C, after corrections. Stage A, the README exactly as written, did
   not succeed.

@@ -833,3 +833,21 @@ Response: **HTTP 201**
   "subject": "Production issue"
 }
 ```
+
+## Note on the two images captured later
+
+day4-TC-Priority-024.png and day4-TC-HTMLBold-001.png were captured after the runs above, from a
+later submission on the same clone and the same commit. They are images of the dashboard only, so the
+ids they show are later ones than the responses recorded above. The two are reconciled here so the
+records do not silently disagree.
+
+| Case | id in the recorded response | id in the image | created_at in the image |
+| --- | --- | --- | --- |
+| TC-Priority-024 | 19 (main run) | 32 (later submission) | 2026-10-12T03:46:26.672306+00:00 |
+| TC-HTMLBold-001 | 28 (main run) | 28 (same ticket, not resubmitted) | 2026-10-12T03:00:21 |
+
+Both later submissions returned the same results as recorded above. TC-Priority-024 returned
+priority: urgent on both runs, and the image shows the card at the top of the dashboard.
+TC-HTMLBold-001 was already on the dashboard and was not resubmitted, so its id is unchanged.
+The bold image incidentally also shows the <img src=x> and <script>alert(1)</script> cards
+rendered as literal text, which corroborates those two cases as well.
