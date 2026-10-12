@@ -1,86 +1,79 @@
-# Model Evaluation Report
+# SmartDesk AI Ticket Classifier - Model Evaluation
 
-## Training Overview
+## 1. Evaluation Scope
 
-- **Baseline dataset:** 36 synthetic support-ticket records in `ai/data/tickets.csv`, with 12 records per category.
-- **Training implementation:** [`ai/train.py`](../ai/train.py).
-- **Model:** TF-IDF vectorization using unigrams and bigrams, followed by Logistic Regression.
-- **Test procedure:** Stratified 80/20 train/test split using `random_state=42`.
-- **Test-set size:** 8 records, representing 20% of the 36-row baseline.
-- **Cross-validation:** Five-fold stratified cross-validation on all 36 rows.
-- **Final artifact:** After evaluation, the script retrains the pipeline on all 36 rows and saves `ai/model.joblib`.
+This report documents the evaluation of the 36-row synthetic baseline dataset in [`ai/data/tickets.csv`](../ai/data/tickets.csv), containing 12 examples for each category: `access`, `billing`, and `technical`.
 
-These results apply to the documented 36-row baseline and its evaluation procedure. If [PR #47](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/47) merges its proposed 42-row dataset, coordinate a version and metrics update before attributing these figures to the new dataset.
+The training and evaluation procedure is implemented in [`ai/train.py`](../ai/train.py).
 
-Group B's separate six-ticket evaluation is documented in [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46). It is separate from the eight-record test split below. The Group B evaluation has already been exposed and is not a blind benchmark.
+[PR #47](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/47) proposes a 42-row dataset. The results in this report apply only to the 36-row baseline. If PR #47 merges, confirm the applicable dataset version and rerun or verify the evaluation before updating these figures.
 
-## Evaluation Results: 20% Test Split
+Group B's separate six-ticket evaluation is documented in [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46). It is separate from the eight-record test split reported here. Those tickets and results have already been exposed and must not be described as a blind benchmark.
 
-The following results are the reported metrics for the eight records in the 20% test split.
+## 2. Training and Evaluation Procedure
 
-| Metric | Result |
-|---|---:|
-| Accuracy | 0.625 (62.5%) |
-| Access precision | 0.50 |
-| Access recall | 1.00 |
-| Billing precision | 0.67 |
-| Billing recall | 0.67 |
-| Technical precision | 1.00 |
-| Technical recall | 0.33 |
+- **Algorithm:** Logistic Regression with TF-IDF text features.
+- **Text features:** Unigrams and bigrams.
+- **Dataset:** 36 synthetic ticket records.
+- **Train/test split:** Stratified 80% training and 20% testing, using `random_state=42`.
+- **Test-set size:** 8 records.
+- **Cross-validation:** Five-fold stratified cross-validation on the 36-row baseline.
+- **Final saved model:** After the evaluation steps, the training script fits the pipeline on all 36 rows and saves it as `ai/model.joblib`.
 
-The reported classification output was (the classification report rounds accuracy to 0.62; the unrounded test accuracy is 0.625):
+The test-split metrics describe the model fitted on the training portion of the split. Cross-validation summarizes results across five separate folds. Neither is an independent evaluation of the final saved model trained on all 36 rows.
 
-```text
-              precision    recall  f1-score   support
+## 3. Test-Split Results
 
-      access       0.50      1.00      0.67         2
-     billing       0.67      0.67      0.67         3
-   technical       1.00      0.33      0.50         3
+The eight-record test split achieved an accuracy of **0.625 (62.5%)**.
 
-    accuracy                           0.62         8
-   macro avg       0.72      0.67      0.61         8
-weighted avg       0.75      0.62      0.60         8
-```
+| Metric | Precision | Recall | F1-score | Support |
+|---|---:|---:|---:|---:|
+| Access | 0.50 | 1.00 | 0.67 | 2 |
+| Billing | 0.67 | 0.67 | 0.67 | 3 |
+| Technical | 1.00 | 0.33 | 0.50 | 3 |
+| Macro average | 0.72 | 0.67 | 0.61 | 8 |
+| Weighted average | 0.75 | 0.62 | 0.60 | 8 |
 
-Because the test split contains only eight records, one incorrect prediction changes accuracy by 12.5 percentage points. These results should therefore be interpreted cautiously.
+The classification report rounds the overall accuracy to 0.62; the unrounded accuracy is 0.625.
 
-## Wrong Predictions on the Test Split
+Because the test split contains only eight records, one incorrect prediction changes the accuracy by 12.5 percentage points. These results should therefore be interpreted cautiously.
 
-The following observed errors are from the eight-record test split:
+## 4. Five-Fold Cross-Validation
 
-```text
-WRONG: technical -> billing | We updated our billing card details successfully, but the data export script hangs indefinitely at 99%
-WRONG: technical -> access | Some settings are not being saved after I update them.
-WRONG: billing -> access | Please send me a receipt for my most recent payment.
-```
+The reported fold accuracies were:
 
-The first ticket combines billing-related wording with an export failure. Billing terms may have influenced the prediction, but this is a possible explanation rather than verified internal model reasoning.
+`[0.875, 0.429, 0.429, 0.857, 0.571]`
 
-The second ticket describes settings that are not being saved. Its wording may be ambiguous to a text classifier, but the exact reason for the prediction has not been verified.
+- **Mean accuracy:** 0.632 (63.2%)
+- **Standard deviation:** 0.198
 
-The receipt request was also misclassified. These are observed examples, not proof of how the classifier will behave on other tickets.
+Cross-validation provides an additional estimate across different folds, but the small synthetic dataset limits the conclusions that can be drawn. It should not be treated as proof of real-world performance.
 
-## Cross-Validation: Separate Evaluation
+## 5. Observed Misclassifications
 
-The reported five-fold stratified cross-validation results on the 36-row baseline were:
+The following three errors were observed on the eight-record test split:
 
-```text
-Cross-validation accuracy per fold: [0.875, 0.429, 0.429, 0.857, 0.571]
-Cross-validation mean accuracy: 0.632 (+/- 0.198)
-```
+| Actual category | Predicted category | Ticket text |
+|---|---|---|
+| Technical | Billing | We updated our billing card details successfully, but the data export script hangs indefinitely at 99% |
+| Technical | Access | Some settings are not being saved after I update them. |
+| Billing | Access | Please send me a receipt for my most recent payment. |
 
-These results are separate from the eight-record test-split metrics. Cross-validation evaluates models fitted across different folds; it does not evaluate the final saved model as an independent, blind test.
+The first ticket combines billing-related wording with an export failure. Billing terms may have influenced the prediction, but the model's internal reasoning has not been independently verified.
 
-## Final Saved Model
+The second ticket describes a settings problem without an explicit technical keyword. Its wording may be ambiguous to a text classifier, but the exact reason for the prediction has not been verified.
 
-After the test-split and cross-validation steps, `ai/train.py` fits the pipeline on all 36 rows and saves `ai/model.joblib`.
+The receipt request was also misclassified. These examples document observed errors; they do not establish how the model will behave on other tickets.
 
-The test-split scores describe the model fitted on the 80% training portion. The cross-validation scores summarize the five-fold evaluation procedure. Neither is an independent evaluation of the final model trained on all 36 rows.
+## 6. Limitations and Follow-Up
 
-## Limitations and Follow-up
+- **Small dataset:** The baseline contains only 36 synthetic records.
+- **Limited test set:** Eight test records provide a limited basis for estimating performance.
+- **Technical recall:** Technical recall was 0.33 on the test split; two of the three technical tickets were misclassified.
+- **Representativeness:** Synthetic tickets may not reflect the language and complexity of real support requests.
+- **Category overlap:** A ticket can mention multiple issues, making its primary category difficult to infer from text alone.
+- **Human review:** Predictions should be reviewed by support staff, particularly for ambiguous tickets and consequential account or payment decisions.
+- **Group B evaluation:** The six-ticket evaluation in PR #46 is separate and already exposed, not a blind benchmark.
+- **Dataset changes:** If PR #47's proposed 42-row dataset merges, verify the dataset version and evaluation results before updating the reported metrics.
 
-- The dataset contains only 36 synthetic records and may not represent real support traffic.
-- Technical recall was 0.33 on the eight-record test split, so human review is important.
-- Group B's six-ticket evaluation in PR #46 is separate and already exposed, not a blind benchmark.
-- If PR #47's proposed 42-row dataset merges, recheck the dataset version and rerun or confirm the appropriate evaluation before updating the reported metrics.
-- Teammate/Group B review feedback and outcome remain pending until the review has actually occurred and its results are documented.
+The final saved model is trained on all 36 baseline rows. The test-split and cross-validation results above are not an independent evaluation of that final artifact.
