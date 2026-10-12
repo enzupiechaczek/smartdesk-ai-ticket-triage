@@ -24,7 +24,7 @@ The dataset is small and synthetic. It does not represent the full variety, word
 
 This report describes the 36-row baseline. Pull request [#47](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/47) proposes a 42-row dataset. If that proposal merges, the dataset version, evaluation figures, and related documentation must be checked and updated together. The figures below must not be presented as results for a 42-row dataset unless that version has been evaluated.
 
-**Baseline provenance:** These metrics apply to the 36-row dataset with SHA-256 `525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1`. The evaluation procedure and reported results are documented in [the evaluation report](model_evaluation.md) and use the training script at [`ai/train.py`](../ai/train.py). This hash identifies the dataset version; it is not a claim that the documentation commit itself was the tested model version.
+**Baseline provenance:** The recorded baseline-checkout SHA-256 is `525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1`. This hash identifies the recorded file bytes; by itself, it does not prove that those exact bytes generated the historical metrics. The Day 2 metrics are attributed to the evaluation session documented in [the evaluation report](model_evaluation.md). The report separately documents the Day 3 evaluation of a pre-existing local model artifact whose original training session and dataset association were not independently verified. Different recorded dataset hashes can sometimes result from CRLF versus LF line endings, so a hash difference alone does not establish that dataset content changed.
 
 Group B's separate six-ticket evaluation is documented in [pull request #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46). Those tickets and results are separate from the eight-record test split reported here. The Group B evaluation has already been exposed and is not a blind benchmark.
 
@@ -37,7 +37,7 @@ The classifier is a scikit-learn pipeline containing:
 
 The training script uses an 80% training split and a 20% test split, stratified by category, with `random_state=42`. It also performs five-fold stratified cross-validation on all 36 dataset rows.
 
-After these evaluation steps, the script fits the pipeline on all 36 examples and saves it as `ai/model.joblib`.
+The documented training recipe fits the pipeline on all 36 examples and saves it as `ai/model.joblib`. This describes the script's intended output; it does not independently establish the provenance of the pre-existing artifact used in the Day 3 evaluation.
 
 The split-test metrics describe the model fitted on the 80% training portion. Cross-validation reports performance across five separate folds. Neither set of metrics is an independent evaluation of the final saved model trained on all 36 rows.
 
@@ -100,8 +100,8 @@ These examples illustrate observed prediction errors. They do not establish how 
 
 - [ ] Preview the complete Markdown document and confirm that the evaluation table renders correctly.
 - [ ] Verify that the evaluation report and related pull-request links work.
-- [ ] Verify UTF-8 encoding, absence of a leading BOM, inline code formatting, and the absence of unintended escaped formatting markers.
-- [ ] Run the whitespace check and record its actual result.
+- [x] Verify UTF-8 encoding and absence of a leading BOM; confirm inline code and Markdown formatting by source inspection.
+- [x] Run `git diff --check`; no whitespace errors were reported.
 - [ ] Confirm that all metric descriptions refer to the correct dataset and evaluation procedure.
 - [ ] Complete and document Group B review only after actual feedback and its outcome are available.
 - [ ] Recheck the documentation if PR #47 merges and the proposed 42-row dataset becomes the applicable baseline.
