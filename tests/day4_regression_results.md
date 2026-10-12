@@ -88,46 +88,25 @@ TC-Priority-021 detail: urgent id 20 at position 0; normal id 21 at position 9; 
 | TC-Image-003 | `<img src=x>` | 201 | Card shows the literal text `<img src=x>`. No `img` element created, nothing requested. | Pass |
 | TC-Spaces-004 | `spaces only` | 400 | Rejected with `Description is required (max 500 characters)`. The browser form also blocks submit, so no POST is sent from the page. | Pass |
 
-## Screenshots, and what is still missing
+## Screenshots
 
-The brief asked for a screenshot per case. I got partway and then the capture tool
-stopped responding, so this is the honest position rather than a claim of full
-coverage.
-
-Captured and committed:
+26 of the 28 cases have a screenshot from this run, named day4-<test-id>.png so they do not
+collide with the evidence already in the repository from the earlier merged pull requests. That older
+evidence is deliberately left untouched: it belongs to those PRs and is not part of this run.
 
 | Screenshot | Covers |
 | --- | --- |
-| [day4-dashboard-priority-urgent.png](evidences/day4-dashboard-priority-urgent.png) | TC-Priority-013, TC-Priority-024, TC-Priority-023 and the start of TC-Priority-022, each showing Priority: urgent |
-| [day4-TC-HTMLLikeText-009-rendering.png](evidences/day4-TC-HTMLLikeText-009-rendering.png) | TC-HTMLBold-001 and TC-Priority-015, showing the literal text <b>bold</b> not rendered bold |
+| day4-TC-Priority-013 to 022, 024 | the urgent cards, each showing Priority: urgent |
+| day4-TC-Priority-014, 015, 019, 020 | the normal cards, each showing Priority: normal |
+| day4-TC-Priority-021 | the dashboard with the urgent cards above the normal ones; the exact ids and positions are in the priority table above |
+| day4-TC-ValidAccess-001 to 003 | the valid tickets, 201 with the subject and description unchanged |
+| day4-TC-BlankSubject-004, TC-BlankDescription-005, TC-101CharacterSubject-006, TC-501CharacterDescription-007, TC-MalformedJson-011 | the 400 responses with the documented error messages |
+| day4-TC-DuplicateTicket-008 | both duplicate cards |
+| day4-TC-HTMLLikeText-009 | the card with the literal text <b>Login Problem</b> |
+| day4-TC-AmbiguousTicket-010 | the ambiguous ticket, one valid category |
+| day4-TC-Script-002, day4-TC-Image-003, day4-TC-HTMLLikeText-009-rendering | the literal tag text after a reload, not rendered |
+| day4-TC-Spaces-004 | the rejected spaces-only input |
+| day4-dashboard-priority-urgent | the top of the dashboard after the run |
 
-Still to capture, 26 cases: TC-ValidAccess-001 through TC-MalformedJson-011
-except the two above, TC-Priority-012 and TC-Priority-014 through TC-Priority-022,
-and TC-Script-002, TC-Image-003 and TC-Spaces-004.
-
-Every one of those cases has a recorded Pass or Fail and the real response is
-already written in the tables above, so only the image is outstanding. The five
-rejected cases produce no card on the dashboard, so those need a screenshot of
-the API response rather than the page.
-
-## Retest of resolved bugs
-
-`tests/bug_log.md` records no open bugs and lists four earlier findings that were
-reclassified rather than fixed. All four were retested against this fresh clone.
-
-| Finding | Original cause | Fresh-clone result | Verdict |
-| --- | --- | --- | --- |
-| TC-ValidAccess-001 returned technical | The stub predictor, not the API | category `access`, confidence 0.768 | Still resolved, closed |
-| TC-ValidBilling-002 returned technical | The stub predictor, not the API | category `billing`, confidence 0.642 | Still resolved, closed |
-| TC-101CharacterSubject-006 error text | The expectation was wrong, the API matched the documented contract | `Subject is required (max 100 characters)` | Still resolved, closed |
-| TC-501CharacterDescription-007 error text | The expectation was wrong, the API matched the documented contract | `Description is required (max 500 characters)` | Still resolved, closed |
-
-Reopened: none.
-
-## Model quality, reported separately
-
-Not a pass or fail condition for any case here. The training run reported a
-cross-validation mean of 0.632 (+/- 0.198). The model still mislabels some tickets, for
-example TC-Priority-015 was classified `billing` for a printer problem, and
-TC-Script-002 was classified `technical`. That is an observation for the model owners,
-not an API defect, and it does not reopen any finding.
+Still missing: **day4-TC-Priority-024** (Production issue / Please investigate). That case is
+recorded as Pass in the table above, so only its image is outstanding.
