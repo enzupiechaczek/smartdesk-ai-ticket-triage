@@ -24,6 +24,8 @@ The dataset is small and synthetic. It does not represent the full variety, word
 
 This report describes the 36-row baseline. Pull request [#47](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/47) proposes a 42-row dataset. If that proposal merges, the dataset version, evaluation figures, and related documentation must be checked and updated together. The figures below must not be presented as results for a 42-row dataset unless that version has been evaluated.
 
+**Baseline provenance:** These metrics apply to the 36-row dataset with SHA-256 `525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1`. The evaluation procedure and reported results are documented in [the evaluation report](model_evaluation.md) and use the training script at [`ai/train.py`](../ai/train.py). This hash identifies the dataset version; it is not a claim that the documentation commit itself was the tested model version.
+
 Group B's separate six-ticket evaluation is documented in [pull request #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46). Those tickets and results are separate from the eight-record test split reported here. The Group B evaluation has already been exposed and is not a blind benchmark.
 
 ## 4. Method
@@ -45,7 +47,7 @@ Source: [`model_evaluation.md`](model_evaluation.md), which reports the 36-row b
 
 ### 20% test split
 
-The 36-row dataset produces an eight-record 20% test split. The reported test accuracy is 0.625 (62.5%).
+The eight-record test split produced by `test_size=0.2` achieved an accuracy of 0.625 (62.5%).
 
 | Metric | Result |
 |---|---:|
@@ -79,15 +81,20 @@ A billing ticket, "Please send me a receipt for my most recent payment.", was pr
 
 These examples illustrate observed prediction errors. They do not establish how the model will perform on other datasets or real support traffic.
 
-## 6. Limitations, Risks, and Human Oversight
+## 6. Limitations
 
 - **Small dataset:** The baseline contains only 36 synthetic examples. A single incorrect prediction changes eight-record test accuracy by 12.5 percentage points.
 - **Low technical recall:** Technical recall was 0.33 on the test split. Two of the three technical tickets in that split were misclassified.
 - **Limited representativeness:** Synthetic examples may not reflect the vocabulary, ambiguity, spelling, and variety of real support requests.
 - **Potential category overlap:** Tickets mentioning multiple issues may contain words associated with a category other than the primary problem.
-- **No guarantee of generalization:** Test-split and cross-validation scores do not establish performance on production traffic or on the final model fitted to all rows.
-- **Human review required:** A person should check predictions, especially for technical issues, ambiguous tickets, and decisions with meaningful consequences.
+- **No guarantee of generalization:** Test-split and cross-validation scores do not establish performance on production traffic or independently establish the final model's performance.
 - **Independent evaluation limitations:** Group B's six-ticket evaluation in PR #46 is separate and already exposed; it must not be described as a blind benchmark.
+
+## 7. Responsible use
+
+- **Human review required:** A person should check predictions, especially for technical issues, ambiguous tickets, and decisions with meaningful consequences.
+- **Decision support only:** Do not use the classifier as the sole basis for decisions affecting account access, payments, refunds, or other consequential support outcomes.
+- **Correction and escalation:** Support staff should correct incorrect predictions and review uncertain or misclassified tickets rather than relying on the model without oversight.
 
 ### Verification and review checklist
 
@@ -98,4 +105,3 @@ These examples illustrate observed prediction errors. They do not establish how 
 - [ ] Confirm that all metric descriptions refer to the correct dataset and evaluation procedure.
 - [ ] Complete and document Group B review only after actual feedback and its outcome are available.
 - [ ] Recheck the documentation if PR #47 merges and the proposed 42-row dataset becomes the applicable baseline.
-
