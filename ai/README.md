@@ -66,18 +66,37 @@ The trained model artifact, `ai/model.joblib`, is ignored by version control and
 
 ## Reproduce the Model
 
-This section explains how to regenerate the model and reproduce the training and evaluation results.
+This section documents the 36-row dataset baseline, the training procedure, the historical two-run comparison, and a separately captured fresh verification.
 
-### Prerequisites
+### Baseline and environment
 
-Python and the required packages must be installed.
+The baseline is tied to the versioned dataset `ai/data/tickets.csv`, containing 36 synthetic tickets.
 
-- `joblib`
-- `scikit-learn`
+- **Baseline dataset SHA-256:** `525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1`
+- **Commit tested during fresh verification:** `6be765d874141750d1b4cac81bb1d410aa51edda`
+- **Operating system:** Microsoft Windows 11 Pro, version 10.0.22000, build 22000
+- **Python:** 3.14.4
+- **pip:** 26.0.1
+- **AI dependencies:** `joblib` 1.6.0 and `scikit-learn` 1.9.1
 
-Run the commands from the repository root. The inspected training script does not make network requests or require an API key.
+The complete installed package versions are recorded in [`docs/evidence/requirements-ai-baseline-2026-10-11.txt`](../docs/evidence/requirements-ai-baseline-2026-10-11.txt). The fresh verification output, timestamp, commit, dataset hash, operating system, and package details are recorded in [`docs/evidence/training-baseline-2026-10-11.txt`](../docs/evidence/training-baseline-2026-10-11.txt).
 
-### Training Procedure
+### Fresh-environment setup
+
+The commands below are for Windows PowerShell. Install Python 3.14.4 first and run the commands from the repository root.
+
+```powershell
+py -3.14 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python --version
+python -m pip install --upgrade pip==26.0.1
+python -m pip install -r docs\evidence\requirements-ai-baseline-2026-10-11.txt
+python -m pip show joblib scikit-learn
+```
+
+Confirm that `python --version` reports Python 3.14.4 before proceeding. The requirements snapshot pins the packages observed in the verification environment; it does not install Python itself or guarantee identical behavior on other operating systems.
+
+### Training procedure
 
 Run the following command from the repository root:
 
@@ -85,26 +104,24 @@ Run the following command from the repository root:
 python ai/train.py
 ```
 
-The script performs these steps:
+The script:
 
-1. Loads the synthetic ticket dataset from `ai/data/tickets.csv`.
-2. Splits the dataset into training and test sets using an 80/20 split, stratified by category, with `random_state=42`.
-3. Builds a text-classification pipeline using TF-IDF with unigrams and bigrams, followed by Logistic Regression with `C=10` and `max_iter=1000`.
-4. Trains the model on the training split and evaluates it on the test split.
+1. Loads `ai/data/tickets.csv`.
+2. Splits the data into training and test sets using an 80/20 split, stratified by category, with `random_state=42`.
+3. Builds a text-classification pipeline using TF-IDF unigrams and bigrams, followed by Logistic Regression with `C=10` and `max_iter=1000`.
+4. Trains and evaluates the model on the training and test split.
 5. Prints test accuracy, the classification report, and incorrect test predictions.
 6. Performs five-fold stratified cross-validation using `random_state=42`.
-7. Retrains the pipeline using all 36 available examples.
-8. Saves the resulting model to `ai/model.joblib`.
+7. Retrains the pipeline using all 36 examples.
+8. Saves the generated model as `ai/model.joblib`.
 
-The dataset and model paths are constructed relative to the training script's directory. The inspected script contains no network calls and does not reference files outside the repository.
+The inspected training script contains no network requests or API-key requirements. The generated model is an output artifact and should not be committed.
 
-### Verified Reproducibility Results
+### Historical two-run baseline
 
-The existing `ai/model.joblib` file was deleted before the first training run. The command `python ai/train.py` completed successfully and recreated the file. The same command was then run a second time.
+The previously recorded comparison reported matching metrics, classification reports, and incorrect test predictions across two training runs. The original raw logs and run-specific environment metadata were not retained, so the historical runs cannot now be independently verified from those original outputs.
 
-Both runs produced matching results.
-
-| Metric | First run | Second run |
+| Metric | Previously recorded run 1 | Previously recorded run 2 |
 |---|---:|---:|
 | Test-split accuracy | 0.625 (62.5%) | 0.625 (62.5%) |
 | Cross-validation mean accuracy | 0.632 (63.2%) | 0.632 (63.2%) |
@@ -117,12 +134,26 @@ Both runs produced matching results.
 | Incorrect test-split predictions | 3 | 3 |
 | Model artifact recreated | Yes | Yes |
 
-The classification report and the three incorrect test-split predictions also matched across both runs.
+These values describe the previously recorded 36-row baseline, not a guarantee about future dataset versions.
 
-These results confirm repeatability in the tested environment. They do not establish that the model is highly accurate or that the same results have been verified across different software environments.
+### Fresh verification - 11 October 2026
 
-### Reproducibility Limitations
+A fresh training run was captured on commit `6be765d874141750d1b4cac81bb1d410aa51edda` using the environment and dataset identified above. The command `python ai/train.py` completed successfully and recreated the model artifact.
 
-The dataset contains only 36 synthetic tickets, and the test split contains eight tickets. Each test example therefore has a substantial effect on the reported accuracy. The results should be interpreted cautiously.
+The fresh run produced:
 
-The verification was performed using Python 3.14.4, joblib 1.6.0, and scikit-learn 1.9.1. Identical results across other operating systems, Python versions, or library versions have not been established.
+- Test-split accuracy: `0.625`
+- Cross-validation fold accuracies: `[0.875, 0.429, 0.429, 0.857, 0.571]`
+- Cross-validation mean accuracy: `0.632`
+- Cross-validation standard deviation: `0.198`
+- Incorrect test-split predictions: 3
+
+The fresh classification report and the three incorrect predictions are preserved in the training evidence file. These observations match the previously recorded baseline results. This fresh run is separate evidence; it does not replace the missing original logs for the historical two-run comparison.
+
+The reported repeatability concerns printed evaluation results. No comparison of model-artifact hashes was performed, so byte-for-byte identity of generated model files has not been established.
+
+### Limitations and dataset updates
+
+The dataset contains only 36 synthetic tickets, and the test split contains eight tickets. Each test example therefore has a substantial effect on the reported accuracy. These results should not be interpreted as proof of production readiness or generalization to real-world support tickets.
+
+These metrics are the baseline for this specific dataset version. PR #47 proposes a 42-row dataset. If that change is merged, coordinate the update with the dataset owner and rerun training before publishing new results. Record the new dataset hash and verification evidence, and clearly distinguish the new results from this 36-row baseline.

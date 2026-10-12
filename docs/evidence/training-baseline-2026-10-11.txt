@@ -1,0 +1,98 @@
+Verification date: 2026-10-11 18:59:05 +02:00
+Commit: 6be765d874141750d1b4cac81bb1d410aa51edda
+Dataset SHA-256: 525AC01B9A55B86BB69D77B17128D5529535D1844F9018CF8DCE1DB4C2F896A1
+Operating system: Microsoft Windows 11 Pro, version 10.0.22000, build 22000
+Python version:
+Python 3.14.4
+
+pip version:
+pip 26.0.1 from C:\Users\Whitney.Adm\Documents\smartdesk-ai-ticket-triage\.venv\Lib\site-packages\pip (python 3.14)
+
+Installed AI dependencies:
+Name: joblib
+
+Version: 1.6.0
+
+Summary: Lightweight pipelining with Python functions
+
+Home-page: https://joblib.readthedocs.io
+
+Author:
+
+Author-email: Gael Varoquaux <gael.varoquaux@normalesup.org>
+
+License-Expression: BSD-3-Clause
+
+Location: C:\Users\Whitney.Adm\Documents\smartdesk-ai-ticket-triage\.venv\Lib\site-packages
+
+Requires: cloudpickle
+
+Required-by: scikit-learn
+
+---
+
+Name: scikit-learn
+
+Version: 1.9.1
+
+Summary: A set of python modules for machine learning and data mining
+
+Home-page: https://scikit-learn.org
+
+Author:
+
+Author-email:
+
+License-Expression: BSD-3-Clause
+
+Location: C:\Users\Whitney.Adm\Documents\smartdesk-ai-ticket-triage\.venv\Lib\site-packages
+
+Requires: joblib, narwhals, numpy, scipy, threadpoolctl
+
+Required-by:
+
+Training output:
+Accuracy: 0.625
+
+              precision    recall  f1-score   support
+
+      access       0.50      1.00      0.67         2
+
+     billing       0.67      0.67      0.67         3
+
+   technical       1.00      0.33      0.50         3
+
+    accuracy                           0.62         8
+
+   macro avg       0.72      0.67      0.61         8
+
+weighted avg       0.75      0.62      0.60         8
+
+Wrong predictions on the test split:
+
+WRONG: technical -> billing | We updated our billing card details successfully, but the data export script hangs indefinitely at 99%
+
+WRONG: technical -> access | Some settings are not being saved after I update them.
+
+WRONG: billing -> access | Please send me a receipt for my most recent payment.
+
+Cross-validation accuracy per fold: [0.875, 0.429, 0.429, 0.857, 0.571]
+
+Cross-validation mean accuracy: 0.632 (+/- 0.198)
+
+Saved model.joblib
+
+Full installed package versions (pip freeze):
+cloudpickle==3.1.2
+
+joblib==1.6.0
+
+narwhals==2.27.1
+
+numpy==2.5.4
+
+scikit-learn==1.9.1
+
+scipy==1.18.1
+
+threadpoolctl==3.7.0
