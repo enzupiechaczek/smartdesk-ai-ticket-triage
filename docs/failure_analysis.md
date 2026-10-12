@@ -77,5 +77,6 @@ After the discussions actually happen, record the date, participants, A2 feedbac
 - [Updated count-only separate-set evaluation](evidence/pr47/updated-evaluation.txt).
 - [Actual run dates, tested commits, dataset/model hashes and exact commands](evidence/pr47/manifest.json).
 - [Original executed-source hashes and LF/CRLF content comparison](evidence/pr47/source-comparison.json).
+- [CLI follow-up source version, eight passing tests and unchanged evaluation](evidence/pr47/cli-followup.json).
 
 The technical fixes and captured evidence are prepared for PR #47. Team discussion, dependency agreement, Enzu recheck/approval, and merge remain pending. Add the merged PR link to the task only after the actual merge.

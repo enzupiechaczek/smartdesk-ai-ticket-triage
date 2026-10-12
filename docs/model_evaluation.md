@@ -6,7 +6,7 @@ Both models were trained and evaluated locally on **2026-10-12 (UTC+03:00, Asia/
 
 - Reviewed PR #47 head: `3698de47425d1a0dcd60fec5c3c8f654f7517c82`.
 - Historical baseline source for the fresh replay: `4267ae5495b83b28b2f079803726cfa345a29429` (36-row training data, training script, and predictor).
-- Tested local code commit: `213281c9cc717f1677451cb31db8c47b50d81173`. It merges current main `0706db3add33fab7f5007049d30be6ef25a81115` and uses the original six additional technical examples.
+- Tested local code commit: `213281c9cc717f1677451cb31db8c47b50d81173`. It includes main at `0706db3add33fab7f5007049d30be6ef25a81115` and uses the original six additional technical examples.
 - Both replays use the evaluator content from the tested local code commit. The executed snapshots have different LF/CRLF line endings; training, predictor and evaluator contents are identical after CRLF-to-LF normalization only. Original byte hashes are preserved rather than relabelled. The training dataset grows from 36 to 42 rows.
 - Evaluation-file SHA-256: `043a43417794e25e405d418248110d5cf7b1b2957706da782887927bfdc571c1`. Case IDs identify rows in this unchanged file and are not ticket text.
 
@@ -25,6 +25,18 @@ The six evaluation cases were previously exposed in Git history. These scores ar
 Both original-byte hashes and normalized-content hashes are in that artifact. No trimming, BOM removal or other source rewriting was used in this comparison. The replay sources differ only in line endings; no training, prediction or evaluation logic difference was found between those two executed versions.
 
 The later CLI error-handling change is a follow-up evaluator version. It must not be attributed to the already captured baseline/updated runs. Their original evaluator hashes, model hashes, dates, metrics and output captures remain unchanged; no new training run was needed to explain the verified formatting differences.
+
+## CLI follow-up verification
+
+The CLI follow-up was tested on 2026-10-12 at source commit `57a4de72e286d6bf07b2e6ea221ea83869b7a4e9`, which includes main `02a9d941ffe8691aec4a75473984e638790ef1b5`. Exact timestamps, executed source-byte hashes, committed-source hashes and captured output hashes are in [cli-followup.json](evidence/pr47/cli-followup.json).
+
+```text
+python -m unittest discover -s tests -p "test_evaluate_heldout.py" -v
+```
+
+The actual result was **8 tests passed**. Coverage includes missing CSV, malformed CSV, invalid labels/encoding, nonzero process exit, and text-safe stderr without private ticket text, raw paths or tracebacks. Internal validation remains independently testable. [The actual test output](evidence/pr47/cli-tests-stderr.txt) is on stderr, as emitted by unittest; stdout was empty.
+
+A focused `python ai/evaluate_heldout.py` execution also succeeded: its [case/count output](evidence/pr47/cli-evaluation-stdout.txt) is identical to the original updated replay capture and still reports 4/6. The saved model SHA-256 was checked before and after and is unchanged. No training run was performed for this CLI/documentation follow-up, and the historical training/evaluator hashes and baseline/updated metrics in this report remain attached to their original executed versions.
 
 ## Actual fresh results
 

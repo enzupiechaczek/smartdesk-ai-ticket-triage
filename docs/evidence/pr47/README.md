@@ -24,3 +24,7 @@ Shared text captures use UTF-8 with LF line endings so their manifest hashes mat
 The 36-row replay is balanced (12 per category). The 42-row replay has 12 access, 12 billing and 18 technical examples. Both separate-set scores are 4/6. Split/CV scores across the two training datasets are not controlled measurements on identical evaluation cases.
 
 This previously exposed evaluation set is not a blind benchmark. The original historical reports lacked tested-run metadata; this evidence describes the fresh source-pinned replays instead. Group discussion and supervisor approval remain pending.
+
+## Later CLI follow-up
+
+[cli-followup.json](cli-followup.json) identifies the separately tested CLI fix and its merged-main commit. Eight evaluator tests passed; [unittest stderr](cli-tests-stderr.txt) contains the actual output. [CLI evaluation stdout](cli-evaluation-stdout.txt) matches the original updated case/count output and still reports 4/6. No retraining occurred, and the saved model hash did not change. This follow-up does not replace the original replay captures or their executed-file hashes.
