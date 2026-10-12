@@ -5,32 +5,26 @@
 Verify that the SmartDesk API loads the ticket-classification model, accepts valid ticket submissions, stores the resulting tickets, returns them through the GET endpoint, and preserves them after the API process restarts.
 
 ## Environment
-
-* **Verification date:** 2026-10-11 (South African Standard Time, UTC+02:00)
-* **Verification branch:** `a2-day3-integration-review`
-* **Tested Git commit:** `72f0f56194fabc6d097518eb179f4ba2ce7be2eb`
-* **Operating environment:** Windows PowerShell
-* **API address:** `http://127.0.0.1:5000`
-* **API implementation:** `backend/app.py`
-* **Local model file used by the API:** `ai/model.joblib`
-* **Database:** `backend/smartdesk.db`
-* **Database engine:** SQLite
-* **Python dependencies checked:** Flask 3.1.3, joblib 1.6.0, scikit-learn 1.9.1
-
-The existing database initially contained four tickets (IDs 1–4). These records were preserved. The four new tickets created during this test received IDs 5–8.
+- **Session 1 (POST Testing & Ticket Creation)**:
+  - **Commit Tested**: `48ba094`
+  - **Date**: October 8, 2026
+  - **Scope**: Original ticket submissions via API / Postman and initial model loading.
+- **Session 2 (GET Retrieval & Restart Persistence Verification)**:
+  - **Commit Tested**: `72f0f56`
+  - **Branch**: `a2-<githubusername>-day3-integration`
+  - **Local API Address**: `http://127.0.0.1:5000/api/tickets`
+  - **Model Path**: `ai/model.joblib` (pre-existing trained artifact reused; training was not re-executed during this verification session)
 
 ## Commands and procedure
+### Session 1 (Commit `48ba094`):
+1. Submitted four POST requests (IDs 6, 10, 11, 12) to verify initial model classification and database entry creation.
 
-1. Recorded the tested Git commit using `git rev-parse HEAD`. The result was `72f0f56194fabc6d097518eb179f4ba2ce7be2eb`.
-2. Checked the existing database in read-only mode before testing. It contained four tickets, IDs 1–4.
-3. Checked that Flask, joblib, and scikit-learn were importable.
-4. Loaded the model through `ai.predictor.predict_category`. A sample login problem was classified as `access` with confidence `0.837`.
-5. Started the API using `python backend\app.py`.
-6. Checked the health endpoint using `Invoke-RestMethod http://127.0.0.1:5000/api/health`.
-7. Submitted four tickets to `POST http://127.0.0.1:5000/api/tickets` with JSON request bodies. Captured the HTTP status and response body for each request.
-8. Retrieved the saved tickets using `GET http://127.0.0.1:5000/api/tickets`.
-9. Stopped the Flask process with Ctrl+C, restarted it using `python backend\app.py`, and repeated the GET request.
-10. Captured the actual HTTP status and complete GET response body before and after the API restart. Both captures recorded the tested Git commit.
+### Session 2 (Commit `72f0f56` - Command-Line Verification):
+1. **Pre-restart check**: Queried `GET http://127.0.0.1:5000/api/tickets` and captured the raw HTTP response to `docs/get_pre_restart.txt`.
+2. **Server shutdown**: Stopped Flask server using `Ctrl+C`.
+3. **Server restart**: Relaunched the server using `python backend/app.py`.
+4. **Post-restart check**: Queried `GET http://127.0.0.1:5000/api/tickets` and captured the raw HTTP response to `docs/get_post_restart.txt`.
+5. Reused the pre-existing `ai/model.joblib` model artifact without retraining.
 
 ## Results
 
