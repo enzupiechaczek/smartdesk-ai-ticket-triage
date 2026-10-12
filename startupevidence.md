@@ -4,7 +4,28 @@ Tested commit: 3030606b93ff7fac7cc4b901b53f03a37461d5b4
 Date: 12/10/2026 (DD/MM/YYYY)
 Checkout: disposable clone (`smartdesk-test`); no prior .venv, model or database
 
-## Bash (WSL, Ubuntu 24.04)
+## Session covered by this file
+
+One manual session at commit 3030606 (everything below), run by hand on
+Windows 11 and on Ubuntu 24.04 under WSL. It exercised the startup path as it
+was at that commit: `start.sh` (environment creation and reuse, requirements
+install, model training, launch from another directory), the manual Windows
+startup commands, and the `/api/health` response.
+
+No automated runs are recorded. Changes made after 3030606 are not covered by
+this session.
+
+## Environments
+
+| Environment            | OS                                     | Python                            | Shell      |
+| ---------------------- | -------------------------------------- | --------------------------------- | ---------- |
+| Windows manual startup | Windows 11 (build number not recorded) | 3.14.8                            | PowerShell |
+| Bash runs A-C          | Ubuntu 24.04 under WSL on Windows 11   | 3.12 (patch version not recorded) | Bash       |
+
+The Linux Python version comes from the tester's note, not from captured
+command output.
+
+## Bash (WSL, Ubuntu 24.04, Python 3.12)
 
 **Run A: first launch, no environment/model**
 
@@ -27,7 +48,10 @@ Checkout: disposable clone (`smartdesk-test`); no prior .venv, model or database
 - Outcome: script changed into the repository folder itself and started the
   server normally.
 
-## Windows manual startup (PowerShell, Windows <version>, Python 3.14.8)
+## Windows manual startup (PowerShell, Windows 11, Python 3.14.8)
+
+Windows build number was not recorded. `start.sh` was not run here; these are
+the manual commands.
 
 **First-time setup**
 
@@ -45,4 +69,9 @@ Checkout: disposable clone (`smartdesk-test`); no prior .venv, model or database
   (Mon, 12 Oct 2026 14:03:03 GMT, Werkzeug/3.1.9)
 
 ## Not tested
-- macOS
+
+- **macOS**: untested. No result here is evidence for macOS, and the Linux
+  (WSL) runs are not treated as equivalent to it.
+- **Native Linux (non-WSL)**: untested. The Bash runs were on WSL only, from a
+  checkout on the Windows filesystem (`/mnt/c/...`).
+- **`start.sh` on native Windows**: not run; Windows used the manual commands.
