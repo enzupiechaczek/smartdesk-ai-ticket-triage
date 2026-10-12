@@ -1,111 +1,63 @@
-# Model Evaluation Report
+# Model evaluation: versioned baseline and updated results
 
-Historical author-reported results from the original PR #47; original run timestamps, tested revisions, and captured outputs were not supplied. These values are not a fresh verification of the updated 42-row model. The six evaluation cases were previously exposed in Git history, so this is a separate evaluation set rather than a blind benchmark. Versioned fresh-run evidence is being prepared locally.
+## Fresh verification
 
-## 1. Training Overview
+Both models were trained and evaluated locally on **2026-10-12 (UTC+03:00, Asia/Damascus)**. Exact start/end timestamps, commands, working directories, package versions, dataset hashes, model hashes, and output hashes are recorded in [the manifest](evidence/pr47/manifest.json).
 
-* **Algorithm:** Logistic Regression with TF-IDF Vectorizer (unigrams and bigrams)
-* **Training and validation split:** 80% training / 20% validation, stratified
-* **Training dataset size:** 36 synthetic ticket samples
-* **Evaluation tasks:** Day 2 validation and cross-validation (baseline), followed by Day 3 separate-set evaluation (Task 2930)
+- Reviewed PR #47 head: `3698de47425d1a0dcd60fec5c3c8f654f7517c82`.
+- Historical baseline source for the fresh replay: `4267ae5495b83b28b2f079803726cfa345a29429` (36-row training data, training script, and predictor).
+- Tested local code commit: `213281c9cc717f1677451cb31db8c47b50d81173`. It merges current main `0706db3add33fab7f5007049d30be6ef25a81115` and uses the original six additional technical examples.
+- Both replays use the same corrected evaluator from the tested local code commit. Training/predictor source code is unchanged between the two versions; only the training dataset grows from 36 to 42 rows.
+- Evaluation-file SHA-256: `043a43417794e25e405d418248110d5cf7b1b2957706da782887927bfdc571c1`. Case IDs identify rows in this unchanged file and are not ticket text.
 
-## 2. Day 2 — Validation Results
+The six evaluation cases were previously exposed in Git history. These scores are for a **separate evaluation set, not a genuinely blind benchmark**. Removing tracking does not undo that exposure.
 
-### Validation Performance
+## Actual fresh results
 
-```text
-Accuracy: 0.625
+| Metric | Fresh 36-row baseline replay | Fresh 42-row updated replay |
+| --- | ---: | ---: |
+| Training rows | 36 | 42 |
+| access / billing / technical | 12 / 12 / 12 | 12 / 12 / 18 |
+| Stratified 20% split accuracy | 62.5% (5/8) | 55.6% (5/9) |
+| Five-fold CV mean accuracy | 63.2% | 78.3% |
+| CV fold standard deviation | 19.8% | 17.8% |
+| Separate-set accuracy | 4/6 (66.7%) | 4/6 (66.7%) |
+| Separate-set errors | 2 | 2 |
 
-              precision    recall  f1-score   support
+The split scores evaluate models trained on the corresponding training subset. Each cross-validation fold trains its own pipeline on its training fold. The saved baseline/updated models are then fitted on all 36/42 training rows, respectively; their separate-set scores are measured after that final fit.
 
-      access       0.50      1.00      0.67         2
-     billing       0.67      0.67      0.67         3
-   technical       1.00      0.33      0.50         3
+The two split scores use different validation cases and sample sizes. The CV means also use different datasets and folds, so they are not a controlled comparison on identical evaluation cases. The separate-set comparison uses the same six cases, but prior exposure and its small size limit what it can establish.
 
-    accuracy                           0.62         8
-   macro avg       0.72      0.67      0.61         8
-weighted avg       0.75      0.62      0.60         8
-```
+## Case-level results without ticket text
 
-### Incorrect Predictions on the Validation Split
+| Case ID | Expected | Baseline prediction | Baseline confidence | Updated prediction | Updated confidence |
+| --- | --- | --- | ---: | --- | ---: |
+| CASE-001 | access | billing | 0.413 | billing | 0.396 |
+| CASE-002 | access | access | 0.814 | access | 0.792 |
+| CASE-003 | billing | billing | 0.682 | billing | 0.671 |
+| CASE-004 | billing | billing | 0.690 | billing | 0.673 |
+| CASE-005 | technical | access | 0.465 | access | 0.439 |
+| CASE-006 | technical | technical | 0.763 | technical | 0.845 |
 
-```text
-WRONG: technical -> billing | We updated our billing card details successfully, but the data export script hangs indefinitely at 99%
-WRONG: technical -> access | Some settings are not being saved after I update them.
-WRONG: billing -> access | Please send me a receipt for my most recent payment.
-```
+CASE-001 and CASE-005 remain incorrect after adding the six technical examples. Expected labels were not changed to improve the score. One error changes the six-case accuracy by approximately 16.7 percentage points.
 
-### Five-Fold Stratified Cross-Validation
+## Captured evidence and reproduction
 
-```text
-Cross-validation accuracy per fold: [0.875, 0.429, 0.429, 0.857, 0.571]
-Cross-validation mean accuracy: 0.632 (+/- 0.198)
-```
+- [Baseline training output](evidence/pr47/baseline-train.txt) and [baseline separate-set output](evidence/pr47/baseline-evaluation.txt).
+- [Updated training output](evidence/pr47/updated-train.txt) and [updated separate-set output](evidence/pr47/updated-evaluation.txt).
+- [Versions, file hashes, timestamps and exact executed commands](evidence/pr47/manifest.json).
+- [Replay method and command notes](evidence/pr47/README.md).
 
-### Interpretation of Day 2 Results
+The training file hashes are `f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71` (baseline bytes used) and `4490b651424ba6633d534633e1ace4765e527493a6b4c91d52379acecc983209` (updated bytes used). Both have zero whitespace-normalized exact text overlap with the evaluation set. This check does not establish semantic independence or restore blindness.
 
-* The validation split contained only eight tickets. One additional incorrect prediction would change its accuracy by 12.5 percentage points.
-* The technical category had the lowest recall (0.33). Two of the three technical tickets in the validation split were misclassified.
-* One misclassified ticket combined billing-related wording with a technical issue involving a data export that stopped progressing. The model predicted billing, likely because of the billing-related terms.
-* Another technical ticket described settings that would not save. The model predicted access, suggesting difficulty distinguishing account-access issues from technical problems.
-* A billing ticket requesting a receipt was classified as access. The short text may not have provided enough distinctive billing-related language.
-* The cross-validation mean accuracy was 63.2%, with a standard deviation of 19.8 percentage points. The variation between folds indicates that the small dataset produces inconsistent results across different splits.
+## Historical baseline evidence
 
-## 3. Day 3 — Separate-Set Ticket Evaluation (Task 2930)
+The original PR report described a 36-row model with split accuracy 62.5%, CV mean 63.2%, and separate-set score 4/6. Those values and its baseline confidences are historical author-reported evidence; the original run dates, environment and captured outputs were not supplied. The fresh baseline replay above reproduces those values in the recorded environment. Its captured outputs are new evidence from 2026-10-12, not reconstructed original logs.
 
-### Evaluation Method
+The original updated-model report described a 42-row model with split accuracy 55.6%, CV mean 78.3%, and separate-set score 4/6. The fresh updated run also reproduces these values. Refer to its own captured outputs and model hash, rather than attributing historical baseline evidence to the updated saved model.
 
-The saved model (`ai/model.joblib`) was evaluated against the six separate-set tickets supplied by Group B in `tests/held_out_tickets.csv`. The evaluation script (`ai/evaluate_heldout.py`) passed each ticket to the existing prediction function and compared the predicted category with the expected category.
+## Task ownership and next steps
 
-The script normalizes category labels by converting them to lowercase and removing surrounding whitespace before comparison. The separate-set tickets were kept separate from the training dataset, and the existing saved model was used without retraining during this evaluation.
+The evaluator/report were inherited from task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46). The historical integration report belongs to task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43); its expanded integration changes are not supplied by this PR. Enzu and the task owners still need to agree how these dependencies will be reviewed/merged. Neither dependency is treated as approved by this report.
 
-### Separate-Set Results
-
-|  # | Expected Category | Predicted Category | Confidence | Result    |
-| -: | ----------------- | ------------------ | ---------: | --------- |
-|  1 | access            | billing            |      0.413 | Incorrect |
-|  2 | access            | access             |      0.814 | Correct   |
-|  3 | billing           | billing            |      0.682 | Correct   |
-|  4 | billing           | billing            |      0.690 | Correct   |
-|  5 | technical         | access             |      0.465 | Incorrect |
-|  6 | technical         | technical          |      0.763 | Correct   |
-
-**Correct predictions:** 4 out of 6
-
-**Separate-set accuracy:** 66.7%
-
-### Comparison with Day 2
-
-The Day 3 separate-set accuracy was 66.7%, compared with 62.5% on the Day 2 validation split and a 63.2% mean accuracy in Day 2 cross-validation. Although the separate-set score was higher than both Day 2 figures, the six-ticket sample is too small to establish that the model has improved or will perform similarly on future tickets.
-
-### Day 3 Error Analysis
-
-Two of the six separate-set tickets were misclassified:
-
-1. **Access predicted as billing:** The request concerned updating the registered email address on a workspace account. The model predicted billing with a confidence of 0.413.
-2. **Technical predicted as access:** The request stated that the user was unable to update their email. The model predicted access with a confidence of 0.465.
-
-Both errors involved email updates, suggesting that short requests about account settings may be difficult to classify consistently. The model may benefit from more varied training examples that distinguish account-access requests from technical problems involving settings or profile updates.
-
-### Comparison Summary
-
-| Metric                          |                     Day 2 |              Day 3 |
-| ------------------------------- | ------------------------: | -----------------: |
-| Validation or separate-set accuracy |                     62.5% |              66.7% |
-| Dataset evaluated               | 8-ticket validation split | 6 separate-set tickets |
-| Cross-validation mean accuracy  |                     63.2% |     Not calculated |
-
-The Day 2 validation and Day 3 separate-set scores come from different ticket sets and should be treated as separate measurements. The Day 3 result provides an additional check on the saved model, rather than proof of a performance improvement.
-
-## 4. Limitations and Next Steps
-
-* **Small datasets:** The original training dataset contains 36 synthetic samples, and the separate-set evaluation contains only six tickets.
-* **Sensitivity to individual errors:** Each incorrect prediction changes the Day 3 accuracy by approximately 16.7 percentage points.
-* **Category overlap:** Short requests involving email updates, account settings, and access may contain similar language across categories.
-* **Confidence interpretation:** Prediction confidence is the model's reported probability for its selected category; it should not automatically be treated as a guarantee that the prediction is correct.
-* **Future improvements:** Add more varied, accurately labelled training examples, particularly for ambiguous account-setting and technical requests, then evaluate changes using a separate separate-set dataset.
-* **Evaluation integrity:** Keep separate-set tickets separate from training data so that the evaluation remains meaningful.
-
-## 5. Conclusion
-
-The saved ticket-classification model correctly classified four of the six separate-set tickets, achieving an accuracy of 66.7%. The evaluation identified confusion between access and technical requests involving email updates, providing a concrete area for future improvement while highlighting the need for a larger evaluation dataset.
+Discuss the ambiguous failure categories with A2 and ask Group B about support-routing impact. Record the discussion after it happens. Generate `ai/model.joblib` locally; keep it and the local evaluation CSV out of Git. Enzu approval and merge remain pending.

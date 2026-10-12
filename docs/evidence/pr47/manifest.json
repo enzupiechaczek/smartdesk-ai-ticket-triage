@@ -1,0 +1,131 @@
+{
+  "reviewed_pr_head": "3698de47425d1a0dcd60fec5c3c8f654f7517c82",
+  "tested_code_commit": "213281c9cc717f1677451cb31db8c47b50d81173",
+  "merged_main": "0706db3add33fab7f5007049d30be6ef25a81115",
+  "baseline_source_commit": "4267ae5495b83b28b2f079803726cfa345a29429",
+  "evaluation_file_sha256": "043a43417794e25e405d418248110d5cf7b1b2957706da782887927bfdc571c1",
+  "evaluation_rows": 6,
+  "evaluation_status": "Previously exposed separate evaluation set; not a blind benchmark",
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "packages": {
+    "scikit-learn": "1.9.1",
+    "joblib": "1.6.0",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "Flask": "3.1.3"
+  },
+  "runs": {
+    "baseline": {
+      "training_source_commit": "4267ae5495b83b28b2f079803726cfa345a29429",
+      "evaluation_code_commit": "213281c9cc717f1677451cb31db8c47b50d81173",
+      "training_data_sha256": "f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71",
+      "training_git_blob_sha256": "f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71",
+      "training_script_sha256": "60ab4a8dacc05d06da053c2a75c75cbe20e85d3b92150b27b84b6877da35af01",
+      "evaluator_sha256": "d71bf284eb217f0a0af17c4405f6f6311bde95ee0d01aeeb29f0a8657dc9c652",
+      "training_rows": 36,
+      "category_counts": {
+        "access": 12,
+        "billing": 12,
+        "technical": 12
+      },
+      "normalized_overlap_count": 0,
+      "commands": [
+        {
+          "name": "train",
+          "argv": [
+            "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review\\.venv\\Scripts\\python.exe",
+            "ai/train.py"
+          ],
+          "cwd": "C:\\Users\\MZ\\AppData\\Local\\Temp\\smartdesk-pr47-73503c461bb24cce9abbcf14264d87b5\\baseline-replay",
+          "started_at_utc_plus_3": "2026-10-12T17:33:32.415907+03:00",
+          "ended_at_utc_plus_3": "2026-10-12T17:33:44.891637+03:00",
+          "exit_code": 0,
+          "stdout_file": "baseline-train.txt",
+          "stderr_file": "baseline-train-stderr.txt",
+          "stdout_sha256": "d34b0137c72b92919055dcd16fbef1f291a8bfe726b4f1a8d40ce22bf9ab878b",
+          "stderr_sha256": "680b0790040d2ee431b7e7682be246bcf9494e74ccddb8783cb8144aa84ba8ad"
+        },
+        {
+          "name": "evaluation",
+          "argv": [
+            "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review\\.venv\\Scripts\\python.exe",
+            "ai/evaluate_heldout.py",
+            "--csv",
+            "C:\\Users\\MZ\\AppData\\Local\\Temp\\smartdesk-pr47-73503c461bb24cce9abbcf14264d87b5\\separate_evaluation.csv"
+          ],
+          "cwd": "C:\\Users\\MZ\\AppData\\Local\\Temp\\smartdesk-pr47-73503c461bb24cce9abbcf14264d87b5\\baseline-replay",
+          "started_at_utc_plus_3": "2026-10-12T17:33:44.893636+03:00",
+          "ended_at_utc_plus_3": "2026-10-12T17:33:47.539890+03:00",
+          "exit_code": 0,
+          "stdout_file": "baseline-evaluation.txt",
+          "stderr_file": "baseline-evaluation-stderr.txt",
+          "stdout_sha256": "18decd30de3f5b8d545bc5e3a116be78fa03eaf4502307f1914b9456c6b42962",
+          "stderr_sha256": "680b0790040d2ee431b7e7682be246bcf9494e74ccddb8783cb8144aa84ba8ad"
+        }
+      ],
+      "split_accuracy": 0.625,
+      "cv_mean": 0.632,
+      "cv_std": 0.198,
+      "separate_correct": 4,
+      "separate_total": 6,
+      "saved_model_sha256": "c76c8d56a1f8e793637222c68272ac4eb74130b73cb8edfb05f902a09d41a4b2",
+      "saved_model_training_rows": 36
+    },
+    "updated": {
+      "training_source_commit": "213281c9cc717f1677451cb31db8c47b50d81173",
+      "evaluation_code_commit": "213281c9cc717f1677451cb31db8c47b50d81173",
+      "training_data_sha256": "4490b651424ba6633d534633e1ace4765e527493a6b4c91d52379acecc983209",
+      "training_git_blob_sha256": "19848e89dbcdef63e5ee001d9763bfbaf969f1b5e1429e1bfb3d2437f327f60e",
+      "training_script_sha256": "95227e52327bd0644031912b085d943c674451cd172c64b01cdeb90f4e1d5da7",
+      "evaluator_sha256": "fbea9560af611a43368cbecc8c01cb7f652a9d60661cb049cde844889ffead61",
+      "training_rows": 42,
+      "category_counts": {
+        "access": 12,
+        "billing": 12,
+        "technical": 18
+      },
+      "normalized_overlap_count": 0,
+      "commands": [
+        {
+          "name": "train",
+          "argv": [
+            "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review\\.venv\\Scripts\\python.exe",
+            "ai/train.py"
+          ],
+          "cwd": "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review",
+          "started_at_utc_plus_3": "2026-10-12T17:33:47.603860+03:00",
+          "ended_at_utc_plus_3": "2026-10-12T17:33:50.377093+03:00",
+          "exit_code": 0,
+          "stdout_file": "updated-train.txt",
+          "stderr_file": "updated-train-stderr.txt",
+          "stdout_sha256": "c620086e8199877977d5d6bc89ad1b0232057206e2e600100db71cb93c29d9ef",
+          "stderr_sha256": "680b0790040d2ee431b7e7682be246bcf9494e74ccddb8783cb8144aa84ba8ad"
+        },
+        {
+          "name": "evaluation",
+          "argv": [
+            "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review\\.venv\\Scripts\\python.exe",
+            "ai/evaluate_heldout.py",
+            "--csv",
+            "C:\\Users\\MZ\\AppData\\Local\\Temp\\smartdesk-pr47-73503c461bb24cce9abbcf14264d87b5\\separate_evaluation.csv"
+          ],
+          "cwd": "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review",
+          "started_at_utc_plus_3": "2026-10-12T17:33:50.378090+03:00",
+          "ended_at_utc_plus_3": "2026-10-12T17:33:53.074901+03:00",
+          "exit_code": 0,
+          "stdout_file": "updated-evaluation.txt",
+          "stderr_file": "updated-evaluation-stderr.txt",
+          "stdout_sha256": "99567f008af90458e65947672dee6d00e4d53408b79198d96380ea7e53a26f3b",
+          "stderr_sha256": "680b0790040d2ee431b7e7682be246bcf9494e74ccddb8783cb8144aa84ba8ad"
+        }
+      ],
+      "split_accuracy": 0.5555555555555556,
+      "cv_mean": 0.783,
+      "cv_std": 0.178,
+      "separate_correct": 4,
+      "separate_total": 6,
+      "saved_model_sha256": "62d91c3edcebe7c67ad497c10d2dcd0cfb5e95c944f6eca57acad8bf6d3e744c",
+      "saved_model_training_rows": 42
+    }
+  }
+}

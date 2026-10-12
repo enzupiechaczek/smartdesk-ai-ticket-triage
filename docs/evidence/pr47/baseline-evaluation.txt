@@ -1,0 +1,9 @@
+Separate evaluation set; ticket text is omitted.
+Evaluation CSV SHA-256: 043a43417794e25e405d418248110d5cf7b1b2957706da782887927bfdc571c1
+CASE-001 | MISS | expected=access | predicted=billing | confidence=0.413
+CASE-002 | OK | expected=access | predicted=access | confidence=0.814
+CASE-003 | OK | expected=billing | predicted=billing | confidence=0.682
+CASE-004 | OK | expected=billing | predicted=billing | confidence=0.690
+CASE-005 | MISS | expected=technical | predicted=access | confidence=0.465
+CASE-006 | OK | expected=technical | predicted=technical | confidence=0.763
+Accuracy: 4/6 (66.7%)

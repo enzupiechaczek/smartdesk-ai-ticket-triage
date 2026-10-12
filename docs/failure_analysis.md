@@ -1,86 +1,64 @@
-# Task 2931: Failure Analysis and Training Data Improvement
+# Task 2931: Failure analysis and one honest data improvement
 
-Historical author-reported results from the original PR #47; original run timestamps, tested revisions, and captured outputs were not supplied. These values are not a fresh verification of the updated 42-row model. The six evaluation cases were previously exposed in Git history, so this is a separate evaluation set rather than a blind benchmark. Versioned fresh-run evidence is being prepared locally.
+## Scope and versioned evidence
 
-## 1. Objective
+PR #47 adds six synthetic technical training examples to a 36-row baseline. The updated dataset has 42 rows: 12 access, 12 billing, and 18 technical. All original training rows and the six added rows were preserved. Fresh baseline and updated models were trained/evaluated on 2026-10-12; [the evaluation report](model_evaluation.md) and [manifest](evidence/pr47/manifest.json) identify the exact sources, environment and captured outputs.
 
-The objective was to analyse incorrect separate-set predictions, add six synthetic training examples for the technical category, retrain the model, and compare performance before and after the change.
+The local six-case evaluation file is unchanged, identified by SHA-256 `043a43417794e25e405d418248110d5cf7b1b2957706da782887927bfdc571c1`. It was previously exposed in Git history and must be described as a separate evaluation set, not a blind benchmark. Shared documentation uses case IDs and metrics; detailed ticket text stays local.
 
-## 2. Baseline
+## Failure 1: CASE-001
 
-Before adding the six training examples:
+- Expected label: `access`.
+- Baseline prediction: `billing`, confidence `0.413`.
+- Updated prediction: `billing`, confidence `0.396`.
+- Outcome: still incorrect after retraining.
+- Hypothesis: account/profile-change language can overlap category boundaries when a request does not make an authentication or permission problem explicit. This is an explanation to discuss, not a confirmed account of the model's internal decision.
+- Potential support impact: routing to billing could delay handling by the team responsible for the account request. Group B has not yet confirmed that impact.
 
-* Training dataset: 36 tickets
-* Technical examples: 12
-* Separate-set evaluation dataset: 6 tickets
-* Separate-set accuracy: 4/6 (66.7%)
+## Failure 2: CASE-005
 
-## 3. Failure Analysis
+- Expected label: `technical`.
+- Baseline prediction: `access`, confidence `0.465`.
+- Updated prediction: `access`, confidence `0.439`.
+- Outcome: still incorrect after retraining.
+- Hypothesis: a short profile-update request may lack enough failure context for a bag-of-words classifier to distinguish an application malfunction from an access request. This remains a hypothesis.
+- Potential support impact: routing to access support may postpone investigation of a malfunction. Group B has not yet confirmed that impact.
 
-### Failure 1: Registered email address update
+## The six new synthetic examples
 
-* **Ticket:** CASE-001
-* **True category:** access
-* **Predicted category before improvement:** billing
-* **Confidence before improvement:** 0.413
-* **Predicted category after improvement:** billing
-* **Confidence after improvement:** 0.396
-* **Outcome:** Incorrect before and after retraining.
+The weakest baseline split category was technical (recall 0.33 in the historical/fresh baseline report). Six technical examples were added covering an internal server error on a report page, document-upload crash, filtered-search failure, record-fetch timeout, failed export, and unsaved notification preferences.
 
-**Possible explanation:** This ticket describes an account-related change, but it does not explicitly mention a sign-in problem. The model may not have enough context to distinguish an account-access request from other account-related requests. This is a hypothesis, not a confirmed explanation of the model's internal decision.
+The additions are synthetic examples, not copies of evaluation rows. Both training versions have zero whitespace-normalized exact overlap with the evaluation set. The expected evaluation labels and CSV hash were preserved. Exact non-overlap is narrower than semantic independence; prior benchmark exposure remains a limitation.
 
-**Potential impact:** The request could be routed to the wrong support team, delaying assistance.
+## Honest before-and-after scores
 
-### Failure 2: Unable to update email
+| Metric | Fresh 36-row baseline replay | Fresh 42-row updated replay |
+| --- | ---: | ---: |
+| Training rows | 36 | 42 |
+| access / billing / technical | 12 / 12 / 12 | 12 / 12 / 18 |
+| Stratified 20% split accuracy | 62.5% (5/8) | 55.6% (5/9) |
+| Five-fold CV mean accuracy | 63.2% | 78.3% |
+| CV fold standard deviation | 19.8% | 17.8% |
+| Separate-set accuracy | 4/6 (66.7%) | 4/6 (66.7%) |
+| Separate-set errors | 2 | 2 |
 
-* **Ticket:** CASE-005
-* **True category:** technical
-* **Predicted category before improvement:** access
-* **Confidence before improvement:** 0.465
-* **Predicted category after improvement:** access
-* **Confidence after improvement:** 0.439
-* **Outcome:** Incorrect before and after retraining.
+The six-case accuracy stays at 4/6 (66.7%) and both analysed errors remain. The concrete improvement is additional training coverage for technical issues; this experiment does not show improved accuracy on the separate evaluation set. The higher CV mean uses a different training dataset and different folds and must not be presented as a controlled improvement on identical test cases.
 
-**Possible explanation:** The ticket is brief and does not explain what happens when the user tries to update the email address. The model may associate email-related wording with account access because the ticket does not clearly describe an application error or failed operation.
+## Team discussion and dependencies
 
-**Potential impact:** The ticket could be routed to access support instead of the team responsible for investigating a failed application function.
+- [ ] Discuss both failure hypotheses together in A2.
+- [ ] Ask Group B whether each routing mistake matters to a support agent and record the actual feedback.
+- [ ] Agree any label-boundary clarification with the team; do not change expected labels just to raise the score.
+- [ ] Agree ownership/dependency handling with Enzu for task 2930 / PR #46 and task 2929 / PR #43.
 
-## 4. Training Data Improvement
+The historical six-line `docs/integration_check.md` is preserved as inherited task 2929 work; the expanded integration update belongs in PR #43. Evaluator/report work inherited from PR #46 is identified rather than silently removed or treated as independently approved.
 
-Added six synthetic examples labelled `technical` to `ai/data/tickets.csv`. They cover:
+## Evidence
 
-1. A report page returning an internal server error.
-2. An application crash during document upload.
-3. Search results stopping after a filter change.
-4. A timeout while retrieving records.
-5. An export failure before a download is generated.
-6. Notification preferences not being saved.
+- [Baseline training output](evidence/pr47/baseline-train.txt).
+- [Baseline count-only separate-set evaluation](evidence/pr47/baseline-evaluation.txt).
+- [Updated training output](evidence/pr47/updated-train.txt).
+- [Updated count-only separate-set evaluation](evidence/pr47/updated-evaluation.txt).
+- [Actual run dates, tested commits, dataset/model hashes and exact commands](evidence/pr47/manifest.json).
 
-The training dataset now contains 42 tickets, including 18 technical examples. The separate-set dataset remains unchanged at six tickets. No separate-set examples were added to the training data.
-
-## 5. Before-and-After Results
-
-| Metric                              |                Before |       After |
-| ----------------------------------- | --------------------: | ----------: |
-| Training dataset size               |                    36 |          42 |
-| Technical training examples         |                    12 |          18 |
-| Training script test-split accuracy | Baseline not recorded |       55.6% |
-| Five-fold cross-validation mean     |                 63.2% |       78.3% |
-| Separate-set accuracy                   |           4/6 (66.7%) | 4/6 (66.7%) |
-| Incorrect separate-set predictions      |                     2 |           2 |
-
-The separate-set accuracy remained at 66.7% after retraining. Both email-related errors remained unchanged. The cross-validation mean increased from 63.2% to 78.3%, but the small dataset and variation between folds mean that this result should be interpreted cautiously. The training script's test-split accuracy and separate-set accuracy come from different evaluation sets and should not be treated as directly comparable.
-
-## 6. Conclusion and Next Steps
-
-Adding six technical examples increased the representation of technical tickets in the training data, but did not resolve the two observed separate-set classification errors.
-
-Possible next steps include adding carefully labelled examples that distinguish account-access requests from account-profile changes and technical failures. The team should review the categories and consider whether these routing outcomes would affect real support agents.
-
-Group discussion and supervisor review should be documented once completed.
-
-## 7. Evidence
-
-* Training output after adding the six examples.
-* Separate-set evaluation output after retraining.
-* Commit and pull request link to be added after submission.
+The technical fixes and captured evidence are prepared for PR #47. Team discussion, dependency agreement, Enzu recheck/approval, and merge remain pending. Add the merged PR link to the task only after the actual merge.
