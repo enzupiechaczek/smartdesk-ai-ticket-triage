@@ -9,6 +9,11 @@ from database import get_connection, init_db
 from ai.predictor import predict_category
 from priority import compute_priority
 
+model_path = Path("ai/model.joblib")
+if not model_path.exists():
+    print("CRITICAL ERROR: Model not found. Run python ai/train.py first.")
+    sys.exit(1)  # Or raise a RuntimeError that stops startup
+
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
 init_db()
 
