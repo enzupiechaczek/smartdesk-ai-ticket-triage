@@ -1,0 +1,18 @@
+[
+  {
+    "subject": "Cannot access account",
+    "description": "I cannot access my account today"
+  },
+  {
+    "subject": "Cannot sign in to portal",
+    "description": "I cannot sign in to the portal, even though my password appears to be correct."
+  },
+  {
+    "subject": "Charged twice this month",
+    "description": "I was charged twice for the same month. Please reverse the extra payment."
+  },
+  {
+    "subject": "Error when saving changes",
+    "description": "An error appears whenever I attempt to save my changes."
+  }
+]

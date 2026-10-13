@@ -6,7 +6,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request
 from database import get_connection, init_db
-from ai.predictor import predict_category
+from ai.predictor import MODEL_PATH, predict_category
 from priority import compute_priority
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
@@ -20,6 +20,17 @@ def index():
 
 @app.get("/api/health")
 def health():
+    if not MODEL_PATH.exists():
+        return (
+            jsonify(
+                {
+                    "status": "error",
+                    "message": "Model not trained. Run python ai/train.py",
+                }
+            ),
+            503,
+        )
+
     return jsonify({"status": "ok", "service": "SmartDesk local API"})
 
 
