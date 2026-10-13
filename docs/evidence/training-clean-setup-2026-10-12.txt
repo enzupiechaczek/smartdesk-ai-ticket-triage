@@ -1,0 +1,57 @@
+SmartDesk AI Ticket Triage — Clean Environment Verification
+Date: 2026-10-12
+Branch: a2-day4-repro
+Tested commit: 0c65c2fb6f7afccec91c980d69476a6b2a24ce80
+Operating system: Microsoft Windows, version 10.0.26300.9550
+Python: 3.14.8
+pip: 26.0.1
+Dataset: ai/data/tickets.csv
+Dataset rows: 36
+Dataset SHA-256: 525ac01b9a55b86bb69d77b17128d5529535d1844f9018cf8dce1db4c2f896a1
+
+Environment creation (Git Bash, repository root):
+py -3.14 -m venv .venv-repro-check
+source .venv-repro-check/Scripts/activate
+python --version
+
+Dependency installation:
+python -m pip install --upgrade pip==26.0.1
+python -m pip install -r docs/evidence/requirements-ai-baseline-2026-10-11.txt
+python -m pip check
+python -m pip show scikit-learn numpy scipy joblib
+
+Installation outcome: All seven pinned packages installed successfully in the fresh virtual environment. pip check reported no broken requirements.
+Installed versions: cloudpickle 3.1.2; joblib 1.6.0; narwhals 2.27.1; numpy 2.5.4; scikit-learn 1.9.1; scipy 1.18.1; threadpoolctl 3.7.0.
+Privacy note: Local Windows user-profile paths and virtual-environment installation paths are omitted from this published evidence. Package names, versions, commands, results and exit status are preserved.
+The requirements snapshot initially contained a UTF-8 BOM. It was removed without changing dependency versions. The BOM-free file was subsequently accepted by pip, which reported all requirements already satisfied. This was not a second clean installation.
+
+Training command executed (Git Bash):
+python ai/train.py > docs/evidence/training-clean-setup-2026-10-12.txt 2>&1
+Training exit status: 0
+
+The command above initially captured the raw training output. The environment metadata and exit status were subsequently added to this evidence file. The training output below was preserved without changing its results.
+
+Limitations:
+This verification used Python 3.14.8, while the previous captured baseline used Python 3.14.4. The printed accuracy, classification report, cross-validation results and incorrect predictions match the previously documented results. Byte-identical model artifacts and cross-environment reproducibility were not verified. The historical two-run raw logs remain unavailable.
+
+--- Captured training output (unaltered) ---
+
+
+Accuracy: 0.625
+              precision    recall  f1-score   support
+
+      access       0.50      1.00      0.67         2
+     billing       0.67      0.67      0.67         3
+   technical       1.00      0.33      0.50         3
+
+    accuracy                           0.62         8
+   macro avg       0.72      0.67      0.61         8
+weighted avg       0.75      0.62      0.60         8
+
+Wrong predictions on the test split:
+WRONG: technical -> billing | We updated our billing card details successfully, but the data export script hangs indefinitely at 99%
+WRONG: technical -> access | Some settings are not being saved after I update them.
+WRONG: billing -> access | Please send me a receipt for my most recent payment.
+Cross-validation accuracy per fold: [0.875, 0.429, 0.429, 0.857, 0.571]
+Cross-validation mean accuracy: 0.632 (+/- 0.198)
+Saved model.joblib
