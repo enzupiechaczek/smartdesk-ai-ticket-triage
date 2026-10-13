@@ -1,93 +1,255 @@
-# AI folder
+# SmartDesk
 
-## Dataset Breakdown
+A local AI-powered support-ticket triage application, built by the EARTech Information Technology interns.
 
-The training dataset `ai/data/tickets.csv` contains 42 synthetic support ticket examples. Task 2931 adds six technical examples to the historical 36-row baseline, so the updated dataset is not balanced:
+A user submits a support ticket (subject and description). A Python Flask server checks it, a locally trained machine learning model predicts the category (access, billing or technical) with a confidence score, a documented rule sets the priority (urgent or normal), and the ticket is saved in SQLite. The web page shows tickets as cards with urgent tickets first.
 
-- **access**: 12 rows
-- **billing**: 12 rows
-- **technical**: 18 rows
-- **Total**: 42 rows
+## Tech stack
 
-### Hard Cases Included
+Python 3.11 or newer, Flask, SQLite, scikit-learn (TF-IDF and Logistic Regression), HTML, CSS, JavaScript, Git and GitHub.
 
-- **Multi-topic tickets**: Labeled strictly by the root/primary issue (e.g., tickets mentioning checkout UI bugs vs. unauthorized card charges are routed to `billing` if the underlying request is financial reversal).
-- **Short queries**: e.g., `"cant log in, fix pls"`, `"Refund pls"`, `"App crash"`.
-- **Typo-heavy text**: Real-world phonetics and misspellings (e.g., `"accout is loocked"`, `"invoyce"`, `"downlaod botton throwss"`).
+## Project structure
 
-## Ticket categories
-- billing: charges, invoices, payments, subscriptions, receipts and refunds.
-- technical: software errors, freezes, slow pages, uploads, exports and saving problems.
-- access: signing in, passwords, verification codes, account recovery and permissions.
-
-
-## Training dataset
-
-`data/tickets.csv` contains 42 synthetic support tickets: twelve `access`, twelve `billing`, and eighteen `technical`. The two columns are `ticket_text,category`; labels are lowercase, text containing commas is enclosed in double quotes, and embedded double quotes are doubled.
-
-Training examples are fictional and contain no real names, emails, IDs, or incidents. Never copy evaluation rows into training data. The six-case evaluation set used in tasks 2930/2931 was previously exposed in Git history; it is a separate evaluation set, not a blind benchmark.
-
-## Categories
-
-- **access:** Problems or requests involving authentication, account recovery, workspace invitations, or permissions. This includes locked accounts, multi-factor authentication recovery, and changes to who may view or edit resources.
-- **billing:** Questions or problems involving subscription charges, invoices, receipts, taxes, refunds, or payment methods. This includes incorrect seat charges, duplicate payments, and charges after cancellation.
-- **technical:** Failures in application behavior or output, including errors, freezes, broken layouts, exports, search, or saved changes. These tickets concern a malfunction rather than an authentication, authorization, or payment request.
-
-## Proposed edge-case rules for A2 review
-
-These rules guide this draft and still need agreement during teammate peer review.
-
-- Classify by the main problem or requested resolution, not by tone or words such as "urgent".
-- Failed authentication, expired recovery links, missing permissions, and workspace membership changes are `access`. A general page crash or broken interface after successful sign-in is `technical`.
-- A declined subscription payment or access blocked specifically by an unpaid subscription is `billing`. Access denied because of a role or workspace permission is `access`.
-- Missing password recovery or invitation messages are `access`; duplicate routine ticket notifications are `technical`.
-- A request to correct an invoice amount is `billing`; a malfunction when downloading an otherwise correct invoice is `technical`.
-- If a ticket contains unrelated problems with no clear primary request, split it into separate examples or hold it for team review instead of guessing a label.
-- If a ticket mixes two problems, label the main problem the user wants solved. Example: a paid-fine card plus an unauthorized role error is `access`.
-- A sign-in or lockout caused by a server error (for example a 502) is `technical`, because the fix is on the server, not the account.
-
-## Peer review
-
-Reviewers should check label consistency, distinct wording and tone, CSV quoting, duplicate text, and the absence of real data. Teammate peer review and agreement on the edge-case rules are pending; automated validation does not complete that requirement.
-
-
-## Setup & Running the Model
-
-> **Note:** Run `python ai/train.py` before starting the server.
-
-The trained model artifact (`ai/model.joblib`) is ignored by version control and must be generated locally before running the server or predictor.
-
-## Dataset Versions & Model Reproduction
-
-### Dataset versioning
-
-- **Historical 36-row baseline (Tasks 2929, 2930, 2938, 2939, 2940):** 36 synthetic examples (12 access, 12 billing, 12 technical). Baseline checkout-byte SHA-256: `525ac01b9a55b86bb69d77b17128d5529535d1844f9018cf8dce1db4c2f896a1` (LF checkout). Recorded baseline source commits: `6be765d874141750d1b4cac81bb1d410aa51edda` (October 11) and `0c65c2fb6f7afccec91c980d69476a6b2a24ce80` (October 12). Documented in merged PR #46, merged PR #49 (`docs/model_card.md`), and PR #48 (`a2-day4-repro`).
-- **Updated 42-row dataset (Task 2931 / PR #47):** Adds six synthetic technical examples (12 access, 12 billing, 18 technical). Updated checkout-byte SHA-256: `4490b651424ba6633d534633e1ace4765e527493a6b4c91d52379acecc983209`. Tested source commit for replay: `213281c9cc717f1677451cb31db8c47b50d81173`. Documented in `docs/model_evaluation.md` and `docs/failure_analysis.md`.
-
-### Ownership and merge-order agreement for `ai/README.md`
-
-- **Attribution & Date:** Agreement confirmed on **2026-10-13** between contributor Blaqcodex (PR #48) and PR #47 contributors. This agreement governs shared `ai/README.md` handling and is distinct from the still-pending A2/Group B failure discussions and the pending PR #50 presentation handoff.
-- **Responsible Owner:** PR #48 (Task 2938, WhitneyKataka / Blaqcodex) owns the Model Reproduction documentation section (`## Reproduce the Model`), including baseline environment requirements, package pins, and captured training logs.
-- **Historical reproduction rule:** Historical reproduction of the 36-row baseline must be checked out at the recorded baseline source commits (`6be765d` / `0c65c2f`) with the baseline 36-row dataset checkout bytes (`525ac01b...`). It must not assume that the current working `ai/data/tickets.csv` contains 36 rows once the 42-row dataset lands.
-- **Merge-order reconciliation:**
-  - If PR #48 merges first: PR #47 will preserve PR #48's 36-row reproduction section intact, update the current dataset counts to 42 rows, and maintain distinct 42-row training/evaluation references.
-  - If PR #47 merges first: PR #48 will reconcile its reproduction section by explicitly referencing the recorded baseline source commits and checkout bytes rather than assuming the current CSV in `main` contains 36 rows.
-- In both merge orders, original 36-row captures, checkout-byte hashes, metrics, and tested source commits remain preserved, while 42-row results are identified separately.
-
-
-
-## Separate-set evaluation
-
-Keep the evaluation CSV local and ignored, or pass its private location explicitly:
-
-```text
-python ai/train.py
-python ai/evaluate_heldout.py --csv PATH_TO_LOCAL_EVALUATION_CSV
+```
+frontend/   Web page (HTML, CSS, JavaScript)          Group A1
+backend/    Flask server, database, priority rule     Group A1
+ai/         Dataset, training, predictor              Group A2
+tests/      Test plan, held-out data, bug template    Group B
+docs/       Architecture, model card, reports         All groups
 ```
 
-The evaluator reports stable row-based case identifiers, expected/predicted labels, confidence values, the CSV SHA-256, and an aggregate score. It does not print ticket text. Case identifiers refer to that file hash and row order; keep the file unchanged when comparing model versions.
+## How we work
 
-Unreadable, malformed, invalidly encoded or validation-failing evaluation CSVs produce a concise text-safe message on stderr and exit status 1. Successful evaluation exits with status 0. Error messages do not include ticket contents or raw exception values.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short version:
 
-See `docs/model_evaluation.md` and `docs/failure_analysis.md` for versioned results and limitations. Do not commit `ai/model.joblib` or `tests/held_out_tickets.csv`.
+1. Never push to `main`.
+2. Work on your task branch.
+3. Sync with `main` before you push.
+4. Open a pull request. Enzu reviews and merges.
 
+## Rules
+
+- Synthetic data only. No real names, emails or customer data.
+- No keys, tokens or passwords in code, screenshots or chat.
+- The model works offline and never calls a paid or cloud AI service.
+
+## How to run SmartDesk
+
+### Requirements
+
+- Git
+- Python 3.11 or newer ([python.org](https://www.python.org/downloads/))
+- On Windows, tick **"Add python.exe to PATH"** during the Python installer
+
+### 1. Get the code
+
+```bash
+git clone <repository-url>
+cd <repository-folder>
+```
+
+
+## Running The Application
+
+Linux and macOS users can use the Bash launcher (step 2). Windows PowerShell users follow step 3 instead.
+
+### 2. Running Under Linux/MacOS System
+
+> ⚠️ `start.sh` is a Bash script, not a PowerShell script. It needs `bash` and Python 3.
+
+From the repository root, run:
+
+```bash
+chmod +x ./start.sh
+./start.sh
+```
+
+The script changes to the repository folder itself, so `path/to/repository/start.sh` also works from another folder. Each run:
+
+1. creates the virtual environment `.venv` in the repository root, only if it is missing,
+2. activates `.venv` and installs `backend/requirements.txt`,
+3. trains the model with `python ai/train.py`,
+4. starts the server with `python backend/app.py`.
+
+If installing or training fails, the script stops and does not start the server.
+
+You should see `Running on http://127.0.0.1:5000`. Leave this terminal open while you use the app.
+
+Then open **http://127.0.0.1:5000** in a browser. You should see the ticket form and the ticket dashboard.
+
+macOS is untested.
+
+### 3. Running Under **Windows (PowerShell)**
+
+Run every command from the repository root.
+
+#### Create the virtual environment and install requirements (first time only)
+
+```powershell
+python -m venv .venv
+. .\.venv\Scripts\Activate.ps1
+pip install -r .\backend\requirements.txt
+```
+
+#### Activate the environment (every new PowerShell terminal)
+
+```powershell
+. .\.venv\Scripts\Activate.ps1
+```
+
+Your prompt should now start with `(.venv)`.
+
+#### Train the model, then start SmartDesk
+
+```powershell
+python ai/train.py
+python backend/app.py
+```
+
+Training creates `ai/model.joblib`, which the server needs to classify tickets.
+
+You should see `Running on http://127.0.0.1:5000`. Leave this terminal open while you use the app.
+
+Then open **http://127.0.0.1:5000** in a browser. You should see the ticket form and the ticket dashboard.
+
+### 4. Check it works
+
+Open http://127.0.0.1:5000/api/health in a browser. You should see:
+
+```json
+{ "service": "SmartDesk local API", "status": "ok" }
+```
+
+If the model has not been trained yet, the same address returns HTTP 503 with `"status": "error"`. Run `python ai/train.py`, then check again.
+
+To stop the server, press `Ctrl+C` in the terminal.
+
+### 5. Run the tests
+
+With the virtual environment active, from the repository root:
+
+```bash
+python -m unittest discover -s backend -p "test_*.py" -v
+```
+
+This runs the API validation tests in [backend/test_api.py](backend/test_api.py) and the priority rule tests in [backend/test_priority.py](backend/test_priority.py). The priority rule itself is documented in [docs/priority.md](docs/priority.md).
+
+## API routes
+
+| Method | Route          | What it does                                                |
+| ------ | -------------- | ----------------------------------------------------------- |
+| GET    | `/`            | Serves the SmartDesk web page                               |
+| GET    | `/api/health`  | Checks that the server is running and the model is trained  |
+| GET    | `/api/tickets` | Returns every saved ticket, urgent first, then newest first |
+| POST   | `/api/tickets` | Validates a new ticket, classifies it, saves it             |
+
+> **Note:** The `category` and `confidence` values in the examples below are illustrative. They show the intended output of the trained model. Until that model replaces the temporary stub in [ai/predictor.py](ai/predictor.py), every ticket is returned as `"category": "technical"` with `"confidence": 0.5`.
+
+### `GET /api/health`
+
+A quick check that the Flask server is up and the model file `ai/model.joblib` exists.
+
+**Response `200 OK`**
+
+```json
+{ "status": "ok", "service": "SmartDesk local API" }
+```
+
+**Response `503 Service Unavailable`**: returned when the model has not been trained yet.
+
+```json
+{ "status": "error", "message": "Model not trained. Run python ai/train.py" }
+```
+
+### `GET /api/tickets`
+
+Returns all tickets stored in SQLite as a list, with `urgent` tickets first and the newest tickets first within each priority. Returns an empty list `[]` if there are no tickets yet.
+
+**Response `200 OK`** (illustrative values, see the note above)
+
+```json
+[
+  {
+    "id": 2,
+    "subject": "Cannot log in",
+    "description": "My password reset link has expired.",
+    "category": "access",
+    "confidence": 0.91,
+    "priority": "normal",
+    "created_at": "2026-10-07T07:15:42.120000+00:00"
+  }
+]
+```
+
+### `POST /api/tickets`
+
+Creates a new ticket.
+
+**Request body**
+
+```json
+{
+  "subject": "Cannot log in",
+  "description": "My password reset link has expired."
+}
+```
+
+| Field         | Type   | Rules                         |
+| ------------- | ------ | ----------------------------- |
+| `subject`     | string | Required, 1–100 characters    |
+| `description` | string | Required, 1–500 characters    |
+
+**Response `201 Created`** (illustrative values, see the note above)
+
+```json
+{
+  "id": 3,
+  "subject": "Cannot log in",
+  "description": "My password reset link has expired.",
+  "category": "access",
+  "confidence": 0.91,
+  "priority": "normal",
+  "created_at": "2026-10-07T07:20:05.481000+00:00"
+}
+```
+
+**Response `400 Bad Request`**: returned when the body is not a JSON object, or when a field is missing, not a string, empty, or too long. Arrays, `null`, numbers and other non-object bodies are rejected. The `error` message is one of:
+
+```json
+{ "error": "Request body must be a JSON object" }
+```
+
+```json
+{ "error": "Subject must be a string" }
+```
+
+```json
+{ "error": "Description must be a string" }
+```
+
+```json
+{ "error": "Subject is required (max 100 characters)" }
+```
+
+```json
+{ "error": "Description is required (max 500 characters)" }
+```
+
+### Ticket fields
+
+| Field         | Type    | Meaning                                                      |
+| ------------- | ------- | ------------------------------------------------------------ |
+| `id`          | integer | Unique ticket number, set by the database                    |
+| `subject`     | string  | Short title written by the user                              |
+| `description` | string  | Details of the problem                                       |
+| `category`    | string  | Predicted by the model: `access`, `billing` or `technical`   |
+| `confidence`  | number  | How sure the model is, from 0 to 1                           |
+| `priority`    | string  | `urgent` or `normal`                                         |
+| `created_at`  | string  | When the ticket was created (ISO 8601, UTC)                  |
+
+## Troubleshooting
+
+- **PowerShell blocks the activate script:** run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use `.venv\Scripts\activate.bat` in cmd.
+- **`No module named 'flask'`:** the environment isn't active. Activate it and run `pip install -r backend/requirements.txt` again.
+- **Python version is older than 3.11:** install a newer Python, then create the environment with `py -3.11 -m venv .venv` (Windows) or `python3.11 -m venv .venv` (Mac).
+- **Port 5000 already in use:** stop the other program, or stop the old server with `Ctrl+C`.
