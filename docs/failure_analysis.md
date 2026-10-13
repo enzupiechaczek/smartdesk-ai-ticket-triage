@@ -60,7 +60,7 @@ The six-case accuracy stays at 4/6 (66.7%) and both analysed errors remain. The 
 - [ ] Discuss both failure hypotheses together in A2.
 - [ ] Ask Group B whether each routing mistake matters to a support agent and record the actual feedback.
 - [ ] Agree any label-boundary clarification with the team; do not change expected labels just to raise the score.
-- [ ] Record completed A2/Group B discussion outcomes or explicit formal deferrals.
+- [ ] Record completed A2/Group B discussion outcomes (pending team review).
 
 The obsolete six-line `docs/integration_check.md` addition was backed up outside the repository and removed while honoring its deletion in main from approved/merged PR #46 (`df294c84fed1108c820447f2591e4d9202b442e4`). This PR does not introduce a competing integration report; the expanded report belongs in PR #43 (which is now merged). PR #46's complete historical report is preserved in [a versioned archive](model_evaluation_pr46_baseline.md). Canonical evaluator and 42-row evaluation/failure analysis report ownership belongs to PR #47.
 
@@ -75,8 +75,8 @@ The status and ownership boundaries across related pull requests are recorded be
 | [#46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46) / 2930 | WhitneyKataka | Historical baseline 36-row report and artifact-provenance limitations preserved intact in `docs/model_evaluation_pr46_baseline.md`. | Merged into `main` (`df294c8`) |
 | [#49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) / 2939 | WhitneyKataka | Baseline model card for the 36-row baseline preserved in `docs/model_card.md`. Any 42-row model card material will be added as a separately identified version upon transition. | Merged into `main` (`73853f2`) |
 | #47 / 2931 | WhitneyKataka and A2 | Owns the canonical evaluator implementation (`ai/evaluate_heldout.py`, `tests/test_evaluate_heldout.py`) including text-safe CLI failure handling, and the versioned 42-row evaluation report and failure analysis (`docs/model_evaluation.md`, `docs/failure_analysis.md`). | Open (pending recheck & discussion) |
-| [#48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) / 2938 | WhitneyKataka / Blaqcodex | Responsible owner of `ai/README.md` reproduction section (`## Reproduce the Model`). Preserves historical 36-row captures, hashes, metrics, and tested commits. Agrees merge-order handling: historical reproduction uses the recorded baseline source/data (`525ac01b...`), not assuming current CSV is 36 rows; reconciles current dataset counts and instructions against whichever PR lands first; 42-row results identified separately. | Agreement recorded; open |
-| [#50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) / 2940 | WhitneyKataka / justacoder120 | Preserves historical 36-row demo observations tied to the baseline model. Agrees explicit model-version boundary: historical demo captures (IDs 11/12 and 13/14) remain tied to the 36-row baseline; any live demo of the current 42-row model requires separate focused verification without overwriting historical captures. | Open |
+| [#48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) / 2938 | WhitneyKataka / Blaqcodex | Responsible owner of `ai/README.md` reproduction section (`## Reproduce the Model`). Agreement confirmed on 2026-10-13 between Blaqcodex and PR #47: historical reproduction uses the recorded baseline source commits (`6be765d` / `0c65c2f`) and checkout bytes (`525ac01b...`), not assuming current CSV is 36 rows; reconciles current dataset counts and instructions against whichever PR lands first; 42-row results identified separately. Distinct from pending A2/Group B discussions and pending PR #50 presentation handoff. | Agreement recorded (2026-10-13); open |
+| [#50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) / 2940 | WhitneyKataka / justacoder120 | Preserves historical 36-row demo observations tied to the baseline model. Agrees explicit model-version boundary: historical demo captures (IDs 11/12 and 13/14) remain tied to the 36-row baseline; any live demo of the current 42-row model requires separate focused verification without overwriting historical captures. Presentation handoff remains pending. | Open (handoff pending) |
 
 ### Participant boundary
 
@@ -84,10 +84,10 @@ The current contributor is not a member of Group A2 or Group B and cannot claim 
 
 ### Ownership boundaries and merge-order agreement
 
-- **`ai/README.md` Owner and Merge-Order Handling:** Confirmed with PR #48 (WhitneyKataka / Blaqcodex). PR #48 owns the reproduction section. Historical reproduction must use the recorded baseline source and 36-row dataset (`525ac01b...`), not assume the current CSV still contains 36 rows once PR #47 merges. Whichever PR lands first:
-  - If PR #48 merges first: PR #47 preserves PR #48's 36-row reproduction section intact, updates current dataset counts to 42 rows, and links to the 42-row evaluation.
-  - If PR #47 merges first: PR #48 reconciles its reproduction instructions by targeting the historical 36-row baseline snapshot rather than assuming current `main` contains 36 rows.
-  In both merge orders, original 36-row captures, hashes, metrics, and tested commits remain preserved, and 42-row results are identified separately.
+- **`ai/README.md` Owner and Merge-Order Handling:** Confirmed on **2026-10-13** between contributor Blaqcodex (PR #48) and PR #47 contributors. PR #48 owns the reproduction section. Historical reproduction must be executed at the recorded baseline source commits (`6be765d` / `0c65c2f`) with the baseline 36-row dataset checkout bytes (`525ac01b...`), not assuming the current CSV still contains 36 rows once PR #47 merges. Whichever PR lands first:
+  - If PR #48 merges first: PR #47 will preserve PR #48's 36-row reproduction section intact, update current dataset counts to 42 rows, and link to the 42-row evaluation.
+  - If PR #47 merges first: PR #48 will reconcile its reproduction instructions by targeting the historical 36-row baseline source commits and checkout bytes rather than assuming current `main` contains 36 rows.
+  In both merge orders, original 36-row captures, hashes, metrics, and tested source commits remain preserved, and 42-row results are identified separately. This agreement is distinct from the still-pending A2/Group B discussions and the pending PR #50 presentation handoff.
 - **Evaluator & Report Ownership:** PR #47 owns the updated text-safe evaluator (`ai/evaluate_heldout.py`, `tests/test_evaluate_heldout.py`) and the 42-row evaluation/failure reports (`docs/model_evaluation.md`, `docs/failure_analysis.md`).
 - **PR #46** remains the preserved historical 36-row report archive (`docs/model_evaluation_pr46_baseline.md`).
 - **PR #43** remains authoritative for the expanded integration report (`docs/integration_check.md`).
@@ -96,7 +96,7 @@ The current contributor is not a member of Group A2 or Group B and cannot claim 
 
 The 36-row metrics, demo captures, session/file/model hashes, and archived provenance limits remain historical evidence. The 42-row metrics and any current-model demo evidence retain their own dataset, source, session, file, and model identifiers. No old result may be relabelled as a 42-row or current-model result.
 
-Until actual A2/Group B discussions are conducted and recorded, or explicit deferrals are agreed, these items remain follow-ups and the explicit **Do not merge yet** hold remains in force. Expected evaluation labels must remain unchanged merely to raise the score.
+Until actual A2/Group B discussions are conducted and recorded, these items remain pending follow-ups and the explicit **Do not merge yet** hold remains in force. Expected evaluation labels must remain unchanged merely to raise the score.
 
 ## Evidence
 

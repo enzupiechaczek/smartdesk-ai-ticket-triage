@@ -61,17 +61,19 @@ The trained model artifact (`ai/model.joblib`) is ignored by version control and
 
 ### Dataset versioning
 
-- **Historical 36-row baseline (Tasks 2929, 2930, 2938, 2939, 2940):** 36 synthetic examples (12 access, 12 billing, 12 technical). Dataset SHA-256: `525ac01b9a55b86bb69d77b17128d5529535d1844f9018cf8dce1db4c2f896a1`. Documented in merged PR #46, merged PR #49 (`docs/model_card.md`), and PR #48 (`a2-day4-repro`).
-- **Updated 42-row dataset (Task 2931 / PR #47):** Adds six synthetic technical examples (12 access, 12 billing, 18 technical). Dataset SHA-256: `4490b651424ba6633d534633e1ace4765e527493a6b4c91d52379acecc983209`. Documented in `docs/model_evaluation.md` and `docs/failure_analysis.md`.
+- **Historical 36-row baseline (Tasks 2929, 2930, 2938, 2939, 2940):** 36 synthetic examples (12 access, 12 billing, 12 technical). Baseline checkout-byte SHA-256: `525ac01b9a55b86bb69d77b17128d5529535d1844f9018cf8dce1db4c2f896a1` (LF checkout). Recorded baseline source commits: `6be765d874141750d1b4cac81bb1d410aa51edda` (October 11) and `0c65c2fb6f7afccec91c980d69476a6b2a24ce80` (October 12). Documented in merged PR #46, merged PR #49 (`docs/model_card.md`), and PR #48 (`a2-day4-repro`).
+- **Updated 42-row dataset (Task 2931 / PR #47):** Adds six synthetic technical examples (12 access, 12 billing, 18 technical). Updated checkout-byte SHA-256: `4490b651424ba6633d534633e1ace4765e527493a6b4c91d52379acecc983209`. Tested source commit for replay: `213281c9cc717f1677451cb31db8c47b50d81173`. Documented in `docs/model_evaluation.md` and `docs/failure_analysis.md`.
 
 ### Ownership and merge-order agreement for `ai/README.md`
 
+- **Attribution & Date:** Agreement confirmed on **2026-10-13** between contributor Blaqcodex (PR #48) and PR #47 contributors. This agreement governs shared `ai/README.md` handling and is distinct from the still-pending A2/Group B failure discussions and the pending PR #50 presentation handoff.
 - **Responsible Owner:** PR #48 (Task 2938, WhitneyKataka / Blaqcodex) owns the Model Reproduction documentation section (`## Reproduce the Model`), including baseline environment requirements, package pins, and captured training logs.
-- **Historical reproduction rule:** Reproduction of the historical 36-row baseline must use the recorded baseline source/data commit (`6be765d` / `0c65c2f`) and dataset SHA-256 (`525ac01b...`). It must not assume that the current working `ai/data/tickets.csv` contains 36 rows once the 42-row dataset lands.
+- **Historical reproduction rule:** Historical reproduction of the 36-row baseline must be checked out at the recorded baseline source commits (`6be765d` / `0c65c2f`) with the baseline 36-row dataset checkout bytes (`525ac01b...`). It must not assume that the current working `ai/data/tickets.csv` contains 36 rows once the 42-row dataset lands.
 - **Merge-order reconciliation:**
   - If PR #48 merges first: PR #47 will preserve PR #48's 36-row reproduction section intact, update the current dataset counts to 42 rows, and maintain distinct 42-row training/evaluation references.
-  - If PR #47 merges first: PR #48 will reconcile its reproduction section to explicitly target the historical 36-row baseline snapshot rather than assuming the current CSV is 36 rows.
-- In both merge orders, original 36-row captures, hashes, metrics, and tested commits remain preserved, while 42-row results are identified separately.
+  - If PR #47 merges first: PR #48 will reconcile its reproduction section by explicitly referencing the recorded baseline source commits and checkout bytes rather than assuming the current CSV in `main` contains 36 rows.
+- In both merge orders, original 36-row captures, checkout-byte hashes, metrics, and tested source commits remain preserved, while 42-row results are identified separately.
+
 
 
 ## Separate-set evaluation
