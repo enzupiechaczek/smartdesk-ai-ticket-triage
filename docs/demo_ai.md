@@ -13,7 +13,7 @@ Complete these steps before the timed presentation:
 - [ ] Activate the project virtual environment.
 - [ ] Confirm the dataset version (see [Dataset change to watch](#dataset-change-to-watch)) and review the latest training output.
 - [ ] Run `python ai/train.py` before the presentation; training is outside the timed demo.
-- [ ] Start the API with `python backend\app.py` and confirm `/api/health` returns `ok`.
+- [ ] Start the API with `python backend\app.py` and confirm `/api/health` returns `ok`. If it reports `Model not trained`, run `python ai/train.py` first.
 - [ ] Confirm the two example requests below work.
 - [ ] Record the actual rehearsal date, tested commit, participants, duration and outcome after a rehearsal has taken place.
 - [ ] Record the presenter name before presenting.
@@ -153,7 +153,7 @@ These examples illustrate the need to evaluate the model on more representative 
 
 ## Rehearsal and handoff record
 
-Status on 12 October 2026: no rehearsal has taken place, and the 105-second timing above is planned, not measured. Replace each pending item with the actual result after it happens.
+Status on 13 October 2026: no rehearsal has been recorded, and the 105-second timing above is planned, not measured. Replace each pending item with the actual result after it happens.
 
 | Item | Status |
 | --- | --- |
@@ -168,17 +168,18 @@ Status on 12 October 2026: no rehearsal has taken place, and the 105-second timi
 
 - Evaluation report: [Model Evaluation Report](model_evaluation.md), as updated by [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46). It records the Day 2 split and cross-validation results for the 36-row baseline, and a Day 3 check of a separately identified local model artifact on Group B's six held-out tickets. The report states that this six-ticket set was previously exposed and is not a blind benchmark, and that the artifact's training provenance was not independently verified.
 - Data quality report: [Data Quality Report](data_quality_report.md).
-- Model card: pending. It is proposed as `docs/model_card.md` in [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49), which has not been merged, so this script does not link the file yet.
+- Model card: [Model Card](model_card.md), merged in [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) on 13 October 2026. It describes the same 36-row baseline and evaluation figures as this script.
 
 ### Dataset change to watch
 
-[PR #47](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/47) proposes expanding the training data from 36 to 42 rows. It has not been merged. Every figure in this script describes the 36-row baseline: the dataset size, the `0.625` split accuracy, the `0.632` cross-validation mean and `0.198` standard deviation, the three test-split errors, and the confidences captured on 12 October. If PR #47 merges before the demo, `python ai/train.py` will train on the merged data, so these figures must be revised from a recorded run on that data before presenting. This revision has not been done and still needs to be agreed with the PR #47 owner.
+[PR #47](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/47) proposes expanding the training data from 36 to 42 rows. As of 13 October 2026 it has not been merged. Every figure in this script describes the 36-row baseline: the dataset size, the `0.625` split accuracy, the `0.632` cross-validation mean and `0.198` standard deviation, the three test-split errors, and the confidences captured on 12 October. These remain historical 36-row records and must not be relabelled as results for another model. If PR #47 merges before the demo, `python ai/train.py` will train on 42 rows, so these figures will no longer describe the model being shown. Presenting that model needs its own recorded verification session (dataset version, commit, environment and results), kept separate from the 36-row records. Coordination with the PR #47 owner is still pending.
 
 ### Handoffs with the other demo segments
 
-As of 12 October 2026, no handoff has been confirmed with Group A1 or Group B.
+As of 13 October 2026, no handoff decision with Group A1 or Group B has been recorded.
 
-- From Group A1: A1's script, `docs/demo_script.md` in [PR #44](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/44) (not yet merged), ends by handing over to the AI team and links to this file. Still to agree with A1:
+- From Group A1: A1's script, [demo_script.md](demo_script.md), was merged in [PR #44](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/44) on 12 October 2026. It ends by handing over to the AI team and links to this file. It also says the hand-over order (A1 shows the app, A2 explains the model, B explains the testing) and the three-minute limits still have to be agreed with the A2 and B owners. Merging A1's script did not settle any of these points. Still to agree with A1:
+  - The hand-over order and timing. This script plans 105 seconds for the AI segment.
   - Which segment explains confidence. A1's moment 5 already explains category, confidence and priority.
   - Whether the AI segment reuses A1's running server and database.
   - How the live ticket IDs are presented. If the database is reused, the two requests above will receive the next IDs after A1's tickets, not 13 and 14.
