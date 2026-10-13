@@ -46,8 +46,8 @@ The six-case accuracy stays at 4/6 (66.7%) and both analysed errors remain. The 
 
 ## Contributor review of CASE-001 and CASE-005
 
-**Review date:** 2026-10-13 (local date, UTC+07:00)  
-**Reviewer:** waitwhat2231; not a member of Group A2 or Group B  
+**Review date:** 2026-10-13 (local date, UTC+07:00)
+**Reviewer:** waitwhat2231; not a member of Group A2 or Group B
 **Evidence reviewed:** the source-pinned case/count captures, the versioned evaluator report, and the proposed category rules. The evaluation CSV is intentionally not included in shared artifacts, so this review does not reproduce or disclose the ticket text.
 
 - **CASE-001:** expected `access`; predicted `billing` at `0.413` in the 36-row replay and `0.396` in the 42-row replay. Recorded label and confidence metadata alone cannot establish or substantiate semantic ambiguity or ticket meaning. The explanation that account/profile-change wording may overlap billing terms remains strictly a hypothesis to be evaluated. Without human routing review of the underlying local ticket text by designated reviewers, operational team ownership cannot be determined. The expected `access` label is retained.
