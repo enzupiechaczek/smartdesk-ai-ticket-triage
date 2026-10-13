@@ -44,30 +44,60 @@ The additions are synthetic examples, not copies of evaluation rows. Both traini
 
 The six-case accuracy stays at 4/6 (66.7%) and both analysed errors remain. The concrete improvement is additional training coverage for technical issues; this experiment does not show improved accuracy on the separate evaluation set. The higher CV mean uses a different training dataset and different folds and must not be presented as a controlled improvement on identical test cases.
 
+## Contributor review of CASE-001 and CASE-005
+
+**Review date:** 2026-10-13 (local date, UTC+07:00)  
+**Reviewer:** waitwhat2231; not a member of Group A2 or Group B  
+**Evidence reviewed:** the source-pinned case/count captures, the versioned evaluator report, and the proposed category rules. The evaluation CSV is intentionally not included in shared artifacts, so this review does not reproduce or disclose the ticket text.
+
+- **CASE-001:** expected `access`; predicted `billing` at `0.413` in the 36-row replay and `0.396` in the 42-row replay. Recorded label and confidence metadata alone cannot establish or substantiate semantic ambiguity or ticket meaning. The explanation that account/profile-change wording may overlap billing terms remains strictly a hypothesis to be evaluated. Without human routing review of the underlying local ticket text by designated reviewers, operational team ownership cannot be determined. The expected `access` label is retained.
+- **CASE-005:** expected `technical`; predicted `access` at `0.465` in the 36-row replay and `0.439` in the 42-row replay. Recorded label and confidence metadata alone cannot establish or substantiate semantic ambiguity or ticket meaning. The explanation that short profile-update wording lacks sufficient context to distinguish an application malfunction from an access request remains strictly a hypothesis to be evaluated. Without human routing review of the underlying local ticket text by designated reviewers, the proper support route cannot be determined. The expected `technical` label is retained.
+
+**Unresolved after this review:** A2 has not confirmed the failure hypotheses; Group B has not confirmed the support-routing impact; no A2/Group B label-boundary agreement has been recorded; and no decision has been made to change either expected label. Recorded metadata alone does not establish semantic ambiguity. A designated A2 member and designated Group B members must review the original local cases and record their actual feedback, date, participants, and any follow-ups. This contributor review does not satisfy those team decisions.
+
 ## Team discussion and dependencies
 
 - [ ] Discuss both failure hypotheses together in A2.
 - [ ] Ask Group B whether each routing mistake matters to a support agent and record the actual feedback.
 - [ ] Agree any label-boundary clarification with the team; do not change expected labels just to raise the score.
-- [ ] Agree ownership/dependency handling with Enzu for task 2930 / PR #46 and task 2929 / PR #43.
-- [ ] Agree the 42-row README/evaluation/model-card/demo transition with the owners of PR #48, #49 and #50.
+- [ ] Record completed A2/Group B discussion outcomes (pending team review).
 
-The obsolete six-line `docs/integration_check.md` addition was backed up outside the repository and removed while honoring its deletion in main from approved/merged PR #46 (`df294c84fed1108c820447f2591e4d9202b442e4`). This PR does not introduce a competing integration report; the expanded report belongs in PR #43. PR #46's complete historical report is preserved in [a versioned archive](model_evaluation_pr46_baseline.md). Final shared evaluator/report ownership for #47 remains pending.
+The obsolete six-line `docs/integration_check.md` addition was backed up outside the repository and removed while honoring its deletion in main from approved/merged PR #46 (`df294c84fed1108c820447f2591e4d9202b442e4`). This PR does not introduce a competing integration report; the expanded report belongs in PR #43 (which is now merged). PR #46's complete historical report is preserved in [a versioned archive](model_evaluation_pr46_baseline.md). Canonical evaluator and 42-row evaluation/failure analysis report ownership belongs to PR #47.
 
-### Proposed coordination plan — not yet agreed
+### Cross-PR coordination and ownership agreements
 
-No completed team discussion or dependency agreement has been reported. The following proposals need confirmation from Enzu and the task owners; they are not completed work or permission to merge.
+The status and ownership boundaries across related pull requests are recorded below:
 
-| PR / task | Owner | Proposed action | Status |
+| PR / task | Owner | Action & Agreed Handling | Status |
 | --- | --- | --- | --- |
-| [#43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) / 2929 | AakashAaku | Keep the expanded integration report authoritative. The obsolete addition is removed in line with merged main; agree the remaining integration dependency plan without replacing #43's expanded report. | Pending agreement |
-| [#46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46) / 2930 | WhitneyKataka | The approved report is now archived intact after #46 merged. Agree remaining shared evaluator/report ownership for #47. | #46 merged; #47 agreement pending |
-| #47 / 2931 | WhitneyKataka and A2 | Keep the source-pinned 42-row failure analysis/results; agree the canonical evaluator including CLI failure handling and tests. | Pending agreement |
-| [#48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) / 2938 | WhitneyKataka | Preserve the reproducibility captures for the 36-row baseline. Agree the shared README's current dataset/version wording and separate 42-row evidence links. | Pending agreement |
-| [#49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) / 2939 | WhitneyKataka | Keep baseline model-card metrics versioned; agree a separate 42-row dataset/metric/limitation section after transition. | Pending agreement |
-| [#50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) / 2940 | WhitneyKataka | Keep existing demo observations attached to their tested baseline. Agree whether the demo stays historical or needs focused verification with the 42-row model. | Pending agreement |
+| [#43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) / 2929 | AakashAaku | Authoritative for the expanded integration report (`docs/integration_check.md`). | Merged into `main` (`c8e7e34`) |
+| [#44](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/44) | A1 team | Backend startup, API endpoints, and test infrastructure. | Merged into `main` (`0d877ba`) |
+| [#46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46) / 2930 | WhitneyKataka | Historical baseline 36-row report and artifact-provenance limitations preserved intact in `docs/model_evaluation_pr46_baseline.md`. | Merged into `main` (`df294c8`) |
+| [#49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) / 2939 | WhitneyKataka | Baseline model card for the 36-row baseline preserved in `docs/model_card.md`. Any 42-row model card material will be added as a separately identified version upon transition. | Merged into `main` (`73853f2`) |
+| #47 / 2931 | WhitneyKataka and A2 | Owns the canonical evaluator implementation (`ai/evaluate_heldout.py`, `tests/test_evaluate_heldout.py`) including text-safe CLI failure handling, and the versioned 42-row evaluation report and failure analysis (`docs/model_evaluation.md`, `docs/failure_analysis.md`). | Open; **Do not merge yet** (A2/Group B discussion pending; recheck requested) |
+| [#48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) / 2938 | WhitneyKataka / Blaqcodex | Responsible owner of `ai/README.md` reproduction section (`## Reproduce the Model`). Agreement confirmed on 2026-10-13 between Blaqcodex and PR #47: historical reproduction uses the recorded baseline source commits (`6be765d` / `0c65c2f`) and baseline dataset bytes (`525ac01b...` Windows CRLF checkout, or `f3eea6dc...` LF), not assuming current CSV is 36 rows; 42-row results identified separately. PR #48 merged first, so PR #47 keeps its reproduction section unchanged from `f4b3e55` and identifies current 42-row counts, instructions and evidence separately in `ai/README.md`. Distinct from pending A2/Group B discussions and the PR #50 rehearsal/handoff follow-ups. | Approved and merged into `main` (`f4b3e55`, 2026-10-13); #48-first path applied |
+| [#50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) / 2940 | WhitneyKataka / justacoder120 | Written demo plan. Preserves historical 36-row demo observations tied to the baseline model. Agrees explicit model-version boundary: historical demo captures (IDs 11/12 and 13/14) remain tied to the 36-row baseline; any live demo of the current 42-row model requires separate focused verification without overwriting historical captures. Rehearsal and handoffs remain follow-ups. | Merged into `main` (`f8e0270`, 2026-10-13) as the written demo plan; rehearsal/handoffs are follow-ups |
 
-After the discussions actually happen, record the date, participants, A2 feedback for CASE-001/CASE-005, Group B's routing-impact feedback, agreed label boundaries, and the owner/merge order of each shared update. Expected evaluation labels must remain unchanged merely to raise the score.
+### Participant boundary
+
+The current contributor is not a member of Group A2 or Group B and cannot claim or complete those teams' discussion decisions. A designated A2 member must review the two failure hypotheses, and designated Group B members must provide the routing-impact feedback and agree any label boundaries. The actual date, participants, feedback, and unresolved follow-ups must be recorded after those discussions occur.
+
+### Ownership boundaries and merge-order agreement
+
+- **`ai/README.md` Owner and Merge-Order Handling:** Confirmed on **2026-10-13** between contributor Blaqcodex (PR #48) and PR #47 contributors. PR #48 owns the reproduction section. Historical reproduction must be executed at the recorded baseline source commits (`6be765d` / `0c65c2f`) with the baseline 36-row dataset bytes (`525ac01b...` Windows CRLF checkout, or `f3eea6dc...` LF), not assuming the current CSV still contains 36 rows once PR #47 merges. Whichever PR lands first:
+  - If PR #48 merges first (**applied**: PR #48 merged into `main` as `f4b3e55` on 2026-10-13): PR #47 preserves PR #48's 36-row reproduction section intact, updates current dataset counts to 42 rows, and links to the 42-row evaluation. In `ai/README.md`, the `## Reproduce the Model` section is unchanged from `f4b3e55`; the current 42-row counts, reproduction instructions and evidence links are in separately headed sections, together with instructions for reproducing the 36-row baseline from a separate checkout of `0c65c2f`.
+  - If PR #47 merges first (not applicable after PR #48 merged first): PR #48 would have reconciled its reproduction instructions by targeting the historical 36-row baseline source commits and checkout bytes rather than assuming current `main` contains 36 rows.
+  In both merge orders, original 36-row captures, hashes, metrics, and tested source commits remain preserved, and 42-row results are identified separately. This agreement is distinct from the still-pending A2/Group B discussions and the PR #50 rehearsal/handoff follow-ups.
+- **Evaluator & Report Ownership:** PR #47 owns the updated text-safe evaluator (`ai/evaluate_heldout.py`, `tests/test_evaluate_heldout.py`) and the 42-row evaluation/failure reports (`docs/model_evaluation.md`, `docs/failure_analysis.md`).
+- **PR #46** remains the preserved historical 36-row report archive (`docs/model_evaluation_pr46_baseline.md`).
+- **PR #43** remains authoritative for the expanded integration report (`docs/integration_check.md`).
+- **PR #49** remains authoritative for the baseline model card (`docs/model_card.md`).
+- **PR #48** (merged, `f4b3e55`) remains authoritative for the historical 36-row reproduction section (`## Reproduce the Model`) and its captured environment and training evidence.
+- **PR #50** (merged, `f8e0270`, as the written demo plan) preserves historical 36-row demo observations; rehearsal and handoffs remain follow-ups, and any 42-row demo verification must be recorded separately.
+
+The 36-row metrics, demo captures, session/file/model hashes, and archived provenance limits remain historical evidence. The 42-row metrics and any current-model demo evidence retain their own dataset, source, session, file, and model identifiers. No old result may be relabelled as a 42-row or current-model result.
+
+Merging PR #48 and PR #50 does not complete the A2/Group B discussion or approve PR #47. The explicit **Do not merge yet** hold remains in force until the actual participants and date, failure-hypothesis feedback, routing impact and label-boundary outcomes are recorded, or the repository owner explicitly agrees a documented deferral. Expected evaluation labels must not be changed merely to raise the score.
 
 ## Evidence
 
@@ -79,4 +109,4 @@ After the discussions actually happen, record the date, participants, A2 feedbac
 - [Original executed-source hashes and LF/CRLF content comparison](evidence/pr47/source-comparison.json).
 - [CLI follow-up source version, eight passing tests and unchanged evaluation](evidence/pr47/cli-followup.json).
 
-The technical fixes and captured evidence are prepared for PR #47. Team discussion, dependency agreement, Enzu recheck/approval, and merge remain pending. Add the merged PR link to the task only after the actual merge.
+The technical fixes and captured evidence are prepared for PR #47. The `ai/README.md` merge-order dependency on PR #48 is handled by the #48-first reconciliation above. Team discussion, Enzu recheck/approval, and merge remain pending. Add the merged PR link to the task only after the actual merge.
