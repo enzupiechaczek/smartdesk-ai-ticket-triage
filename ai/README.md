@@ -57,6 +57,23 @@ Reviewers should check label consistency, distinct wording and tone, CSV quoting
 
 The trained model artifact (`ai/model.joblib`) is ignored by version control and must be generated locally before running the server or predictor.
 
+## Dataset Versions & Model Reproduction
+
+### Dataset versioning
+
+- **Historical 36-row baseline (Tasks 2929, 2930, 2938, 2939, 2940):** 36 synthetic examples (12 access, 12 billing, 12 technical). Dataset SHA-256: `525ac01b9a55b86bb69d77b17128d5529535d1844f9018cf8dce1db4c2f896a1`. Documented in merged PR #46, merged PR #49 (`docs/model_card.md`), and PR #48 (`a2-day4-repro`).
+- **Updated 42-row dataset (Task 2931 / PR #47):** Adds six synthetic technical examples (12 access, 12 billing, 18 technical). Dataset SHA-256: `4490b651424ba6633d534633e1ace4765e527493a6b4c91d52379acecc983209`. Documented in `docs/model_evaluation.md` and `docs/failure_analysis.md`.
+
+### Ownership and merge-order agreement for `ai/README.md`
+
+- **Responsible Owner:** PR #48 (Task 2938, WhitneyKataka / Blaqcodex) owns the Model Reproduction documentation section (`## Reproduce the Model`), including baseline environment requirements, package pins, and captured training logs.
+- **Historical reproduction rule:** Reproduction of the historical 36-row baseline must use the recorded baseline source/data commit (`6be765d` / `0c65c2f`) and dataset SHA-256 (`525ac01b...`). It must not assume that the current working `ai/data/tickets.csv` contains 36 rows once the 42-row dataset lands.
+- **Merge-order reconciliation:**
+  - If PR #48 merges first: PR #47 will preserve PR #48's 36-row reproduction section intact, update the current dataset counts to 42 rows, and maintain distinct 42-row training/evaluation references.
+  - If PR #47 merges first: PR #48 will reconcile its reproduction section to explicitly target the historical 36-row baseline snapshot rather than assuming the current CSV is 36 rows.
+- In both merge orders, original 36-row captures, hashes, metrics, and tested commits remain preserved, while 42-row results are identified separately.
+
+
 ## Separate-set evaluation
 
 Keep the evaluation CSV local and ignored, or pass its private location explicitly:

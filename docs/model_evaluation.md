@@ -90,7 +90,7 @@ The merged PR #46 evaluator's clear missing-file failure, label normalization, c
 
 ## Task ownership and next steps
 
-Task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46), owned by WhitneyKataka, is now approved and merged; its report is preserved in the historical archive. The historical integration report belongs to task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43), owned by AakashAaku; its expanded integration changes are not supplied by this PR. Enzu and the task owners still need to agree the remaining #43 dependency and the shared #47 evaluator/report ownership. The remaining agreements are not implied by the already completed #46 merge.
+Task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46), owned by WhitneyKataka, is approved and merged into `main` (`df294c8`); its report is preserved in the historical archive (`model_evaluation_pr46_baseline.md`). Task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43), owned by AakashAaku, is approved and merged into `main` (`c8e7e34`), providing the authoritative expanded integration report (`docs/integration_check.md`). Task 2939, [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49), is merged into `main` (`73853f2`), providing the baseline model card (`docs/model_card.md`). PR #47 owns the canonical evaluator implementation (`ai/evaluate_heldout.py`, `tests/test_evaluate_heldout.py`) and the versioned 42-row failure analysis and evaluation report.
 
 Discuss the ambiguous failure categories with A2 and ask Group B about support-routing impact. Record the discussion after it happens. Generate `ai/model.joblib` locally; keep it and the local evaluation CSV out of Git. Enzu approval and merge remain pending.
 
@@ -100,9 +100,10 @@ The current contributor is not a member of Group A2 or Group B. A designated mem
 
 This report is the versioned #47 evaluation record. Its updated evaluator, 42-row results, CLI follow-up, and associated source/file/model hashes belong to #47. The following related evidence remains separate:
 
-- [PR #46's historical report](model_evaluation_pr46_baseline.md) remains an unchanged archive of the historical 36-row evidence and its artifact-provenance limitations.
-- [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) remains authoritative for the expanded integration report; this report does not replace it.
-- [PR #48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) documents reproducibility of the 36-row baseline, not the 42-row replay.
-- [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) and [PR #50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) must keep any 42-row model-card or demo material separately versioned from their historical 36-row material.
+- [PR #46's historical report](model_evaluation_pr46_baseline.md) remains an unchanged archive of the historical 36-row evidence and its artifact-provenance limitations (merged into `main`).
+- [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) is merged and authoritative for the expanded integration report; this report does not replace it.
+- [PR #48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) (WhitneyKataka / Blaqcodex) owns the `ai/README.md` reproduction section for the historical 36-row baseline. Merge-order handling is agreed: historical reproduction must use the recorded baseline source/data (`525ac01b...`), not assume the current CSV still contains 36 rows; instructions reconcile against whichever PR lands first; and 42-row results are identified separately.
+- [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) is merged; its baseline model card in `docs/model_card.md` is preserved, and any 42-row additions will be versioned separately upon transition.
+- [PR #50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) preserves historical 36-row demo observations. If a live demo of the current 42-row model is required, focused verification of that model must be recorded separately rather than overwriting historical captures.
 
-The ownership and transition statements above are pending confirmation with Enzu and the task owners. They do not mark the coordination table complete, change expected labels, or authorize merge. Any live demo of the current model requires its own focused verification and must not overwrite the historical captures.
+The ownership and transition agreements above reflect coordination with task owners. They do not mark pending A2/Group B discussions complete, change expected labels, or authorize merge. The explicit **Do not merge yet** hold remains in place.
