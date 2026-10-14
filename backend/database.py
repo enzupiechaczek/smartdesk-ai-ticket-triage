@@ -1,4 +1,5 @@
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 DB_PATH = Path(__file__).parent / "smartdesk.db"
@@ -11,7 +12,7 @@ def get_connection():
 
 
 def init_db():
-    with get_connection() as conn:
+    with closing(get_connection()) as conn, conn:
         conn.execute("""CREATE TABLE IF NOT EXISTS tickets (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 subject TEXT NOT NULL,

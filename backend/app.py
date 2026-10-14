@@ -1,12 +1,13 @@
 import sys
 from pathlib import Path
+from contextlib import closing
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request
 from database import get_connection, init_db
-from ai.predictor import MODEL_PATH, predict_category
+from ai.predictor import MODEL_PATH, ModelUnavailableError, predict_category
 from priority import compute_priority
 
 app = Flask(__name__, static_folder="../frontend", static_url_path="")
@@ -22,21 +23,15 @@ def index():
 def health():
     if not MODEL_PATH.exists():
         return (
-            jsonify(
-                {
-                    "status": "error",
-                    "message": "Model not trained. Run python ai/train.py",
-                }
-            ),
+            jsonify({"status": "error", "message": "Model not trained. Run python ai/train.py"}),
             503,
         )
-
     return jsonify({"status": "ok", "service": "SmartDesk local API"})
 
 
 @app.get("/api/tickets")
 def list_tickets():
-    with get_connection() as conn:
+    with closing(get_connection()) as conn:
         rows = conn.execute(
             "SELECT * FROM tickets ORDER BY CASE priority WHEN 'urgent' THEN 0 ELSE 1 END, id DESC"
         ).fetchall()
@@ -60,37 +55,28 @@ def create_ticket():
         return jsonify({"error": "Subject is required (max 100 characters)"}), 400
     if not description or len(description) > 500:
         return jsonify({"error": "Description is required (max 500 characters)"}), 400
-    prediction = predict_category(subject + ". " + description)
+    try:
+        prediction = predict_category(subject + ". " + description)
+    except ModelUnavailableError:
+        return jsonify({"error": "Model not trained. Run python ai/train.py"}), 503
     priority = compute_priority(subject, description)
     created_at = datetime.now(timezone.utc).isoformat()
-    with get_connection() as conn:
+    with closing(get_connection()) as conn, conn:
         cur = conn.execute(
             "INSERT INTO tickets (subject, description, category, confidence, priority, created_at) "
             "VALUES (?, ?, ?, ?, ?, ?)",
-            (
-                subject,
-                description,
-                prediction["category"],
-                prediction["confidence"],
-                priority,
-                created_at,
-            ),
+            (subject, description, prediction["category"], prediction["confidence"], priority, created_at),
         )
         ticket_id = cur.lastrowid
-    return (
-        jsonify(
-            {
-                "id": ticket_id,
-                "subject": subject,
-                "description": description,
-                "category": prediction["category"],
-                "confidence": prediction["confidence"],
-                "priority": priority,
-                "created_at": created_at,
-            }
-        ),
-        201,
-    )
+    return jsonify({
+        "id": ticket_id,
+        "subject": subject,
+        "description": description,
+        "category": prediction["category"],
+        "confidence": prediction["confidence"],
+        "priority": priority,
+        "created_at": created_at,
+    }), 201
 
 
 if __name__ == "__main__":
