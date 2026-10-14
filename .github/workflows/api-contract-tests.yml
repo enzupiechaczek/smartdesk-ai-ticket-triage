@@ -1,0 +1,40 @@
+name: API contract and model-boundary tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install application dependencies
+        run: python -m pip install -r backend/requirements.txt
+      - name: Record verification environment
+        run: |
+          git rev-parse HEAD
+          date -u
+          python --version
+          python -m pip freeze
+      - name: Require a checkout without a model artifact
+        run: test ! -e ai/model.joblib
+      - name: Run backend contract and priority tests
+        run: python -m unittest discover -s backend -p 'test_*.py' -v
+      - name: Run evaluator tests
+        run: python -m unittest discover -s tests -p 'test_evaluate_heldout.py' -v
+      - name: Run predictor availability tests
+        run: python -m unittest discover -s tests -p 'test_predictor_availability.py' -v
+      - name: Confirm tests did not generate model or development database
+        run: |
+          test ! -e ai/model.joblib
+          test ! -e backend/smartdesk.db
