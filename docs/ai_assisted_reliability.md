@@ -1,33 +1,57 @@
 # AI-assisted API reliability improvement
 
-## Status and attribution
+## Outcome and attribution
 
-Implementation awaiting validation and Enzu's final code review; not a completed or merged result. Baseline: main commit `ffff8ecef5a05bc0fc78a7a7603f9c9e7fd1e76f` on 2026-10-14. SmartDesk's original application was built by EARTech interns under Enzu's instruction. This follow-up is not sole authorship of their original work.
+This is my scoped AI-assisted improvement to SmartDesk. I directed the work, manually reviewed the implementation, questioned the exception-handling boundary and completed browser verification. Perplexity inspected source and drafted the changes under my direction. The original application remains attributed to the EARTech interns who built it under my instruction.
 
-Enzu selected the reliability scope and approved branch-only commits. Perplexity inspected source and drafted code, tests, workflow and this document. Final human code review, actual runtime validation and merge remain pending. Approving a proposed write is not evidence of line-by-line review or successful tests.
+Human review and scoped browser verification are complete, and recorded CI jobs passed. Final documentation CI/readiness/merge are still pending; no merged result is claimed here. [PR #54](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/54) is the delivery record.
 
-Implementation commits:
+Baseline: `ffff8ecef5a05bc0fc78a7a7603f9c9e7fd1e76f`. Manually reviewed/tested revision: `0b4d29df7bca548b4cf48472ef1ac9c3f45d72df`. Later evidence-only commits must not be relabelled as the revision I tested.
 
-- `29c306ea57a6e555c55afb7e0acca0f4539c9f0d`: missing-model handling and explicit database connection closure.
-- `4af46abaa13cf9b579480f3d5a69690df0457ba5`: isolated API tests and model-loading boundary tests.
+## Problem and implementation
 
-## Source-inspected problem
+Source inspection found an unhandled missing-model RuntimeError in the valid-ticket path and API tests that depended on a locally trained artifact. A fresh baseline runtime comparison was not performed.
 
-The baseline predictor raises RuntimeError when the model file is missing. The valid-ticket API path does not handle that condition. Its success-path test calls the real predictor and depends on a locally generated model. The baseline API suite shares one temporary database. These are source observations; a fresh baseline runtime reproduction has not been recorded for this improvement.
+- ModelUnavailableError distinguishes missing model files and remains a RuntimeError subclass for compatibility.
+- Valid submissions with that known condition return an actionable JSON 503 before insertion; validation retains its 400 contract and successful creation its 201 contract.
+- Unexpected loading/prediction errors are not broadly caught.
+- Database operations explicitly close connections after reads or transaction completion.
+- API tests use mocked prediction and a fresh temporary database per test, checking stored fields, duplicate IDs, priority/whitespace and failure without insertion.
+- Predictor tests cover missing/disappearing files and propagation of unrelated loading faults.
+- Read-only-permissions CI runs backend, evaluator and predictor tests without training or generating model/development-database artifacts.
 
-## Changes and engineering decisions
+Implementation commits: `29c306ea57a6e555c55afb7e0acca0f4539c9f0d` (production changes), `4af46abaa13cf9b579480f3d5a69690df0457ba5` (tests), `22246e62bb59330a62c285eeadec3b667bcc195a` (workflow/case-study draft), and `0b4d29df7bca548b4cf48472ef1ac9c3f45d72df` (initial evidence record).
 
-- ModelUnavailableError distinguishes missing model files, including a file disappearing between the existence check and loading. It remains a RuntimeError subclass for compatibility.
-- The API catches only that exception and returns JSON 503 with training instructions before insertion. Existing invalid-input 400 and successful-create 201 behavior is retained by design and awaits verification.
-- Unexpected prediction/loading faults are not broadly swallowed. Corrupt-model recovery and full readiness checks are outside scope.
-- API tests mock prediction at the application boundary, use a new temporary database per test and restore patched state during cleanup. Application import is prevented from initializing a development database in this test module.
-- Tests check persisted response fields, repeated GET retrieval, duplicate IDs, priority/whitespace handling, safe missing-model errors, and failure without insertion. Repeated GET is not a browser-refresh test.
-- Database operations explicitly close connections after reads or transaction completion; write transactions still commit on success and roll back on errors.
-- CI runs backend, evaluator and predictor-boundary tests without model training. It uses contents: read, a ten-minute timeout and no application secrets. It checks that model/development-database artifacts are absent.
+## My human review decision
 
-## Verification plan
+On 2026-10-14 I confirmed that my manual code review was complete and the changes looked correct. My specific remaining question was whether unexpected faults in ai/predictor.py were broadly swallowed. I requested a double-check of the predictor, regression tests and API caller.
 
-Use a clean checkout and an isolated environment with backend/requirements.txt installed. From the repository root:
+The double-check found only FileNotFoundError around joblib.load is translated to ModelUnavailableError; the API catches only that specific subclass. Prediction/result processing is outside the loading try block. There is no broad Exception/RuntimeError handler, fabricated prediction or silent fallback. I accepted the explanation and confirmed my questions were resolved.
+
+Qualification accepted for this scope: any FileNotFoundError raised inside joblib.load is classified as model unavailability, not necessarily only disappearance of the top-level file. Corrupt-model recovery/full readiness remain outside scope. This is my actual review decision, not a claim that I independently injected every possible fault.
+
+## My browser verification and screenshots
+
+I used a separate clone, smartdesk-pr54-manual, at the full reviewed revision above, with a separate environment and server on 127.0.0.1:5054. The checkout screenshot records `2026-10-14T15:21:29.8781017+02:00`. Browser: Microsoft Edge/InPrivate; exact browser/Python/package versions were not captured in these images.
+
+[All five original screenshots are attached in my GitHub evidence comment](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/54#issuecomment-6169879789), posted on 2026-10-14 at 13:47:57 UTC. They are GitHub comment attachments, not committed binary files.
+
+| Scenario | Observed result and evidence boundary |
+| --- | --- |
+| Missing model | Subject PR54 missing-model check; description Synthetic test of controlled model-unavailable handling. Screenshot shows the actionable page message and POST 503. I reported completing the checks as expected, including no saved ticket. Complete error JSON and an empty API listing are not separately displayed in the screenshot set. |
+| Model present | After training in the separate test copy, I submitted PR54 successful persistence check / Synthetic test after training the local model. Screenshots show Network 201, saved message and matching dashboard text, technical at displayed 54% confidence, normal priority. This is not an accuracy benchmark. |
+| Real refresh | I pressed browser refresh and confirmed the ticket remained. Screenshot shows the retained ticket and a new tickets fetch returning 200. This is a browser observation, not repeated automated test-client GET calls. |
+| API value matching | I reported the prescribed API-record/value checks worked as expected. The supplied images do not display the ticket ID/full JSON, so these remain tester-reported observations, not screenshot-transcribed values. |
+
+Screenshot inventory: Screenshot-2026-10-14-152150.jpg (checkout/version), error-3.jpg (missing-model), pr54-success-response-4.jpg (201), ticket-dashboard-success-2.jpg (ticket details), refresh-success-5.jpg (refresh). GitHub attachment display names may omit filename suffixes.
+
+The missing-model screenshot includes Unexpected token '|'. I confirmed that I accidentally entered text into DevTools Console. This was a tester-input mistake, not a SmartDesk defect. The original evidence and explanation are retained.
+
+## Automated evidence
+
+[CI status record](evidence/pr54/ci-status.md) preserves both successful jobs, branch revisions and UTC timestamps. GitHub check conclusions were verified; exact counts, installed versions and executed synthetic merge SHA were not retrieved from logs and are not claimed.
+
+Commands:
 
 ```text
 python -m unittest discover -s backend -p "test_*.py" -v
@@ -35,39 +59,21 @@ python -m unittest discover -s tests -p "test_evaluate_heldout.py" -v
 python -m unittest discover -s tests -p "test_predictor_availability.py" -v
 ```
 
-Proposed contract for a valid submission with a missing model:
-
-```text
-503 {"error": "Model not trained. Run python ai/train.py"}
-```
-
-Invalid input must still be rejected before prediction. Successful creation must return 201 and a matching stored record. Health behavior is unchanged: it checks model-file existence, not model loading or database readiness.
-
-For baseline comparison use a separate checkout of ffff8ec, preserving development data. Record actual commands, dates/timezone, Python/dependency versions, tested commit, exit status and genuine outputs. Never reconstruct unsaved results. CI records its checkout SHA, UTC time and environment; a PR CI run may test GitHub's synthetic merge commit rather than the branch head. Record both identifiers accurately.
-
 ## Evidence ledger
 
 | Item | Status |
 | --- | --- |
-| Source inspection | Completed by assistant against identified baseline |
-| Fresh baseline runtime reproduction | Pending |
-| Implementation and tests | Committed on feature branch; not merged |
-| Local runtime execution | Pending; no passing test count claimed |
-| CI run URL, tested SHA and outcomes | Pending until actual execution |
-| Enzu review findings and requested corrections | Pending |
-| Manual browser checks with/without a model | Pending; mocks do not prove browser behavior |
-| PR link and final merge commit | Pending |
+| Source inspection and implementation | Complete, with identified baseline and commits |
+| My manual code review | Complete; exception-boundary question resolved |
+| Scoped browser verification | Complete, with screenshot-visible/tester-reported distinctions |
+| Screenshot availability | Five attachments verified in the linked GitHub comment |
+| CI aggregate outcome | Two successful jobs recorded for 22246e6 and 0b4d29d |
+| Exact CI counts/environment/execution SHA | Not captured; optional precision, not claimed |
+| Fresh baseline runtime comparison | Not performed; scope limitation, not a fabricated before/after result |
+| Final documentation CI, readiness and merge | Pending; use PR status and eventual merge commit |
 
-Update this ledger with actual evidence before presenting completed outcomes in a job application. A failed CI run is evidence to investigate, not a result to omit.
+## Limitations and AI oversight
 
-## AI direction and human oversight
+Mocked tests prove contracts/storage, not model accuracy. Health is a file-existence check, not full readiness. Dependencies are unpinned; Actions use major-version tags; CI covers Ubuntu/Python 3.12. My Windows browser session is separately recorded, not a Windows automated-suite result. I trained only the separate test copy; no accuracy gain or production readiness is claimed. Historical model metrics and deferred A2/Group B requirements remain separate.
 
-Prompt summary: Enzu requested an inspectable example of an AI tool improving SmartDesk. The assistant proposed graceful missing-model handling, isolated tests, CI and an evidence document. Enzu authorized the scope, branch and reviewed write confirmations. The assistant avoided broad RuntimeError handling and claims that mocked API tests establish model accuracy.
-
-A first commit-confirmation preview was incomplete. The assistant withdrew that proposal without committing it and reissued smaller exact-content confirmations. Record this as a process correction, not a code-test result. Add Enzu's actual code-review decisions here after review; do not invent rejected suggestions, time savings or final approval.
-
-## Limitations
-
-Prediction is mocked in API-contract tests. Model-boundary tests mock file/loading behavior; they do not evaluate a trained model. Backend dependency versions remain unpinned as in existing requirements, so this workflow is not a locked environment. Action versions use major-version tags, not immutable commit pins. CI currently proposes Ubuntu/Python 3.12 only; Windows execution is not established.
-
-No production readiness, accuracy gain, retraining or complete browser E2E success is claimed. Historical model metrics and deferred A2/Group B follow-ups remain separate. No models, databases, private evaluation CSVs, secrets or real customer data belong in this PR or its evidence.
+The AI workflow included source inspection, proposed scope, branch-only confirmations, implementation, CI and my review/testing. An incomplete first confirmation preview was withdrawn without a commit and replaced by exact-content confirmations. That was a process correction, not a test result. No invented time savings, authorship claims, hidden ticket values or unobserved tests belong in the portfolio.

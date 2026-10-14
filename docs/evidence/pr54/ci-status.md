@@ -1,43 +1,45 @@
-# PR #54 initial CI status and human-review checklist
+# PR #54 CI evidence and completed human review
 
-## Verified check status
+## Verified historical CI jobs
 
-On 2026-10-14, the assistant queried GitHub check runs for PR #54 and received:
+GitHub check-run responses verified both isolated-tests jobs as completed/success on 2026-10-14:
 
-- Branch head at query: `22246e62bb59330a62c285eeadec3b667bcc195a`.
-- Base at query: `ffff8ecef5a05bc0fc78a7a7603f9c9e7fd1e76f`.
-- Check name: `isolated-tests`.
-- Check ID: `115840650556`.
-- Status: completed.
-- Conclusion: success.
-- Started: `2026-10-14T12:00:57Z`.
-- Completed: `2026-10-14T12:01:17Z`.
-- [Actual GitHub Actions job](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/actions/runs/38560670309/job/115840650556).
-- [Draft PR #54](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/54).
+| Branch revision at query | Check ID | Start UTC | End UTC | Evidence |
+| --- | --- | --- | --- | --- |
+| 22246e62bb59330a62c285eeadec3b667bcc195a | 115840650556 | 12:00:57 | 12:01:17 | [Initial job](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/actions/runs/38560670309/job/115840650556) |
+| 0b4d29df7bca548b4cf48472ef1ac9c3f45d72df | 115843988893 | 12:09:09 | 12:09:29 | [Second job](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/actions/runs/38561668300/job/115843988893) |
 
-This is a verified successful job conclusion, not a transcription of detailed job logs. The check-status response did not provide the executed checkout SHA, installed package versions or individual test counts. Those details must be taken from the actual job logs before reporting precise counts or a fully specified runtime environment. A PR workflow may test a synthetic merge commit; do not assume its executed SHA is the branch head.
+Base at the initial query: ffff8ecef5a05bc0fc78a7a7603f9c9e7fd1e76f. Branch revisions are not asserted to be executed checkout SHAs: PR CI may run a synthetic merge commit. The check-status responses did not include exact counts, installed package versions or executed SHA. Detailed logs were not retrieved; those values are not claimed.
 
-The committed workflow runs backend contract/priority tests, evaluator tests and predictor-availability tests on Ubuntu/Python 3.12. It checks absence of ai/model.joblib before testing and absence of that artifact and backend/smartdesk.db afterwards. Its successful job conclusion supports that workflow's aggregate result. It does not establish browser behavior, Windows behavior, trained-model accuracy or a fresh baseline runtime comparison.
+The workflow runs backend contract/priority, evaluator and predictor-availability tests on Ubuntu/Python 3.12, checks that no model exists initially and that no model/development database is generated afterwards. Successful job conclusions support the aggregate workflow result, not browser behavior or model accuracy. Later commits require their own CI check; historical results remain attached to these runs.
 
-The implementation case study and initial PR description predate this successful run and contain pending CI wording. This dated evidence record updates that one status only. Detailed-log capture, final human review, manual checks and merge remain pending. Any later commit requires checking its own CI result; this run must not be relabelled as testing later code.
+## Source review and human acceptance
 
-## Assistant source review
+The assistant reread the seven-file implementation diff at 22246e6 and later checked the predictor, API caller and predictor tests on PR #54. This was author self-review.
 
-The assistant reread the seven-file diff at 22246e6. Source inspection found that the API catches ModelUnavailableError only, validation precedes prediction, and the database write uses a transaction inside an explicit connection-closing context. The existing validation test cases remain, with isolated mocked prediction and additional persistence/failure assertions. This is an author self-review, not independent human approval or a separate local runtime execution.
+Enzu separately confirmed completion of manual code review on 2026-10-14. His question about broad swallowing of unexpected predictor faults was answered: the loading handler catches FileNotFoundError only, and the API catches ModelUnavailableError only. Prediction processing lies outside the loading try block. Enzu accepted the narrow FileNotFoundError classification limitation for the single-file workflow and confirmed his review questions were resolved. No additional unrecorded fault-injection tests are claimed.
 
-## Enzu's focused review
+## Completed browser verification
 
-Leave these unchecked until actually completed and record any requested corrections in the PR conversation:
+Enzu tested reviewed revision 0b4d29df7bca548b4cf48472ef1ac9c3f45d72df in a separate Windows clone and environment, Microsoft Edge/InPrivate, port 5054. Recorded checkout timestamp: 2026-10-14T15:21:29.8781017+02:00.
 
-- [ ] Inspect ai/predictor.py: understand why missing files have a specific exception and unexpected faults are not broadly swallowed.
-- [ ] Inspect backend/app.py: confirm validation precedes prediction, the 503 response contains no raw exception values, and no INSERT occurs on the missing-model path.
-- [ ] Inspect backend/database.py and API database contexts: confirm transaction completion precedes closure and existing storage/order behavior is preserved.
-- [ ] Inspect backend/test_api.py: confirm prediction is patched at the API boundary, tests use isolated databases and persisted fields are asserted. Recognize these are contract tests, not accuracy tests.
-- [ ] Inspect tests/test_predictor_availability.py: confirm missing-file and disappearing-file conditions are distinguished from unrelated errors.
-- [ ] Open the Actions job above and record actual counts, checkout SHA and environment from logs.
-- [ ] Perform or explicitly scope a separate manual/browser check; do not call repeated test-client GET requests browser refresh. Use a separate checkout/environment rather than deleting a development model or database.
-- [ ] Record final human review decisions and any revisions, then decide whether to mark the PR ready.
+[His GitHub evidence comment contains all five screenshots](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/54#issuecomment-6169879789). The assistant verified the comment's five attachment entries and had previously inspected the supplied images in conversation. No binary images are claimed to be committed files.
 
-## Portfolio use
+- Missing model: page message and POST 503 visible.
+- Model present after training the isolated copy: submission 201 and matching ticket text, technical/54% displayed confidence/normal priority visible.
+- Browser refresh: retained ticket and a new tickets fetch returning 200 visible; Enzu confirmed actual refresh.
+- No saved record after failure and API value matching were reported completed by Enzu. Full error JSON, empty API listing and ticket ID/full stored JSON are not separately visible in this screenshot set.
+- Console Unexpected token '|' was confirmed by Enzu as accidental console input, not an application defect.
 
-The supported outcome so far is: an AI-assisted branch implementation with a successful initial automated CI job. Enzu directed scope and authorized branch-only changes. Final human code review and merge are not claimed. Preserve the interns' original authorship and do not invent efficiency percentages or say model accuracy improved.
+## Review checklist status
+
+- [x] Enzu confirmed completed manual code review and resolution of his predictor question.
+- [x] Scoped browser verification performed in a separate checkout/environment.
+- [x] Original screenshots attached in the linked PR comment.
+- [x] Screenshot-visible facts distinguished from tester-reported checks.
+- [x] Two historical successful CI jobs recorded accurately.
+- [ ] Detailed counts/environment/executed SHA captured if precise reporting is needed.
+- [ ] Final documentation revision CI checked before readiness/merge.
+- [ ] Ready state and merge explicitly authorized and completed.
+
+Fresh baseline runtime comparison was not performed; no accuracy improvement, exhaustive E2E coverage or production readiness is claimed. See [the reconciled case study](../../ai_assisted_reliability.md) and [PR #54](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/54) for attribution and final delivery status.
