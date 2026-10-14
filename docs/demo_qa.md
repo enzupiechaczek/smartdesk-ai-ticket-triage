@@ -28,7 +28,7 @@ The README never told you to run `python ai/train.py`. Without a model:
 
 So the one check the README asks you to perform — "open `/api/health`, you should see ok" — **passed while the app could not do its only job.**
 
-![Health check reporting ok with no model](before_and_after_evidences/before-health-returns-ok.png)
+![Health check reporting ok with no model](../tests/before_and_after_evidences/before-health-returns-ok.png)
 
 ## How it was fixed
 
@@ -41,7 +41,7 @@ GET /api/health  ->  503
 
 The README now has the training step, and documents the 503. The ticket endpoint behaves exactly as before — 500 without a model, 201 with one. Only the reporting changed.
 
-![Health check reporting the truth](before_and_after_evidences/after-health-returns-503.png)
+![Health check reporting the truth](../tests/before_and_after_evidences/after-health-returns-503.png)
 
 ## What is still risky
 
