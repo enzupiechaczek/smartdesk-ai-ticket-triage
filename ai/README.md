@@ -2,12 +2,14 @@
 
 ## Dataset Breakdown
 
-The training dataset `ai/data/tickets.csv` contains 36 synthetic support ticket examples, balanced across three categories with 12 examples per category.
+The current training dataset `ai/data/tickets.csv` contains 42 synthetic support ticket examples. Task 2931 (PR #47) adds six synthetic technical examples to the historical 36-row baseline, so the current dataset is not balanced:
 
 - **access:** 12 rows
 - **billing:** 12 rows
-- **technical:** 12 rows
-- **Total:** 36 rows
+- **technical:** 18 rows
+- **Total:** 42 rows
+
+The historical 36-row baseline (12 rows per category) is the dataset described by the preserved [Reproduce the Model](#reproduce-the-model) section. See [Dataset Versions and Model Reproduction](#dataset-versions-and-model-reproduction) for how each version is identified.
 
 ### Hard Cases Included
 
@@ -23,11 +25,11 @@ The training dataset `ai/data/tickets.csv` contains 36 synthetic support ticket 
 
 ## Training Dataset
 
-`ai/data/tickets.csv` contains 36 synthetic support tickets, with twelve examples for each category.
+`ai/data/tickets.csv` currently contains 42 synthetic support tickets: twelve `access`, twelve `billing`, and eighteen `technical`.
 
 The CSV has two columns: `ticket_text` and `category`. Category labels are lowercase. Text containing commas is enclosed in double quotes, and embedded double quotes are escaped by doubling them.
 
-All examples are fictional and contain no real names, email addresses, IDs, or incidents. Group B's held-out examples must remain separate from the training dataset and must not be added to it.
+All examples are fictional and contain no real names, email addresses, IDs, or incidents. Group B's held-out examples must remain separate from the training dataset and must not be added to it. Never copy evaluation rows into training data. The six-case evaluation set used in tasks 2930/2931 was previously exposed in Git history; it is a separate evaluation set, not a blind benchmark.
 
 ## Category Definitions
 
@@ -63,6 +65,70 @@ python ai/train.py
 ```
 
 The trained model artifact, `ai/model.joblib`, is ignored by version control and must be generated locally before running the server or predictor.
+
+On the current checkout this command trains on the 42-row dataset. It does not reproduce the historical 36-row baseline; for that, follow [Reproducing the historical 36-row baseline](#reproducing-the-historical-36-row-baseline).
+
+## Dataset Versions and Model Reproduction
+
+### Dataset versioning
+
+The same committed CSV produces two different SHA-256 values depending on checkout line endings: Git stores it with LF line endings, and a Windows checkout with `core.autocrlf=true` writes CRLF line endings. Both values below identify the same rows.
+
+- **Historical 36-row baseline (Tasks 2929, 2930, 2938, 2939, 2940):** 36 synthetic examples (12 access, 12 billing, 12 technical).
+  - Windows checkout (CRLF) SHA-256: `525ac01b9a55b86bb69d77b17128d5529535d1844f9018cf8dce1db4c2f896a1`, the value recorded by PR #48 and the model card.
+  - Committed file (LF) SHA-256: `f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71`, the value recorded for the PR #47 baseline replay.
+  - Recorded baseline source commits: `6be765d874141750d1b4cac81bb1d410aa51edda` (October 11) and `0c65c2fb6f7afccec91c980d69476a6b2a24ce80` (October 12).
+  - Documented in merged PR #46 ([`docs/model_evaluation_pr46_baseline.md`](../docs/model_evaluation_pr46_baseline.md)), merged PR #49 ([`docs/model_card.md`](../docs/model_card.md)) and merged PR #48 (the preserved [Reproduce the Model](#reproduce-the-model) section below).
+- **Current 42-row dataset (Task 2931 / PR #47):** Adds six synthetic technical examples (12 access, 12 billing, 18 technical).
+  - Windows checkout (CRLF) SHA-256: `4490b651424ba6633d534633e1ace4765e527493a6b4c91d52379acecc983209`, the bytes used by the PR #47 updated replay.
+  - Committed file (LF) SHA-256: `19848e89dbcdef63e5ee001d9763bfbaf969f1b5e1429e1bfb3d2437f327f60e`.
+  - Both values are recorded in [the PR #47 manifest](../docs/evidence/pr47/manifest.json). Tested source commit for replay: `213281c9cc717f1677451cb31db8c47b50d81173`.
+  - Documented in [`docs/model_evaluation.md`](../docs/model_evaluation.md) and [`docs/failure_analysis.md`](../docs/failure_analysis.md), with captured outputs in [`docs/evidence/pr47/`](../docs/evidence/pr47/README.md).
+
+### Reproducing the historical 36-row baseline
+
+The current `ai/data/tickets.csv` contains 42 rows, so running `python ai/train.py` on the current checkout does not reproduce the 36-row baseline. Historical reproduction must use the recorded baseline source and data. Create a separate checkout of a recorded baseline source commit, leaving your current working tree unchanged:
+
+```powershell
+git worktree add --detach ..\smartdesk-baseline-36 0c65c2fb6f7afccec91c980d69476a6b2a24ce80
+cd ..\smartdesk-baseline-36
+(Get-FileHash ai\data\tickets.csv -Algorithm SHA256).Hash
+python ai\check_data.py
+```
+
+A separate clone checked out at the same commit works equally well. Commit `6be765d` contains the same 36-row dataset but predates the requirements snapshot, so `0c65c2f` is the simpler starting point.
+
+Before training, confirm that the dataset hash is `525AC01B...` (Windows CRLF checkout) or `F3EEA6DC...` (LF checkout), and that `check_data.py` reports 36 rows with 12 per category. Any other hash means the bytes are not the recorded baseline data. Investigate that before comparing results.
+
+Then follow the preserved [Fresh-environment setup](#fresh-environment-setup) and [Training procedure](#training-procedure) steps inside that checkout. The requirements snapshot at `0c65c2f` still begins with the UTF-8 BOM that PR #48 later removed; its seven pinned versions are otherwise identical to the current [`docs/evidence/requirements-ai-baseline-2026-10-11.txt`](../docs/evidence/requirements-ai-baseline-2026-10-11.txt). Compare the output with the preserved 36-row captures, not with the 42-row results.
+
+Remove the separate checkout afterwards with `git worktree remove ..\smartdesk-baseline-36`.
+
+### Reproducing the current 42-row results
+
+On the current checkout, with the dependencies installed and a private local evaluation CSV available:
+
+```powershell
+(Get-FileHash ai\data\tickets.csv -Algorithm SHA256).Hash
+python ai/train.py
+python ai/evaluate_heldout.py --csv PATH_TO_LOCAL_EVALUATION_CSV
+```
+
+The dataset hash should be `4490B651...` (Windows CRLF checkout) or `19848E89...` (LF checkout). `python ai/check_data.py` reports `categories are not balanced` for this version because that check requires equal category counts and the 42-row dataset has 12 / 12 / 18 rows by design.
+
+The recorded 42-row results, environment, commands and output captures are in [`docs/model_evaluation.md`](../docs/model_evaluation.md) and [`docs/evidence/pr47/`](../docs/evidence/pr47/README.md). They belong to tested commit `213281c` and must not be reported as 36-row baseline results, and the 36-row captures must not be reported as 42-row results.
+
+### Ownership and merge-order agreement for `ai/README.md`
+
+- **Attribution & Date:** Agreement confirmed on **2026-10-13** between contributor Blaqcodex (PR #48) and PR #47 contributors. This agreement governs shared `ai/README.md` handling. It is distinct from the still-pending A2/Group B failure discussions and from the PR #50 rehearsal/handoff follow-ups.
+- **Responsible Owner:** PR #48 (Task 2938, WhitneyKataka / Blaqcodex) owns the Model Reproduction documentation section (`## Reproduce the Model`), including baseline environment requirements, package pins, and captured training logs.
+- **Historical reproduction rule:** Historical reproduction of the 36-row baseline must be checked out at the recorded baseline source commits (`6be765d` / `0c65c2f`) with the baseline 36-row dataset bytes (`525ac01b...` Windows CRLF checkout, or `f3eea6dc...` LF). It must not assume that the current working `ai/data/tickets.csv` contains 36 rows.
+- **Merge-order reconciliation:**
+  - If PR #48 merges first (**applied**): PR #48 was approved and merged into `main` first, as `f4b3e55` on 2026-10-13. PR #47 therefore preserves PR #48's 36-row reproduction section intact, updates the current dataset counts to 42 rows, and keeps distinct 42-row training/evaluation references.
+  - If PR #47 merges first (not applicable after PR #48 merged first): PR #48 would have reconciled its reproduction section by explicitly referencing the recorded baseline source commits and checkout bytes rather than assuming the current CSV in `main` contains 36 rows.
+- In both merge orders, original 36-row captures, checkout-byte hashes, metrics, and tested source commits remain preserved, while 42-row results are identified separately.
+
+The [Reproduce the Model](#reproduce-the-model) section below is kept unchanged from merged PR #48 (`f4b3e55`). Its references to `ai/data/tickets.csv`, 36 rows and the baseline dataset hash describe the historical 36-row baseline at the recorded source commits, not the current 42-row file.
 
 ## Reproduce the Model
 
@@ -199,3 +265,20 @@ The reported repeatability concerns printed evaluation results. No comparison of
 The dataset contains only 36 synthetic tickets, and the test split contains eight tickets. Each test example therefore has a substantial effect on the reported accuracy. These results should not be interpreted as proof of production readiness or generalization to real-world support tickets.
 
 These metrics are the baseline for this specific dataset version. PR #47 proposes a 42-row dataset. If that change is merged, coordinate the update with the dataset owner and rerun training before publishing new results. Record the new dataset hash and verification evidence, and clearly distinguish the new results from this 36-row baseline.
+
+## Separate-set evaluation
+
+This section belongs to PR #47 and applies to the current 42-row model.
+
+Keep the evaluation CSV local and ignored, or pass its private location explicitly:
+
+```text
+python ai/train.py
+python ai/evaluate_heldout.py --csv PATH_TO_LOCAL_EVALUATION_CSV
+```
+
+The evaluator reports stable row-based case identifiers, expected/predicted labels, confidence values, the CSV SHA-256, and an aggregate score. It does not print ticket text. Case identifiers refer to that file hash and row order; keep the file unchanged when comparing model versions.
+
+Unreadable, malformed, invalidly encoded or validation-failing evaluation CSVs produce a concise text-safe message on stderr and exit status 1. Successful evaluation exits with status 0. Error messages do not include ticket contents or raw exception values.
+
+See `docs/model_evaluation.md` and `docs/failure_analysis.md` for versioned results and limitations. Do not commit `ai/model.joblib` or `tests/held_out_tickets.csv`.

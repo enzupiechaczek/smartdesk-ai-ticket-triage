@@ -1,0 +1,19 @@
+Accuracy: 0.5555555555555556
+              precision    recall  f1-score   support
+
+      access       1.00      0.33      0.50         3
+     billing       0.50      0.50      0.50         2
+   technical       0.50      0.75      0.60         4
+
+    accuracy                           0.56         9
+   macro avg       0.67      0.53      0.53         9
+weighted avg       0.67      0.56      0.54         9
+
+Wrong predictions on the test split:
+WRONG: access -> technical | The verification code is not being accepted, so I cannot enter the account.
+WRONG: billing -> technical | I upgraded mid-month and do not understand the prorated charge.
+WRONG: technical -> billing | We updated our billing card details successfully, but the data export script hangs indefinitely at 99%
+WRONG: access -> technical | My accout is loocked after 3 attemptss
+Cross-validation accuracy per fold: [1.0, 0.667, 0.5, 0.875, 0.875]
+Cross-validation mean accuracy: 0.783 (+/- 0.178)
+Saved model.joblib

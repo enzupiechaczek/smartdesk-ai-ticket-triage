@@ -1,0 +1,18 @@
+Accuracy: 0.625
+              precision    recall  f1-score   support
+
+      access       0.50      1.00      0.67         2
+     billing       0.67      0.67      0.67         3
+   technical       1.00      0.33      0.50         3
+
+    accuracy                           0.62         8
+   macro avg       0.72      0.67      0.61         8
+weighted avg       0.75      0.62      0.60         8
+
+Wrong predictions on the test split:
+WRONG: technical -> billing | We updated our billing card details successfully, but the data export script hangs indefinitely at 99%
+WRONG: technical -> access | Some settings are not being saved after I update them.
+WRONG: billing -> access | Please send me a receipt for my most recent payment.
+Cross-validation accuracy per fold: [0.875, 0.429, 0.429, 0.857, 0.571]
+Cross-validation mean accuracy: 0.632 (+/- 0.198)
+Saved model.joblib

@@ -1,0 +1,55 @@
+{
+  "tested_source_commit": "57a4de72e286d6bf07b2e6ea221ea83869b7a4e9",
+  "merged_main_commit": "02a9d941ffe8691aec4a75473984e638790ef1b5",
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "evaluator_executed_byte_sha256": "e6b69a4332196967eee4430e5e51698aa5ef0927aaa227e4431638b5aee2e073",
+  "evaluator_git_blob_sha256": "e9c495d34ff716d81da9094e4a316e8868dd46ba4530401939ebdf30563077d3",
+  "tests_executed_byte_sha256": "a255932a6292262ea3853642b82cd54e534dbfaa4c2590fa0555536242bb3465",
+  "tests_git_blob_sha256": "a255932a6292262ea3853642b82cd54e534dbfaa4c2590fa0555536242bb3465",
+  "saved_model_sha256_before": "62d91c3edcebe7c67ad497c10d2dcd0cfb5e95c944f6eca57acad8bf6d3e744c",
+  "no_retraining_performed": true,
+  "capture_format": "UTF-8 with LF line endings; empty streams use explicit No stdout/stderr output. markers.",
+  "commands": [
+    {
+      "name": "cli-tests",
+      "argv": [
+        "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review\\.venv\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_evaluate_heldout.py",
+        "-v"
+      ],
+      "cwd": "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review",
+      "started_at_utc_plus_3": "2026-10-12T19:08:16.326575+03:00",
+      "ended_at_utc_plus_3": "2026-10-12T19:08:17.997756+03:00",
+      "exit_code": 0,
+      "stdout_file": "cli-tests-stdout.txt",
+      "stdout_sha256": "0651819a2ee2606c1d46b33ebfd1597521d3cb3a92a48ec8c8dfb82232581849",
+      "stderr_file": "cli-tests-stderr.txt",
+      "stderr_sha256": "f8796141ec61462a636935bc25877b3542dc7e86912cc68352e8f1ba1b47c40c"
+    },
+    {
+      "name": "cli-evaluation",
+      "argv": [
+        "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review\\.venv\\Scripts\\python.exe",
+        "ai/evaluate_heldout.py"
+      ],
+      "cwd": "C:\\Users\\MZ\\Documents\\ChatGPT\\New project\\smartdesk-pr47-review",
+      "started_at_utc_plus_3": "2026-10-12T19:08:17.998754+03:00",
+      "ended_at_utc_plus_3": "2026-10-12T19:08:21.063568+03:00",
+      "exit_code": 0,
+      "stdout_file": "cli-evaluation-stdout.txt",
+      "stdout_sha256": "428f84828951910f6c390a9b815c99b43ec02615aa208aa31d5bf6b1a306689e",
+      "stderr_file": "cli-evaluation-stderr.txt",
+      "stderr_sha256": "588bddaa3e76cf33b2a3de604713d744a9e9d5aa219e978a65ef1b2fff2bc5f7"
+    }
+  ],
+  "tests_run": 8,
+  "separate_correct": 4,
+  "separate_total": 6,
+  "saved_model_sha256_after": "62d91c3edcebe7c67ad497c10d2dcd0cfb5e95c944f6eca57acad8bf6d3e744c"
+}

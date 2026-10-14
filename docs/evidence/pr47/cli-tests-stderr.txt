@@ -1,0 +1,13 @@
+test_cli_handles_invalid_utf8_without_raw_byte_disclosure (test_evaluate_heldout.SeparateEvaluationTests.test_cli_handles_invalid_utf8_without_raw_byte_disclosure) ... ok
+test_cli_handles_malformed_and_invalid_csv_without_private_text (test_evaluate_heldout.SeparateEvaluationTests.test_cli_handles_malformed_and_invalid_csv_without_private_text) ... ok
+test_cli_handles_missing_csv_without_disclosing_path (test_evaluate_heldout.SeparateEvaluationTests.test_cli_handles_missing_csv_without_disclosing_path) ... ok
+test_cli_reports_ids_and_counts_without_private_text (test_evaluate_heldout.SeparateEvaluationTests.test_cli_reports_ids_and_counts_without_private_text) ... ok
+test_invalid_row_errors_do_not_disclose_private_text (test_evaluate_heldout.SeparateEvaluationTests.test_invalid_row_errors_do_not_disclose_private_text) ... ok
+test_process_exits_nonzero_with_safe_stderr_for_csv_failures (test_evaluate_heldout.SeparateEvaluationTests.test_process_exits_nonzero_with_safe_stderr_for_csv_failures) ... ok
+test_rejects_empty_file_and_invalid_columns_before_prediction (test_evaluate_heldout.SeparateEvaluationTests.test_rejects_empty_file_and_invalid_columns_before_prediction) ... ok
+test_results_count_misclassifications_and_normalize_labels (test_evaluate_heldout.SeparateEvaluationTests.test_results_count_misclassifications_and_normalize_labels) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.127s
+
+OK

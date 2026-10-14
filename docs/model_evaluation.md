@@ -1,138 +1,117 @@
-# Model Evaluation Report
+# Model evaluation: versioned baseline and updated results
 
-## 1. Training Overview
+## Fresh verification
 
-* **Algorithm:** Logistic Regression with TF-IDF Vectorizer (unigrams and bigrams)
-* **Training dataset:** 36 synthetic ticket samples in `ai/data/tickets.csv` (12 access, 12 billing, 12 technical)
-* **Training script:** `ai/train.py`
-* **Evaluation tasks:** Day 2 validation and cross-validation, followed by Day 3 held-out evaluation (Task 2930)
+Both models were trained and evaluated locally on **2026-10-12 (UTC+03:00, Asia/Damascus)**. Exact start/end timestamps, commands, working directories, package versions, dataset hashes, model hashes, and output hashes are recorded in [the manifest](evidence/pr47/manifest.json).
 
-### Model Versions
+- Reviewed PR #47 head: `3698de47425d1a0dcd60fec5c3c8f654f7517c82`.
+- Historical baseline source for the fresh replay: `4267ae5495b83b28b2f079803726cfa345a29429` (36-row training data, training script, and predictor).
+- Tested local code commit: `213281c9cc717f1677451cb31db8c47b50d81173`. It includes main at `0706db3add33fab7f5007049d30be6ef25a81115` and uses the original six additional technical examples.
+- Both replays use the evaluator content from the tested local code commit. The executed snapshots have different LF/CRLF line endings; training, predictor and evaluator contents are identical after CRLF-to-LF normalization only. Original byte hashes are preserved rather than relabelled. The training dataset grows from 36 to 42 rows.
+- Evaluation-file SHA-256: `043a43417794e25e405d418248110d5cf7b1b2957706da782887927bfdc571c1`. Case IDs identify rows in this unchanged file and are not ticket text.
 
-`ai/train.py` trains several models from the same 36-row dataset, and each result in this report belongs to a specific one:
+The six evaluation cases were previously exposed in Git history. These scores are for a **separate evaluation set, not a genuinely blind benchmark**. Removing tracking does not undo that exposure.
 
-* **Split model:** trained on the 28-row stratified training split (80%). Produces the Day 2 validation result.
-* **Cross-validation fold models:** five pipelines, each trained on four of the five folds (28 or 29 rows). Produce the Day 2 cross-validation result.
-* **Final-model recipe:** after the split and cross-validation steps, the recorded training script refits a model on all 36 rows and saves it as `ai/model.joblib`. This describes the script's intended output; it does not establish how or when a particular local artifact was created.
+## Executed-source comparison
 
-None of the Day 2 figures were measured on the local artifact evaluated in Day 3. Day 3 used a pre-existing local artifact identified by its recorded SHA-256; its original training session and dataset association were not independently verified from artifact metadata. A model trained on changed data (such as the 42-row dataset proposed in PR #47) is a different version and needs its own results.
+[The source comparison](evidence/pr47/source-comparison.json) records an actual comparison of the executed baseline snapshot and the executed updated files before the CLI follow-up edits. The updated files' original hashes were checked against the manifest; copies of both source snapshots were retained outside the repository. Each normalized source was also checked against its recorded Git source commit.
 
-## 2. Day 2 — Validation Results
+| Source | Baseline CRLF sequences | Updated CRLF sequences | Equal after CRLF-to-LF only |
+| --- | ---: | ---: | --- |
+| `ai/train.py` | 0 | 51 | Yes |
+| `ai/evaluate_heldout.py` | 0 | 81 | Yes |
+| `ai/predictor.py` | 0 | 17 | Yes |
 
-These results come from the split model and the cross-validation fold models, not from the final saved model.
+Both original-byte hashes and normalized-content hashes are in that artifact. No trimming, BOM removal or other source rewriting was used in this comparison. The replay sources differ only in line endings; no training, prediction or evaluation logic difference was found between those two executed versions.
 
-### Validation Performance
+The later CLI error-handling change is a follow-up evaluator version. It must not be attributed to the already captured baseline/updated runs. Their original evaluator hashes, model hashes, dates, metrics and output captures remain unchanged; no new training run was needed to explain the verified formatting differences.
 
-```text
-Accuracy: 0.625
+## CLI follow-up verification
 
-              precision    recall  f1-score   support
-
-      access       0.50      1.00      0.67         2
-     billing       0.67      0.67      0.67         3
-   technical       1.00      0.33      0.50         3
-
-    accuracy                           0.62         8
-   macro avg       0.72      0.67      0.61         8
-weighted avg       0.75      0.62      0.60         8
-```
-
-### Incorrect Predictions on the Validation Split
+The CLI follow-up was tested on 2026-10-12 at source commit `57a4de72e286d6bf07b2e6ea221ea83869b7a4e9`, which includes main `02a9d941ffe8691aec4a75473984e638790ef1b5`. Exact timestamps, executed source-byte hashes, committed-source hashes and captured output hashes are in [cli-followup.json](evidence/pr47/cli-followup.json).
 
 ```text
-WRONG: technical -> billing | We updated our billing card details successfully, but the data export script hangs indefinitely at 99%
-WRONG: technical -> access | Some settings are not being saved after I update them.
-WRONG: billing -> access | Please send me a receipt for my most recent payment.
+python -m unittest discover -s tests -p "test_evaluate_heldout.py" -v
 ```
 
-### Five-Fold Stratified Cross-Validation
+The actual result was **8 tests passed**. Coverage includes missing CSV, malformed CSV, invalid labels/encoding, nonzero process exit, and text-safe stderr without private ticket text, raw paths or tracebacks. Internal validation remains independently testable. [The actual test output](evidence/pr47/cli-tests-stderr.txt) is on stderr, as emitted by unittest; stdout was empty.
 
-```text
-Cross-validation accuracy per fold: [0.875, 0.429, 0.429, 0.857, 0.571]
-Cross-validation mean accuracy: 0.632 (+/- 0.198)
-```
+A focused `python ai/evaluate_heldout.py` execution also succeeded: its [case/count output](evidence/pr47/cli-evaluation-stdout.txt) is identical to the original updated replay capture and still reports 4/6. The saved model SHA-256 was checked before and after and is unchanged. No training run was performed for this CLI/documentation follow-up, and the historical training/evaluator hashes and baseline/updated metrics in this report remain attached to their original executed versions.
 
-### Interpretation of Day 2 Results
+## Actual fresh results
 
-* The validation split contained only eight tickets. One additional incorrect prediction would change its accuracy by 12.5 percentage points.
-* The technical category had the lowest recall (0.33). Two of the three technical tickets in the validation split were misclassified.
-* One misclassified ticket combined billing-related wording with a technical issue involving a data export that stopped progressing. The model predicted billing, likely because of the billing-related terms.
-* Another technical ticket described settings that would not save. The model predicted access, suggesting difficulty distinguishing account-access issues from technical problems.
-* A billing ticket requesting a receipt was classified as access. The short text may not have provided enough distinctive billing-related language.
-* The cross-validation mean accuracy was 63.2%, with a standard deviation of 19.8 percentage points. The variation between folds indicates that the small dataset produces inconsistent results across different splits.
+| Metric | Fresh 36-row baseline replay | Fresh 42-row updated replay |
+| --- | ---: | ---: |
+| Training rows | 36 | 42 |
+| access / billing / technical | 12 / 12 / 12 | 12 / 12 / 18 |
+| Stratified 20% split accuracy | 62.5% (5/8) | 55.6% (5/9) |
+| Five-fold CV mean accuracy | 63.2% | 78.3% |
+| CV fold standard deviation | 19.8% | 17.8% |
+| Separate-set accuracy | 4/6 (66.7%) | 4/6 (66.7%) |
+| Separate-set errors | 2 | 2 |
 
-## 3. Day 3 — Held-Out Ticket Evaluation (Task 2930)
+The split scores evaluate models trained on the corresponding training subset. Each cross-validation fold trains its own pipeline on its training fold. The saved baseline/updated models are then fitted on all 36/42 training rows, respectively; their separate-set scores are measured after that final fit.
 
-### Evaluation Method
+The two split scores use different validation cases and sample sizes. The CV means also use different datasets and folds, so they are not a controlled comparison on identical evaluation cases. The separate-set comparison uses the same six cases, but prior exposure and its small size limit what it can establish.
 
-The pre-existing local `ai/model.joblib` artifact, identified by SHA-256 `bddcbfa2781a0bdb5b2a3ba0a99a8d9d4d965001603c79025ecf2e8113696a92`, was evaluated against the six tickets supplied by Group B in `tests/held_out_tickets.csv`. The evaluation script (`ai/evaluate_heldout.py`) passed each ticket to the existing prediction function and compared the predicted category with the expected category.
+## Case-level results without ticket text
 
-The script normalizes category labels by converting them to lowercase and removing surrounding whitespace before comparison. None of the six ticket texts appear in the recorded `ai/data/tickets.csv`; however, that CSV's association with the evaluated artifact was not independently verified, so this does not establish that the tickets were absent from the artifact's training data. The artifact was used without retraining during this evaluation.
+| Case ID | Expected | Baseline prediction | Baseline confidence | Updated prediction | Updated confidence |
+| --- | --- | --- | ---: | --- | ---: |
+| CASE-001 | access | billing | 0.413 | billing | 0.396 |
+| CASE-002 | access | access | 0.814 | access | 0.792 |
+| CASE-003 | billing | billing | 0.682 | billing | 0.671 |
+| CASE-004 | billing | billing | 0.690 | billing | 0.673 |
+| CASE-005 | technical | access | 0.465 | access | 0.439 |
+| CASE-006 | technical | technical | 0.763 | technical | 0.845 |
 
-### Fresh Held-Out Results
+CASE-001 and CASE-005 remain incorrect after adding the six technical examples. Expected labels were not changed to improve the score. One error changes the six-case accuracy by approximately 16.7 percentage points.
 
-#### Reproducibility Evidence
+## Captured evidence and reproduction
 
-* **Run date:** 2026-10-12
-* **Checkout commit:** `f0c684a4cc0ea78c254eeb932314cf3bc603e1a5`
-* **Evaluator SHA-256:** `99dec36583039c9344d0a910c97c40fee6d6bbe09880f0e3edab5275254c664b`
-  The evaluator was a staged working-tree change during this run, so this hash identifies the exact tested evaluator source; it is not part of the checkout commit above.
-* **Evaluation CSV:** `tests/held_out_tickets.csv`
-* **Evaluation CSV SHA-256:** `994997e3f47ae53eef85e38d344c6a9ae726f2df5bcbd2b18a3daa65e270ebaf`
-* **Model artifact:** local, Git-ignored `ai/model.joblib`; SHA-256 `bddcbfa2781a0bdb5b2a3ba0a99a8d9d4d965001603c79025ecf2e8113696a92`
-* **Training script:** `ai/train.py`; SHA-256 `60ab4a8dacc05d06da053c2a75c75cbe20e85d3b92150b27b84b6877da35af01`
-* **Training CSV:** `ai/data/tickets.csv` (36 rows); SHA-256 `f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71`
-* **Model provenance:** The recorded training recipe builds a lowercase unigram/bigram TF-IDF and Logistic Regression (`C=10`, `max_iter=1000`) pipeline, evaluates it, refits it on all 36 training rows, and saves it with `joblib`. This recipe describes intended model construction, not independently established provenance of the evaluated artifact. The script was not run for this evaluation; the pre-existing local artifact identified by the SHA-256 above was used. Its original training session and dataset association were not independently verified from recorded artifact metadata.
-* **Exact command:** `.venv/bin/python ai/evaluate_heldout.py`
+- [Baseline training output](evidence/pr47/baseline-train.txt) and [baseline separate-set output](evidence/pr47/baseline-evaluation.txt).
+- [Updated training output](evidence/pr47/updated-train.txt) and [updated separate-set output](evidence/pr47/updated-evaluation.txt).
+- [Versions, file hashes, timestamps and exact executed commands](evidence/pr47/manifest.json).
+- [Replay method and command notes](evidence/pr47/README.md).
 
-Captured output from that command:
+The training file hashes are `f3eea6dcfca3bd7786a04874ca00f7041ab169ba752653e9e703e071e29a4b71` (baseline bytes used) and `4490b651424ba6633d534633e1ace4765e527493a6b4c91d52379acecc983209` (updated bytes used). Both have zero whitespace-normalized exact text overlap with the evaluation set. This check does not establish semantic independence or restore blindness.
 
-```text
-MISS | case-01 | expected=access | predicted=billing | confidence=0.413
-OK | case-02 | expected=access | predicted=access | confidence=0.814
-OK | case-03 | expected=billing | predicted=billing | confidence=0.682
-OK | case-04 | expected=billing | predicted=billing | confidence=0.69
-MISS | case-05 | expected=technical | predicted=access | confidence=0.465
-OK | case-06 | expected=technical | predicted=technical | confidence=0.763
+## Historical baseline evidence
 
-Accuracy: 4/6 (66.7%)
-```
+The original PR report described a 36-row model with split accuracy 62.5%, CV mean 63.2%, and separate-set score 4/6. Those values and its baseline confidences are historical author-reported evidence; the original run dates, environment and captured outputs were not supplied. The fresh baseline replay above reproduces those values in the recorded environment. Its captured outputs are new evidence from 2026-10-12, not reconstructed original logs.
 
-**Correct predictions:** 4 out of 6
+The original updated-model report described a 42-row model with split accuracy 55.6%, CV mean 78.3%, and separate-set score 4/6. The fresh updated run also reproduces these values. Refer to its own captured outputs and model hash, rather than attributing historical baseline evidence to the updated saved model.
 
-**Held-out accuracy:** 66.7%
+## Preserved PR #46 report after synchronization
 
-### Day 3 Error Analysis
+PR #46 was approved and merged into main at `df294c84fed1108c820447f2591e4d9202b442e4` during this follow-up. Its complete report is preserved in [the historical PR #46 archive](model_evaluation_pr46_baseline.md), including its recorded artifact-provenance limitations and original case/count output. Its distinct CSV/model hashes remain separate from this PR's replay metadata.
 
-Two of the six held-out tickets were misclassified:
+The merged PR #46 evaluator's clear missing-file failure, label normalization, case/count output and prediction call are retained by this PR's tested implementation. The latter additionally validates malformed/invalidly encoded CSV and emits path-safe errors with exit status 1. The evaluator source remains byte-identical to the CLI source tested at `57a4de72e286d6bf07b2e6ea221ea83869b7a4e9`; source hashes and eight-test outputs are retained in the follow-up evidence. Canonical evaluator and versioned report ownership is settled for PR #47, as documented below.
 
-1. **Access predicted as billing:** The request concerned updating the registered email address on a workspace account. The model predicted billing with a confidence of 0.413.
-2. **Technical predicted as access:** The request stated that the user was unable to update their email. The model predicted access with a confidence of 0.465.
+`docs/model_card.md` (PR #49) and `docs/demo_ai.md` (PR #50) link to `model_evaluation.md` for PR #46's Day 2 split/cross-validation results and Day 3 held-out check of a separately identified local model artifact. With this PR, that PR #46 content is preserved unchanged in [the historical PR #46 archive](model_evaluation_pr46_baseline.md). This report does not replace or relabel it. Those two files belong to PR #49 and PR #50 and are not edited here.
 
-Both errors involved email updates, suggesting that short requests about account settings may be difficult to classify consistently. The model may benefit from more varied training examples that distinguish account-access requests from technical problems involving settings or profile updates.
+## Synchronization with main after PR #48 and PR #50 merged
 
-### Relationship to Day 2 Results
+On 2026-10-13 this branch was synchronized with main at `f4b3e559d8bfc8e150ae8976cfe44d415a49f394` (PR #48), which also contains PR #50 (`f8e0270e8327cbb111ed7542ce236d2a73c44c9b`). Main contributed documentation and captured evidence only: `ai/README.md`, `docs/demo_ai.md`, `docs/demo_ai_api_evidence.md`, `docs/demo_ai_api_evidence_after_training.md`, and three files under `docs/evidence/`. No training script, predictor, evaluator, dataset or test changed, so no training or evaluation was rerun for this synchronization. The 42-row results above remain attached to tested commit `213281c` and the CLI follow-up at `57a4de7`.
 
-The three accuracy figures in this report measure different models on different cases:
+`ai/README.md` follows the agreed PR #48-first path. Its `## Reproduce the Model` section is kept unchanged from `f4b3e55`. The current 42-row counts, instructions and evidence links are in separately headed sections. Each dataset version is listed with both its Windows CRLF checkout hash and its LF committed-file hash, the values already recorded in the PR #47 manifest, `docs/model_card.md` and PR #48's evidence.
 
-| Measurement                      | Model evaluated                       | Cases evaluated                                                      |    Accuracy |
-| -------------------------------- | ------------------------------------- | -------------------------------------------------------------------- | ----------: |
-| Day 2 validation split           | Split model (28 training rows)        | 8 tickets held back from the training dataset                        | 62.5% (5/8) |
-| Day 2 five-fold cross-validation | Five fold models (28 or 29 rows each) | All 36 training rows, each scored by the fold model that excluded it |  63.2% mean |
-| Day 3 held-out set               | Pre-existing local artifact (SHA-256 recorded above; training provenance unverified) | 6 Group B tickets, absent from the recorded CSV but previously exposed; artifact training data unverified | 66.7% (4/6) |
+## Task ownership and next steps
 
-Because the models and evaluation cases differ, these figures are not a controlled comparison and should not be read as evidence that the model improved between Day 2 and Day 3. The differences between the Day 3 figure and the two Day 2 figures (4.2 and 3.5 percentage points) are smaller than the effect of a single prediction on either the validation split (12.5 points) or the held-out set (16.7 points).
+Task 2930, [PR #46](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/46), owned by WhitneyKataka, is approved and merged into `main` (`df294c8`); its report is preserved in the historical archive (`model_evaluation_pr46_baseline.md`). Task 2929, [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43), owned by AakashAaku, is approved and merged into `main` (`c8e7e34`), providing the authoritative expanded integration report (`docs/integration_check.md`). Task 2939, [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49), is merged into `main` (`73853f2`), providing the baseline model card (`docs/model_card.md`). Task 2938, [PR #48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48), is approved and merged into `main` (`f4b3e55`), providing the historical 36-row reproduction section in `ai/README.md`. Task 2940, [PR #50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50), is merged into `main` (`f8e0270`) as the written demo plan; its rehearsal and handoffs remain follow-ups. PR #47 owns the canonical evaluator implementation (`ai/evaluate_heldout.py`, `tests/test_evaluate_heldout.py`) and the versioned 42-row failure analysis and evaluation report.
 
-## 4. Limitations and Next Steps
+Discuss the ambiguous failure categories with A2 and ask Group B about support-routing impact. Record the discussion after it happens. Generate `ai/model.joblib` locally; keep it and the local evaluation CSV out of Git. Enzu approval and merge remain pending.
 
-* **Small datasets:** The original training dataset contains 36 synthetic samples, and the held-out evaluation contains only six tickets.
-* **Sensitivity to individual errors:** Each incorrect prediction changes the Day 3 accuracy by approximately 16.7 percentage points.
-* **Category overlap:** Short requests involving email updates, account settings, and access may contain similar language across categories.
-* **Confidence interpretation:** Prediction confidence is the model's reported probability for its selected category; it should not automatically be treated as a guarantee that the prediction is correct.
-* **Future improvements:** Add more varied, accurately labelled training examples, particularly for ambiguous account-setting and technical requests, then evaluate changes using a separate held-out dataset.
-* **Evaluation integrity:** This six-ticket set has already been exposed in the repository history and can no longer serve as a blind benchmark. A blind check of a future model needs a new set that is kept local-only and is not consulted when choosing training examples.
-* **Model versions:** Results for any retrained model should name the training dataset and model they were measured on, and should not be combined with the 36-row results above.
+The current contributor is not a member of Group A2 or Group B. A designated member from A2 must conduct or confirm the failure discussion, and designated Group B members must provide or confirm the routing-impact feedback and label-boundary decisions. No discussion outcome is claimed here until those participants and the actual date are recorded.
 
-## 5. Conclusion
+## Versioned handoff for related PRs
 
-The pre-existing local artifact identified by SHA-256 `bddcbfa2781a0bdb5b2a3ba0a99a8d9d4d965001603c79025ecf2e8113696a92` correctly classified four of the six Group B tickets, achieving an accuracy of 66.7% (4/6). The recorded training script's all-36-row refit and save procedure is a recipe, not verified provenance for this artifact; its original training session and dataset association were not independently verified from artifact metadata. The result therefore belongs to this identified artifact and does not establish that it was trained on all 36 rows or that the tickets were unseen by its training process. Because this set was previously exposed, the result is not a blind benchmark. It is also not directly comparable with the Day 2 validation (62.5%) and cross-validation (63.2%) figures, which were measured on different models and cases. The evaluation identified confusion between access and technical requests involving email updates, providing a concrete area for future improvement while highlighting the need for a larger evaluation dataset. Any newly trained artifact needs a separately identified evaluation session and result.
+This report is the versioned #47 evaluation record. Its updated evaluator, 42-row results, CLI follow-up, and associated source/file/model hashes belong to #47. The following related evidence remains separate:
+
+- [PR #46's historical report](model_evaluation_pr46_baseline.md) remains an unchanged archive of the historical 36-row evidence and its artifact-provenance limitations (merged into `main`).
+- [PR #43](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/43) is merged and authoritative for the expanded integration report; this report does not replace it.
+- [PR #48](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/48) (WhitneyKataka / Blaqcodex) is approved and merged into `main` (`f4b3e55`, 2026-10-13) and owns the `ai/README.md` reproduction section for the historical 36-row baseline. Agreement confirmed on **2026-10-13** between Blaqcodex and PR #47 contributors: historical reproduction must be executed at the recorded baseline source commits (`6be765d` / `0c65c2f`) with the baseline dataset bytes (`525ac01b...` Windows CRLF checkout, or `f3eea6dc...` LF), not assuming the current CSV still contains 36 rows; and 42-row results are identified separately. Because PR #48 merged first, PR #47 keeps that section unchanged from `f4b3e55` and adds the current 42-row counts and instructions in separate sections. This is distinct from the still-pending A2/Group B discussions and the PR #50 rehearsal/handoff follow-ups.
+- [PR #49](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/49) is merged; its baseline model card in `docs/model_card.md` is preserved, and any 42-row additions will be versioned separately upon transition.
+- [PR #50](https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage/pull/50) is merged into `main` (`f8e0270`, 2026-10-13) as the written demo plan, with rehearsal and handoffs retained as follow-ups. It preserves historical 36-row demo observations. If a live demo of the current 42-row model is required, focused verification of that model must be recorded separately rather than overwriting historical captures.
+
+The ownership and transition agreements above reflect coordination with task owners. They do not mark pending A2/Group B discussions complete, change expected labels, or authorize merge. Merging PR #48 and PR #50 does not complete that discussion or approve PR #47. The explicit **Do not merge yet** hold remains in place until the actual participants and date, failure-hypothesis feedback, routing impact and label-boundary outcomes are recorded, or the repository owner explicitly agrees a documented deferral.

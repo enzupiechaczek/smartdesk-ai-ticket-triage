@@ -1,0 +1,42 @@
+{
+  "compared_at_utc_plus_3": "2026-10-12T19:04:27.197643+03:00",
+  "baseline_source_commit": "4267ae5495b83b28b2f079803726cfa345a29429",
+  "updated_source_commit": "213281c9cc717f1677451cb31db8c47b50d81173",
+  "updated_checkout_at_comparison": "907f6917c07b97c06984471f6c068d2a06ad011f",
+  "normalization": "Replace CRLF with LF only; preserve all other bytes and original executed-file hashes.",
+  "files": [
+    {
+      "path": "ai/train.py",
+      "baseline_original_sha256": "60ab4a8dacc05d06da053c2a75c75cbe20e85d3b92150b27b84b6877da35af01",
+      "updated_original_sha256": "95227e52327bd0644031912b085d943c674451cd172c64b01cdeb90f4e1d5da7",
+      "baseline_crlf_count": 0,
+      "updated_crlf_count": 51,
+      "baseline_normalized_sha256": "60ab4a8dacc05d06da053c2a75c75cbe20e85d3b92150b27b84b6877da35af01",
+      "updated_normalized_sha256": "60ab4a8dacc05d06da053c2a75c75cbe20e85d3b92150b27b84b6877da35af01",
+      "normalized_content_equal": true,
+      "finding": "Only LF versus CRLF line endings differ; no other byte differences after normalization."
+    },
+    {
+      "path": "ai/evaluate_heldout.py",
+      "baseline_original_sha256": "d71bf284eb217f0a0af17c4405f6f6311bde95ee0d01aeeb29f0a8657dc9c652",
+      "updated_original_sha256": "fbea9560af611a43368cbecc8c01cb7f652a9d60661cb049cde844889ffead61",
+      "baseline_crlf_count": 0,
+      "updated_crlf_count": 81,
+      "baseline_normalized_sha256": "d71bf284eb217f0a0af17c4405f6f6311bde95ee0d01aeeb29f0a8657dc9c652",
+      "updated_normalized_sha256": "d71bf284eb217f0a0af17c4405f6f6311bde95ee0d01aeeb29f0a8657dc9c652",
+      "normalized_content_equal": true,
+      "finding": "Only LF versus CRLF line endings differ; no other byte differences after normalization."
+    },
+    {
+      "path": "ai/predictor.py",
+      "baseline_original_sha256": "91d0d2c5601d96ca02cc3a8f9d53259d56b0776424ddf1c7cb96654efa9e34f6",
+      "updated_original_sha256": "9e5bac90387cb9cae0cb830d138d44167890fd4347b2f2b89884d1a314300316",
+      "baseline_crlf_count": 0,
+      "updated_crlf_count": 17,
+      "baseline_normalized_sha256": "91d0d2c5601d96ca02cc3a8f9d53259d56b0776424ddf1c7cb96654efa9e34f6",
+      "updated_normalized_sha256": "91d0d2c5601d96ca02cc3a8f9d53259d56b0776424ddf1c7cb96654efa9e34f6",
+      "normalized_content_equal": true,
+      "finding": "Only LF versus CRLF line endings differ; no other byte differences after normalization."
+    }
+  ]
+}
