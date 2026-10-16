@@ -173,3 +173,24 @@ That is a quality observation for the model owners, not an API bug.
 | TC-2933-Thato-DuplicateTicket-03 | Submit the same subject and description twice; exact values are not recorded in the available evidence. | Submit the same ticket twice. Record both POST statuses and IDs, inspect `/api/tickets` for both stored records, and refresh the dashboard without clearing the database. | Determine whether both submissions are accepted, whether each has a distinct ID, and whether both stored tickets remain visible after refresh. | Two submissions were reported as separate tickets, and both were reported visible on the dashboard after refresh. The exact submitted text, HTTP statuses, ticket IDs, matching GET `/api/tickets` records, and independently evidenced persistence are not available in the retained evidence. | Incomplete — insufficient evidence to independently confirm both submissions, distinct IDs, matching API records, and persistence after refresh. | ![Duplicate-ticket dashboard](evidences/TC-2933-duplicate-03.png) |
 
 **Failure tracking:** No application bug raised; the currently retained evidence does not establish a genuine application failure.
+
+
+### Assigned Case 1: `TC-2933-Thato-ValidTechnical-01`
+
+**Retained evidence:** `tests/evidences/TC-2933-page-01.png`
+
+**Current assessment:** Dashboard classification and the displayed ticket were observed. However, API matching and persistence after refreshing the page were reported but not independently evidenced.
+
+### Assigned Case 2: `TC-2933-Thato-BlankSubject-02`
+
+**Retained evidence:**
+- `tests/evidences/TC-2933-page-02.png`
+- `tests/evidences/TC-2933-api-02.png`
+
+**Current assessment:** Browser validation was observed, and direct API rejection returned HTTP 400. However, browser Network activity was not recorded.
+
+### Assigned Case 3: `TC-2933-Thato-DuplicateTicket-03`
+
+**Retained evidence:** `tests/evidences/TC-2933-duplicate-03.png`
+
+**Current assessment:** Incomplete. The retained evidence does not establish the exact input, both HTTP statuses and IDs, matching records returned by a GET request, or persistence after refreshing the page.
