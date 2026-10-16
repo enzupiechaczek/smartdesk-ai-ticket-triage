@@ -164,3 +164,33 @@ That is a quality observation for the model owners, not an API bug.
 | TC-ValidbillingCheckedOnPage-05 | `{"subject":"billing support request","description":"I need to know when my most recent payment was processed"}` | 1. Go to tickets form<br>2. Enter your subject and description<br>3. Click Submit | create ticket successfully with the correct category "billing" | The form submitted successfully. In DevTools Network, POST /api/tickets returned status HTTP 201 Created with generated ID 20 on 2026-10-08 19:51:00 EEST. (exact commit hash was not recorded in original session metadata and remain explicitly unknown (subsequent documentation commits are intentionally not assigned))The AI categorized it as billing with 0.67 confidence and normal priority. After reloading the dashboard, ticket #20 remained visible with all data intact. Note: Evidence screenshot displays both Tickets #19 and #20 on the dashboard. | Classification Pass (Expected "billing", Actual "billing")<br>Submission Pass<br>Reload Pass | ![screenshot](evidences/task-2933/vaildbillingonpage.png) |
 | TC-501CharacterServerValidation-06 | `subject: "Technical support request" description: 'y' repeated 501 times (generated via python -c "print('y'*501)")` | 1. Open Postman<br>2. Set POST http://127.0.0.1:5000/api/tickets request and set Headers to Content-Type: application/json<br>3. Navigate to Body > raw > JSON and input the payload with a description repeating the character 'y' exactly 501 times and your subject<br>4. click send and observe the response status and error message | Server rejects request with HTTP 400 and description validation error | Server returned HTTP 400 Bad Request with response: `{"error": "Description is required (max 500 characters)"}` on 2026-10-08.(exact commit hash was not recorded in original session metadata.) Note: Attached evidence shows Postman UI with HTTP 400 response body. | Pass | ![screenshot](evidences/task-2933/501postman.png) |
 
+### Task 2933 — Thato's Browser E2E Contribution
+
+| Test ID | Input | Steps | Expected result | Actual result | Pass/Fail | Evidence |
+|---|---|---|---|---|---|---|
+| TC-2933-Thato-ValidTechnical-01 | `{"subject":"PDF upload failed","description":"The app freezes when I upload a PDF"}` | Submit the technical ticket through the browser. Check the displayed ticket, inspect the API record, and refresh the dashboard. | The ticket is submitted with the correct `technical` category, the entered subject and description are stored correctly, and the ticket remains visible after refresh. | The dashboard displayed **PDF upload failed** with the description **The app freezes when I upload a PDF**. The category was `technical (66%)` and the priority was `normal`. The API response was checked during testing and reportedly contained matching ticket details, but it was not saved as evidence. The ticket was reported to remain visible after refresh. | Displayed ticket and classification: Pass (observed); API matching and reload persistence: observed, but not independently evidenced as the response was not recorded. | ![Dashboard](evidences/TC-2933-page-01.png) |
+| TC-2933-Thato-BlankSubject-02 | `{"subject":"","description":"Need help with my account settings"}` | Leave the subject field empty, enter the description, and attempt to submit through the browser. Separately, inspect the direct API response. | The browser prevents submission when the subject is empty. A direct API request with an empty subject returns HTTP `400` with a subject-required error. | The browser form did not allow submission when the subject field was empty. Whether the browser sent a POST request was not recorded. Separately, the direct API request returned HTTP `400 Bad Request` with `{"error":"Subject is required (max 100 characters)"}`. | Browser validation: Observed; browser Network activity: Not recorded; direct API rejection: Pass. | ![Browser screenshot](evidences/TC-2933-page-02.png); ![Direct API response](evidences/TC-2933-api-02.png) |
+| TC-2933-Thato-DuplicateTicket-03 | Submit the same subject and description twice; exact values are not recorded in the available evidence. | Submit the same ticket twice. Record both POST statuses and IDs, inspect `/api/tickets` for both stored records, and refresh the dashboard without clearing the database. | Determine whether both submissions are accepted, whether each has a distinct ID, and whether both stored tickets remain visible after refresh. | Two submissions were reported as separate tickets, and both were reported visible on the dashboard after refresh. The exact submitted text, HTTP statuses, ticket IDs, matching GET `/api/tickets` records, and independently evidenced persistence are not available in the retained evidence. | Incomplete — insufficient evidence to independently confirm both submissions, distinct IDs, matching API records, and persistence after refresh. | ![Duplicate-ticket dashboard](evidences/TC-2933-duplicate-03.png) |
+
+**Failure tracking:** No application bug raised; the currently retained evidence does not establish a genuine application failure.
+
+
+### Assigned Case 1: `TC-2933-Thato-ValidTechnical-01`
+
+**Retained evidence:** `tests/evidences/TC-2933-page-01.png`
+
+**Current assessment:** Dashboard classification and the displayed ticket were observed. However, API matching and persistence after refreshing the page were reported but not independently evidenced.
+
+### Assigned Case 2: `TC-2933-Thato-BlankSubject-02`
+
+**Retained evidence:**
+- `tests/evidences/TC-2933-page-02.png`
+- `tests/evidences/TC-2933-api-02.png`
+
+**Current assessment:** Browser validation was observed, and direct API rejection returned HTTP 400. However, browser Network activity was not recorded.
+
+### Assigned Case 3: `TC-2933-Thato-DuplicateTicket-03`
+
+**Retained evidence:** `tests/evidences/TC-2933-duplicate-03.png`
+
+**Current assessment:** Incomplete. The retained evidence does not establish the exact input, both HTTP statuses and IDs, matching records returned by a GET request, or persistence after refreshing the page.
