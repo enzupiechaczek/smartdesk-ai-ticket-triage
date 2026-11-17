@@ -33,6 +33,17 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 - No keys, tokens or passwords in code, screenshots or chat.
 - The model works offline and never calls a paid or cloud AI service.
 
+## Security
+
+SmartDesk is a local training project that uses synthetic data only. It binds to 127.0.0.1 and has no authentication, TLS or logging, so do not deploy it publicly as-is. See [SECURITY.md](SECURITY.md).
+
+Debug mode is off by default. To turn it on for local development:
+
+- Windows (PowerShell): `$env:SMARTDESK_DEBUG="1"; python backend/app.py`
+- Linux/macOS: `SMARTDESK_DEBUG=1 python backend/app.py`
+
+A self-assessment against ISO/IEC 27001:2022 is published in the [Security & Governance Portfolio](https://github.com/enzupiechaczek/Security-portfolio/tree/main/ISO27001-SmartDesk-Assessment).
+
 ## How to run SmartDesk
 
 ### Requirements
@@ -44,8 +55,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before you push anything. The short vers
 ### 1. Get the code
 
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/enzupiechaczek/smartdesk-ai-ticket-triage.git
+cd smartdesk-ai-ticket-triage
 ```
 
 
@@ -143,7 +154,7 @@ This runs the API validation tests in [backend/test_api.py](backend/test_api.py)
 | GET    | `/api/tickets` | Returns every saved ticket, urgent first, then newest first |
 | POST   | `/api/tickets` | Validates a new ticket, classifies it, saves it             |
 
-> **Note:** The `category` and `confidence` values in the examples below are illustrative. They show the intended output of the trained model. Until that model replaces the temporary stub in [ai/predictor.py](ai/predictor.py), every ticket is returned as `"category": "technical"` with `"confidence": 0.5`.
+> **Note:** The `category` and `confidence` values in the examples below are example values. Real predictions come from the locally trained model in [ai/predictor.py](ai/predictor.py), and its accuracy is limited (see [docs/model_card.md](docs/model_card.md)).
 
 ### `GET /api/health`
 
@@ -165,7 +176,7 @@ A quick check that the Flask server is up and the model file `ai/model.joblib` e
 
 Returns all tickets stored in SQLite as a list, with `urgent` tickets first and the newest tickets first within each priority. Returns an empty list `[]` if there are no tickets yet.
 
-**Response `200 OK`** (illustrative values, see the note above)
+**Response `200 OK`** (example values, see the note above)
 
 ```json
 [
@@ -199,7 +210,7 @@ Creates a new ticket.
 | `subject`     | string | Required, 1–100 characters    |
 | `description` | string | Required, 1–500 characters    |
 
-**Response `201 Created`** (illustrative values, see the note above)
+**Response `201 Created`** (example values, see the note above)
 
 ```json
 {
