@@ -1,3 +1,4 @@
+import os
 import sys
 from pathlib import Path
 from contextlib import closing
@@ -80,4 +81,5 @@ def create_ticket():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug = os.environ.get("SMARTDESK_DEBUG", "0") == "1"
+    app.run(host="127.0.0.1", debug=debug)
